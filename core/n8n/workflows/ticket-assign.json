@@ -1,0 +1,124 @@
+{
+  "name": "DX-FSM: Ticket Assignment",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "ticket-assign",
+        "responseMode": "lastNode",
+        "options": {}
+      },
+      "id": "webhook-assign",
+      "name": "Webhook: Assign Ticket",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [250, 300]
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "={{$env.AI_SERVICE_URL}}/recommend",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "ticket_id",
+              "value": "={{$json.body.ticket_id}}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "get-recommendation",
+      "name": "Get Technician Recommendation",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 3,
+      "position": [500, 300]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{$env.TICKET_SERVICE_URL}}/tickets/assign",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "ticket_id",
+              "value": "={{$json.body.ticket_id}}"
+            },
+            {
+              "name": "technician_id",
+              "value": "={{$json.technician_id}}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "assign-technician",
+      "name": "Assign Technician",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 3,
+      "position": [750, 300]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{$env.NOTIFICATION_SERVICE_URL}}/notify",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "user_id",
+              "value": "={{$json.technician_id}}"
+            },
+            {
+              "name": "title",
+              "value": "=?Yêu cầu mới được gán cho bạn"
+            },
+            {
+              "name": "message",
+              "value": "={{$json.ticket_title}}"
+            },
+            {
+              "name": "type",
+              "value": "ticket_assigned"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "notify-technician",
+      "name": "Notify Technician",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 3,
+      "position": [1000, 300]
+    },
+    {
+      "parameters": {
+        "expression": "={{$json.status}}",
+        "options": {}
+      },
+      "id": "respond-success",
+      "name": "Respond Success",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [1250, 300]
+    }
+  ],
+  "connections": {
+    "Webhook: Assign Ticket": {
+      "main": [[{"node": "Get Technician Recommendation", "type": "main", "index": 0}]]
+    },
+    "Get Technician Recommendation": {
+      "main": [[{"node": "Assign Technician", "type": "main", "index": 0}]]
+    },
+    "Assign Technician": {
+      "main": [[{"node": "Notify Technician", "type": "main", "index": 0}]]
+    },
+    "Notify Technician": {
+      "main": [[{"node": "Respond Success", "type": "main", "index": 0}]]
+    }
+  },
+  "settings": {},
+  "staticData": null
+}

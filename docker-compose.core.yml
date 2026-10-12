@@ -1,0 +1,18 @@
+# DX-FSM – Chỉ Open-Core Infrastructure (Tầng 1)
+# docker compose -f docker-compose.yml -f docker-compose.core.yml up -d
+
+version: "3.8"
+
+services:
+  ticket-service:
+    image: nginx:alpine
+    entrypoint: ["true"]
+  ai-service:
+    image: nginx:alpine
+    entrypoint: ["true"]
+  notification-service:
+    image: nginx:alpine
+    entrypoint: ["true"]
+  app:
+    image: nginx:alpine
+    entrypoint: ["true"]

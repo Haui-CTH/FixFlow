@@ -1,0 +1,72 @@
+# APISIX Configuration
+# DX-FSM API Gateway
+
+deployment:
+  role: traditional
+  role: data_plane
+  config_path: /usr/local/apisix/conf/config.yaml
+  etcd:
+    host:
+      - "http://etcd:2379"
+    prefix: /apisix
+    timeout: 30
+
+apisix:
+  node_listen: 8080
+  enable_admin: true
+  admin_key:
+    - name: admin
+      key: ${APISIX_ADMIN_KEY}
+      role: admin
+
+  ssl:
+    enable: false
+
+  # CORS
+  cors:
+    enabled: true
+    origins:
+      - "http://localhost:3000"
+      - "http://localhost:9180"
+    methods:
+      - GET
+      - POST
+      - PUT
+      - DELETE
+      - PATCH
+      - OPTIONS
+    headers:
+      - "*"
+    exposed_headers:
+      - "*"
+    credentials: true
+    max_age: 86400
+
+  # Log
+  access_log: /dev/stdout
+  error_log: /dev/stderr
+  error_log_level: warn
+
+  # Upstream
+  upstream_check_interval: 5
+  upstream_check_max_retry: 3
+
+  # Proxy
+  proxy_buffering: off
+  proxy_request_buffering: off
+
+# Plugins enabled
+plugins:
+  - cors
+  - jwt-auth
+  - proxy-rewrite
+  - rate-limit
+  - proxy-cache
+  - ip-restriction
+  - key-auth
+
+etcd:
+  host:
+    - "http://etcd:2379"
+  prefix: /apisix
+  timeout: 30

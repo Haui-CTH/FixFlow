@@ -1,0 +1,133 @@
+{
+  "id": "dx-fsm",
+  "realm": "dx-fsm",
+  "enabled": true,
+  "displayName": "DX-FSM Platform",
+  "displayNameHtml": "<div class=\"kc-logo-text\"><span>DX-FSM</span></div>",
+  "accessTokenLifespan": 300,
+  "ssoSessionIdleTimeout": 1800,
+  "ssoSessionMaxLifespan": 36000,
+  "clients": [
+    {
+      "clientId": "dx-fsm-api",
+      "enabled": true,
+      "protocol": "openid-connect",
+      "publicClient": false,
+      "bearerOnly": false,
+      "standardFlowEnabled": false,
+      "implicitFlowEnabled": false,
+      "directAccessGrantsEnabled": true,
+      "serviceAccountsEnabled": true,
+      "authorizationServicesEnabled": false,
+      "redirectUris": [],
+      "webOrigins": []
+    },
+    {
+      "clientId": "dx-fsm-frontend",
+      "enabled": true,
+      "protocol": "openid-connect",
+      "publicClient": true,
+      "standardFlowEnabled": true,
+      "implicitFlowEnabled": false,
+      "directAccessGrantsEnabled": false,
+      "redirectUris": [
+        "http://localhost:3000/*",
+        "http://localhost:9180/*"
+      ],
+      "webOrigins": ["http://localhost:3000"],
+      "attributes": {
+        "pkce.code.challenge.method": "S256"
+      }
+    }
+  ],
+  "roles": {
+    "realm": [
+      {
+        "name": "admin",
+        "description": "System Administrator"
+      },
+      {
+        "name": "manager",
+        "description": "Team Manager"
+      },
+      {
+        "name": "technician",
+        "description": "Field Technician"
+      },
+      {
+        "name": "customer",
+        "description": "Customer"
+      }
+    ]
+  },
+  "users": [
+    {
+      "username": "admin",
+      "enabled": true,
+      "emailVerified": true,
+      "firstName": "Admin",
+      "lastName": "DX-FSM",
+      "email": "admin@haui.vn",
+      "credentials": [
+        {
+          "type": "password",
+          "value": "admin123",
+          "temporary": false
+        }
+      ],
+      "realmRoles": ["admin"]
+    },
+    {
+      "username": "manager",
+      "enabled": true,
+      "emailVerified": true,
+      "firstName": "Nguyễn",
+      "lastName": "Quản Lý",
+      "email": "manager@haui.vn",
+      "credentials": [
+        {
+          "type": "password",
+          "value": "manager123",
+          "temporary": false
+        }
+      ],
+      "realmRoles": ["manager"]
+    },
+    {
+      "username": "technician",
+      "enabled": true,
+      "emailVerified": true,
+      "firstName": "Trần",
+      "lastName": "Kỹ Thuật",
+      "email": "technician@haui.vn",
+      "credentials": [
+        {
+          "type": "password",
+          "value": "tech123",
+          "temporary": false
+        }
+      ],
+      "realmRoles": ["technician"],
+      "attributes": {
+        "specialty": ["hardware", "network"],
+        "experience_years": "3"
+      }
+    },
+    {
+      "username": "customer",
+      "enabled": true,
+      "emailVerified": true,
+      "firstName": "Lê",
+      "lastName": "Khách Hàng",
+      "email": "customer@haui.vn",
+      "credentials": [
+        {
+          "type": "password",
+          "value": "customer123",
+          "temporary": false
+        }
+      ],
+      "realmRoles": ["customer"]
+    }
+  ]
+}

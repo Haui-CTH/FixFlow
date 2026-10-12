@@ -1,0 +1,82 @@
+# DX-FSM CI Pipeline
+# Lint + Test cho mỗi PR
+
+name: CI
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main]
+
+jobs:
+  lint-python:
+    name: Lint Python Services
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Lint ticket-service
+        run: |
+          pip install ruff
+          ruff check services/ticket-service/app/
+
+      - name: Lint ai-service
+        run: |
+          pip install ruff
+          ruff check services/ai-service/app/
+
+  test-ticket-service:
+    name: Test Ticket Service
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: pip install -r services/ticket-service/requirements.txt
+      - run: pip install pytest
+      - run: cd services/ticket-service && python -m pytest tests/ -v --tb=short
+
+  test-ai-service:
+    name: Test AI Service
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: pip install -r services/ai-service/requirements.txt
+      - run: pip install pytest
+      - run: cd services/ai-service && python -m pytest tests/ -v --tb=short
+
+  lint-frontend:
+    name: Lint Frontend
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+          cache-dependency-path: app/package-lock.json
+      - run: cd app && npm ci
+      - run: cd app && npm run lint
+
+  test-frontend:
+    name: Test Frontend
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+          cache-dependency-path: app/package-lock.json
+      - run: cd app && npm ci
+      - run: cd app && npm run test:unit -- --run

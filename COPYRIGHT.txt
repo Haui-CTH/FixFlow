@@ -1,0 +1,20 @@
+DX-FSM – Field Service Management Platform
+Copyright (c) 2025 DX-FSM Team
+
+DX-FSM is built using the following open-source components:
+
+- Keycloak – Red Hat, Inc. (Apache License 2.0)
+- Apache APISIX – Apache Software Foundation (Apache License 2.0)
+- PostgreSQL – PostgreSQL Global Development Group (PostgreSQL License)
+- MinIO – MinIO, Inc. (AGPL-3.0)
+- n8n – n8n GmbH (Elastic License 2.0)
+- FastAPI – Sebastián Ramírez (MIT License)
+- Vue.js – Evan You & contributors (MIT License)
+- Ollama – Ollama, Inc. (MIT License)
+- Llama 3.2 – Meta Platforms, Inc. (Meta Llama Community License)
+
+All open-source components used in this project retain their respective
+copyright notices and licenses. The use of these components does not imply
+endorsement by their respective owners.
+
+For full license texts of all dependencies, see: DEPENDENCIES.md
