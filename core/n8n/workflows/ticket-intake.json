@@ -1,0 +1,104 @@
+{
+  "name": "DX-FSM: Ticket Intake",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "ticket-created",
+        "responseMode": "lastNode",
+        "options": {}
+      },
+      "id": "webhook-ticket-created",
+      "name": "Webhook: Ticket Created",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [250, 300]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{$env.AI_SERVICE_URL}}/classify",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "title",
+              "value": "={{$json.body.title}}"
+            },
+            {
+              "name": "description",
+              "value": "={{$json.body.description}}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "ai-classify",
+      "name": "AI: Classify Ticket",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 3,
+      "position": [500, 300]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{$env.TICKET_SERVICE_URL}}/tickets/ai-result",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "ticket_id",
+              "value": "={{$json.body.ticket_id}}"
+            },
+            {
+              "name": "ai_category",
+              "value": "={{$json.ai_category}}"
+            },
+            {
+              "name": "ai_priority",
+              "value": "={{$json.ai_priority}}"
+            },
+            {
+              "name": "ai_confidence",
+              "value": "={{$json.confidence}}"
+            },
+            {
+              "name": "ai_recommendation",
+              "value": "={{$json.recommendation}}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "save-ai-result",
+      "name": "Save AI Result",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 3,
+      "position": [750, 300]
+    },
+    {
+      "parameters": {
+        "expression": "={{$json.status}}",
+        "options": {}
+      },
+      "id": "respond-success",
+      "name": "Respond Success",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [1000, 300]
+    }
+  ],
+  "connections": {
+    "Webhook: Ticket Created": {
+      "main": [[{"node": "AI: Classify Ticket", "type": "main", "index": 0}]]
+    },
+    "AI: Classify Ticket": {
+      "main": [[{"node": "Save AI Result", "type": "main", "index": 0}]]
+    },
+    "Save AI Result": {
+      "main": [[{"node": "Respond Success", "type": "main", "index": 0}]]
+    }
+  },
+  "settings": {},
+  "staticData": null
+}

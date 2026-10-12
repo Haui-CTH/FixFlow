@@ -1,0 +1,232 @@
+# DX-FSM – Main Docker Compose
+# Licensed under Apache License 2.0
+# Mô hình Open-Core: 4 tầng
+
+services:
+  # ─── Tầng 1: Open-Core Infrastructure ────────────────────
+
+  postgres:
+    image: postgres:16-alpine
+    container_name: dxfsm-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: dxfsm
+      POSTGRES_USER: dxfsm
+      POSTGRES_PASSWORD: changeme_postgres_123
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./core/postgres/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U dxfsm -d dxfsm"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - dxfsm-net
+
+  keycloak:
+    image: quay.io/keycloak/keycloak:24.0
+    container_name: dxfsm-keycloak
+    restart: unless-stopped
+    command: start-dev --import-realm
+    environment:
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin123
+    volumes:
+      - ./core/keycloak/realm-export.json:/opt/keycloak/data/import/realm-export.json:ro
+    ports:
+      - "8080:8080"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health/ready"]
+      interval: 15s
+      timeout: 10s
+      retries: 5
+    networks:
+      - dxfsm-net
+
+  apisix:
+    image: apache/apisix:3.9-debian
+    container_name: dxfsm-apisix
+    restart: unless-stopped
+    depends_on:
+      - etcd
+    environment:
+      APISIX_ADMIN_KEY: ${APISIX_ADMIN_KEY:-edf8c0f0db0c4a9e8f7d6b5a4c3e2f10}
+    volumes:
+      - ./core/apisix/config.yaml:/usr/local/apisix/conf/config.yaml:ro
+      - ./core/apisix/routes.yaml:/usr/local/apisix/conf/routes.yaml:ro
+    ports:
+      - "9180:9180"  # Admin API
+      - "80:8080"    # Proxy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9180/apisix/admin/health"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+    networks:
+      - dxfsm-net
+
+  etcd:
+    image: apache/apisix-etcd:3.5-debian
+    container_name: dxfsm-etcd
+    restart: unless-stopped
+    environment:
+      ETCD_NAME: etcd
+      ETCD_ADVERTISE_CLIENT_URLS: http://0.0.0.0:2379
+      ETCD_LISTEN_CLIENT_URLS: http://0.0.0.0:2379
+    volumes:
+      - etcd_data:/etcd
+    networks:
+      - dxfsm-net
+
+  minio:
+    image: minio/server:RELEASE.2024-11-07T00-52-20Z
+    container_name: dxfsm-minio
+    restart: unless-stopped
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER: minioadmin
+      MINIO_ROOT_PASSWORD: changeme_minio_123
+    volumes:
+      - minio_data:/data
+      - ./core/minio/init.sh:/init.sh:ro
+    ports:
+      - "9000:9000"   # API
+      - "9001:9001"   # Console
+    healthcheck:
+      test: ["CMD", "mc", "ready", "local"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - dxfsm-net
+
+  n8n:
+    image: n8nio/n8n:latest
+    container_name: dxfsm-n8n
+    restart: unless-stopped
+    environment:
+      N8N_BASIC_AUTH_ACTIVE: "true"
+      N8N_BASIC_AUTH_USER: admin
+      N8N_BASIC_AUTH_PASSWORD: changeme_n8n_123
+      N8N_HOST: localhost
+      N8N_PORT: 5678
+      N8N_PROTOCOL: http
+      WEBHOOK_URL: http://localhost:5678/
+    volumes:
+      - n8n_data:/home/node/.n8n
+      - ./core/n8n/workflows:/workflows:ro
+    ports:
+      - "5678:5678"
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://localhost:5678/healthz"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+    networks:
+      - dxfsm-net
+
+  # ─── Tầng 2: H-P-D-I Services ─────────────────────────────
+
+  ticket-service:
+    build:
+      context: ./services/ticket-service
+      dockerfile: Dockerfile
+    container_name: dxfsm-ticket-service
+    restart: unless-stopped
+    environment:
+      DATABASE_URL: postgresql://dxfsm:changeme_postgres_123@postgres:5432/dxfsm
+      KEYCLOAK_URL: http://keycloak:8080
+      MINIO_ENDPOINT: minio:9000
+      MINIO_ACCESS_KEY: minioadmin
+      MINIO_SECRET_KEY: changeme_minio_123
+      AI_SERVICE_URL: http://ai-service:8002
+    ports:
+      - "8001:8001"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8001/health"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+    networks:
+      - dxfsm-net
+
+  ai-service:
+    build:
+      context: ./services/ai-service
+      dockerfile: Dockerfile
+    container_name: dxfsm-ai-service
+    restart: unless-stopped
+    environment:
+      OLLAMA_BASE_URL: http://host.docker.internal:11434
+      OLLAMA_MODEL: llama3.2:3b
+      ENABLE_AI: "true"
+    ports:
+      - "8002:8002"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8002/health"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+    networks:
+      - dxfsm-net
+
+  notification-service:
+    build:
+      context: ./services/notification-service
+      dockerfile: Dockerfile
+    container_name: dxfsm-notification-service
+    restart: unless-stopped
+    ports:
+      - "8003:8003"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8003/health"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+    networks:
+      - dxfsm-net
+
+  # ─── Tầng 3: User Interface ───────────────────────────────
+
+  app:
+    build:
+      context: ./app
+      dockerfile: Dockerfile
+    container_name: dxfsm-app
+    restart: unless-stopped
+    environment:
+      VITE_API_BASE_URL: /api/v1
+      VITE_KEYCLOAK_URL: http://localhost:8080
+      VITE_KEYCLOAK_REALM: dx-fsm
+      VITE_KEYCLOAK_CLIENT_ID: dx-fsm-frontend
+    ports:
+      - "3000:3000"
+    depends_on:
+      - apisix
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://localhost:3000"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+    networks:
+      - dxfsm-net
+
+# ─── Volumes ─────────────────────────────────────────────────
+
+volumes:
+  postgres_data:
+  etcd_data:
+  minio_data:
+  n8n_data:
+
+# ─── Network ────────────────────────────────────────────────
+
+networks:
+  dxfsm-net:
+    driver: bridge

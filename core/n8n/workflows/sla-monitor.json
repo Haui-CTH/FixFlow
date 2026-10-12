@@ -1,0 +1,96 @@
+{
+  "name": "DX-FSM: SLA Monitor",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": "onSchedule",
+        "cronExpression": "*/15 * * * *"
+      },
+      "id": "schedule-trigger",
+      "name": "Every 15 Minutes",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1,
+      "position": [250, 300]
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "={{$env.TICKET_SERVICE_URL}}/tickets/overdue",
+        "options": {}
+      },
+      "id": "fetch-overdue",
+      "name": "Fetch Overdue Tickets",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 3,
+      "position": [500, 300]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "overdue-count",
+              "leftValue": "={{$json.count}}",
+              "rightValue": 0,
+              "operator": "gt"
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "check-overdue",
+      "name": "Check Overdue Exists",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [750, 300]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{$env.NOTIFICATION_SERVICE_URL}}/notify-managers",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "title",
+              "value": "=?Cảnh báo: Tickets quá hạn SLA"
+            },
+            {
+              "name": "message",
+              "value": "=?{{$json.count}} tickets đang quá hạn SLA"
+            },
+            {
+              "name": "type",
+              "value": "sla_breach"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "alert-managers",
+      "name": "Alert Managers",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 3,
+      "position": [1000, 200]
+    }
+  ],
+  "connections": {
+    "Every 15 Minutes": {
+      "main": [[{"node": "Fetch Overdue Tickets", "type": "main", "index": 0}]]
+    },
+    "Fetch Overdue Tickets": {
+      "main": [[{"node": "Check Overdue Exists", "type": "main", "index": 0}]]
+    },
+    "Check Overdue Exists": {
+      "main": [[{"node": "Alert Managers", "type": "main", "index": 0}]]
+    }
+  },
+  "settings": {},
+  "staticData": null
+}
