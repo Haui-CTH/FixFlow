@@ -39,3 +39,7 @@ class Settings(BaseSettings):
 @lru_cache()
 def get_settings() -> Settings:
     return Settings()
+
+
+# Module-level singleton – dùng trực tiếp trong các file import
+settings = get_settings()
