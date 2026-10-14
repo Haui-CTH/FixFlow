@@ -9,6 +9,7 @@ from sqlalchemy import select, func, text
 from typing import Optional
 from uuid import UUID
 from pydantic import BaseModel, Field, field_validator
+from fastapi import Query
 
 from app.db.database import get_db
 from app.models.ticket import Ticket, TicketHistory
@@ -81,8 +82,8 @@ class TicketResponse(BaseModel):
 class TicketListResponse(BaseModel):
     items: list[TicketResponse]
     total: int
-    limit: int
-    offset: int
+    page_limit: int
+    page_offset: int
 
 
 class AIClassifyResponse(BaseModel):
@@ -171,22 +172,27 @@ async def list_tickets(
     customer_id: Optional[UUID] = None,
     q: Optional[str] = None,
     mine: bool = False,
-    limit: int = Field(default=20, le=100),
-    offset: int = 0,
+    limit: int = Query(default=20, le=100),
+    offset: int = Query(default=0, ge=0),
     sort_by: Optional[str] = "created_at",
     sort_dir: Optional[str] = "desc",
     db: AsyncSession = Depends(get_db),
 ):
+    # DB schema dùng ENUM cho status/priority, ORM dùng String → cast khi filter
+    from sqlalchemy import cast, Text
+    s = cast(Ticket.status, Text)
+    p = cast(Ticket.priority, Text)
+
     # Count total
     count_q = select(func.count(Ticket.id))
     query = select(Ticket)
 
     if status:
-        count_q = count_q.where(Ticket.status == status)
-        query = query.where(Ticket.status == status)
+        count_q = count_q.where(s == status)
+        query = query.where(s == status)
     if priority:
-        count_q = count_q.where(Ticket.priority == priority)
-        query = query.where(Ticket.priority == priority)
+        count_q = count_q.where(p == priority)
+        query = query.where(p == priority)
     if category:
         count_q = count_q.where(Ticket.category == category)
         query = query.where(Ticket.category == category)
@@ -224,25 +230,30 @@ async def list_tickets(
     return TicketListResponse(
         items=[_build_ticket_response(t) for t in tickets],
         total=total,
-        limit=limit,
-        offset=offset,
+        page_limit=limit,
+        page_offset=offset,
     )
 
 
 @router.get("/stats/summary")
 async def get_stats(db: AsyncSession = Depends(get_db)):
-    from sqlalchemy import func as f
+    from sqlalchemy import func as f, cast, Text
+
+    # DB schema dùng PostgreSQL ENUM cho status/priority nhưng ORM dùng String.
+    # cast() sang TEXT để PostgreSQL cho phép so sánh enum = text.
+    s = cast(Ticket.status, Text)
+    p = cast(Ticket.priority, Text)
 
     rows = await db.execute(
         select(
             f.count(Ticket.id).label("total"),
-            f.count(Ticket.id).filter(Ticket.status == "new").label("new_count"),
-            f.count(Ticket.id).filter(Ticket.status == "assigned").label("assigned_count"),
-            f.count(Ticket.id).filter(Ticket.status == "in_progress").label("in_progress_count"),
-            f.count(Ticket.id).filter(Ticket.status == "pending").label("pending_count"),
-            f.count(Ticket.id).filter(Ticket.status == "resolved").label("resolved_count"),
-            f.count(Ticket.id).filter(Ticket.status == "closed").label("closed_count"),
-            f.count(Ticket.id).filter(Ticket.priority == "critical").label("critical_count"),
+            f.count(Ticket.id).filter(s == "new").label("new_count"),
+            f.count(Ticket.id).filter(s == "assigned").label("assigned_count"),
+            f.count(Ticket.id).filter(s == "in_progress").label("in_progress_count"),
+            f.count(Ticket.id).filter(s == "pending").label("pending_count"),
+            f.count(Ticket.id).filter(s == "resolved").label("resolved_count"),
+            f.count(Ticket.id).filter(s == "closed").label("closed_count"),
+            f.count(Ticket.id).filter(p == "critical").label("critical_count"),
         )
     )
     row = rows.one()
@@ -258,16 +269,19 @@ async def get_stats(db: AsyncSession = Depends(get_db)):
         },
         "by_priority": {"critical": row.critical_count},
         "open": row.new_count + row.assigned_count + row.in_progress_count + row.pending_count,
-        "sla_compliance_pct": None,  # tính sau khi có resolved_at data
+        "sla_compliance_pct": None,
     }
 
 
 @router.get("/overdue")
 async def get_overdue(db: AsyncSession = Depends(get_db)):
+    from sqlalchemy import cast, Text
+    # DB status là enum nhưng ORM dùng String → cast sang TEXT
+    s = cast(Ticket.status, Text)
     rows = await db.execute(
         select(Ticket).where(
             Ticket.sla_deadline < datetime.now(timezone.utc),
-            Ticket.status.notin_(["resolved", "closed", "cancelled"]),
+            s.notin_(["resolved", "closed", "cancelled"]),
         ).order_by(Ticket.sla_deadline.asc())
     )
     tickets = rows.scalars().all()
