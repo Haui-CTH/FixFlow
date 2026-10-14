@@ -128,11 +128,11 @@ docker compose ps
 
 # 6. Truy cập các service
 # Frontend:      http://localhost:3000
-# Keycloak:       http://localhost:8080/auth (admin/admin123)
+# Keycloak:       http://localhost:8080/auth (admin/<DEMO_PASSWORD>)
 # API Docs:       http://localhost:8000/docs
 # n8n Workflow:  http://localhost:5678
 # MinIO Console:  http://localhost:9001 (minioadmin/minioadmin)
-# Grafana:       http://localhost:3001 (admin/admin123)
+# Grafana:       http://localhost:3001 (admin/<DEMO_PASSWORD>)
 ```
 
 ### Build từ source
@@ -160,10 +160,10 @@ uvicorn app.main:app --reload --port 8002
 
 | Role | Username | Password | Mô tả |
 |---|---|---|---|
-| Customer | `customer@haui.vn` | `customer123` | Tạo ticket, theo dõi trạng thái |
-| Technician | `technician@haui.vn` | `tech123` | Nhận, xử lý, đóng ticket |
-| Manager | `manager@haui.vn` | `manager123` | Dashboard, phân công thủ công |
-| Admin | `admin@haui.vn` | `admin123` | Quản trị Keycloak |
+| Customer | `customer@haui.vn` | `<DEMO_PASSWORD>` | Tạo ticket, theo dõi trạng thái |
+| Technician | `technician@haui.vn` | `<DEMO_PASSWORD>` | Nhận, xử lý, đóng ticket |
+| Manager | `manager@haui.vn` | `<DEMO_PASSWORD>` | Dashboard, phân công thủ công |
+| Admin | `admin@haui.vn` | `<DEMO_PASSWORD>` | Quản trị Keycloak |
 
 ---
 
