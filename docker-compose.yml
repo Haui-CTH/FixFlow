@@ -59,7 +59,7 @@ services:
     ports:
       - "80:80"       # Public API gateway (thay cho 8080 cũ)
     healthcheck:
-      test: ["CMD", "wget", "--spider", "-q", "http://localhost/health"]
+      test: ["CMD", "wget", "--spider", "-q", "http://127.0.0.1/health"]
       interval: 15s
       timeout: 5s
       retries: 3
@@ -133,10 +133,11 @@ services:
       postgres:
         condition: service_healthy
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8001/health"]
+      test: ["CMD-SHELL", "python -c \"import urllib.request; urllib.request.urlopen('http://localhost:8001/health')\""]
       interval: 15s
       timeout: 5s
       retries: 3
+      start_period: 15s
     networks:
       - dxfsm-net
 
@@ -153,10 +154,11 @@ services:
     ports:
       - "8002:8002"
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8002/health"]
+      test: ["CMD-SHELL", "python -c \"import urllib.request; urllib.request.urlopen('http://localhost:8002/health')\""]
       interval: 15s
       timeout: 5s
       retries: 3
+      start_period: 30s
     networks:
       - dxfsm-net
 
@@ -169,10 +171,11 @@ services:
     ports:
       - "8003:8003"
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8003/health"]
+      test: ["CMD-SHELL", "python -c \"import urllib.request; urllib.request.urlopen('http://localhost:8003/health')\""]
       interval: 15s
       timeout: 5s
       retries: 3
+      start_period: 15s
     networks:
       - dxfsm-net
 
