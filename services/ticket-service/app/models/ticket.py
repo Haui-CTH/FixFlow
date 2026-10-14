@@ -82,5 +82,5 @@ class TicketHistory(Base):
     action = Column(String(100), nullable=False)
     old_value = Column(Text)
     new_value = Column(Text)
-    metadata = Column(JSONB)
+    extra_data = Column(JSONB)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
