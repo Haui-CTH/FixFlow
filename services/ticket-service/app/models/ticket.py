@@ -4,7 +4,7 @@
 from datetime import datetime
 from uuid import UUID
 from typing import Optional
-from sqlalchemy import Column, String, Text, Enum, ForeignKey, DateTime, Numeric, Boolean, ARRAY
+from sqlalchemy import Column, String, Text, Enum, ForeignKey, DateTime, Numeric, Boolean, ARRAY, BigInteger
 from sqlalchemy.dialects.postgresql import UUID as PGUUID, JSONB
 from sqlalchemy.sql import func
 
@@ -67,7 +67,7 @@ class TicketAttachment(Base):
     user_id = Column(PGUUID(as_uuid=True), nullable=False)
     file_name = Column(String(255), nullable=False)
     file_path = Column(Text, nullable=False)
-    file_size = Column(PGUUID)
+    file_size = Column(BigInteger)
     mime_type = Column(String(100))
     minio_object_name = Column(String(500))
     created_at = Column(DateTime(timezone=True), server_default=func.now())
@@ -82,5 +82,5 @@ class TicketHistory(Base):
     action = Column(String(100), nullable=False)
     old_value = Column(Text)
     new_value = Column(Text)
-    metadata = Column(JSONB)
+    extra_data = Column(JSONB)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
