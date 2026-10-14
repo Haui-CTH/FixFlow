@@ -10,8 +10,13 @@ class Settings(BaseSettings):
     database_url: str = "postgresql://dxfsm:changeme@postgres:5432/dxfsm"
 
     # Keycloak
-    keycloak_url: str = "http://keycloak:8080"
+    # keycloak_public_url: dùng cho issuer verify (phải khớp với iss trong JWT)
+    # keycloak_internal_url: dùng để fetch JWKS từ Docker network
+    keycloak_public_url: str = "http://localhost:8080"
+    keycloak_internal_url: str = "http://keycloak:8080"
     keycloak_realm: str = "dx-fsm"
+    keycloak_client_id: str = "dx-fsm-api"
+    keycloak_client_secret: str = ""
 
     # MinIO
     minio_endpoint: str = "minio:9000"

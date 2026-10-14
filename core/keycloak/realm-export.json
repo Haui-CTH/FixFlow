@@ -20,7 +20,13 @@
       "serviceAccountsEnabled": true,
       "authorizationServicesEnabled": false,
       "redirectUris": [],
-      "webOrigins": []
+      "webOrigins": [],
+      "credentials": [
+        {
+          "type": "secret",
+          "value": "dxfsm-api-secret-2026"
+        }
+      ]
     },
     {
       "clientId": "dx-fsm-frontend",
