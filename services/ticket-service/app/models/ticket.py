@@ -4,11 +4,41 @@
 from datetime import datetime
 from uuid import UUID
 from typing import Optional
-from sqlalchemy import Column, String, Text, Enum, ForeignKey, DateTime, Numeric, Boolean, ARRAY, BigInteger
+import enum
+from sqlalchemy import Column, String, Text, ForeignKey, DateTime, Numeric, Boolean, ARRAY, BigInteger, Enum as SQLAlchemyEnum
 from sqlalchemy.dialects.postgresql import UUID as PGUUID, JSONB
 from sqlalchemy.sql import func
 
 from app.db.database import Base
+
+
+# ─── Python enums khớp với PostgreSQL enum types ────────────────────────
+# DB schema dùng ENUM types; ORM dùng SQLAlchemyEnum để SQLAlchemy cast
+# Python str → khi INSERT, sinh ra "category"::ticket_category rõ ràng.
+
+class TicketStatusEnum(str, enum.Enum):
+    new = "new"
+    assigned = "assigned"
+    in_progress = "in_progress"
+    pending = "pending"
+    resolved = "resolved"
+    closed = "closed"
+    cancelled = "cancelled"
+
+
+class TicketPriorityEnum(str, enum.Enum):
+    low = "low"
+    medium = "medium"
+    high = "high"
+    critical = "critical"
+
+
+class TicketCategoryEnum(str, enum.Enum):
+    hardware = "hardware"
+    software = "software"
+    network = "network"
+    electrical = "electrical"
+    other = "other"
 
 
 class Ticket(Base):
@@ -18,9 +48,21 @@ class Ticket(Base):
     ticket_number = Column(String(20), unique=True, nullable=False)
     title = Column(String(500), nullable=False)
     description = Column(Text)
-    category = Column(String(50), nullable=False, default="other")
-    priority = Column(String(20), nullable=False, default="medium")
-    status = Column(String(50), nullable=False, default="new")
+    category = Column(
+        SQLAlchemyEnum(TicketCategoryEnum, name="ticket_category", create_type=False),
+        nullable=False,
+        default=TicketCategoryEnum.other,
+    )
+    priority = Column(
+        SQLAlchemyEnum(TicketPriorityEnum, name="ticket_priority", create_type=False),
+        nullable=False,
+        default=TicketPriorityEnum.medium,
+    )
+    status = Column(
+        SQLAlchemyEnum(TicketStatusEnum, name="ticket_status", create_type=False),
+        nullable=False,
+        default=TicketStatusEnum.new,
+    )
 
     customer_id = Column(PGUUID(as_uuid=True), nullable=False)
     customer_name = Column(String(255))

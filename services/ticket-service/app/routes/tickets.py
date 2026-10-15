@@ -54,6 +54,84 @@ class TicketCreate(BaseModel):
         return v.lower()
 
 
+class TicketUpdate(BaseModel):
+    """Body cho PATCH /tickets/{id} — chỉ field cần update."""
+    status: Optional[str] = None
+    technician_id: Optional[UUID] = None
+    technician_name: Optional[str] = None
+    description: Optional[str] = None
+    priority: Optional[str] = None
+    category: Optional[str] = None
+
+    @field_validator("status")
+    @classmethod
+    def validate_status(cls, v: Optional[str]) -> Optional[str]:
+        if v is None:
+            return v
+        valid = {"new", "assigned", "in_progress", "pending", "resolved", "closed", "cancelled"}
+        if v.lower() not in valid:
+            raise ValueError(f"status must be one of {valid}")
+        return v.lower()
+
+    @field_validator("priority")
+    @classmethod
+    def validate_priority_update(cls, v: Optional[str]) -> Optional[str]:
+        if v is None:
+            return v
+        if v.lower() not in VALID_PRIORITIES:
+            raise ValueError(f"priority must be one of {VALID_PRIORITIES}")
+        return v.lower()
+
+    @field_validator("category")
+    @classmethod
+    def validate_category_update(cls, v: Optional[str]) -> Optional[str]:
+        if v is None:
+            return v
+        if v.lower() not in VALID_CATEGORIES:
+            raise ValueError(f"category must be one of {VALID_CATEGORIES}")
+        return v.lower()
+
+
+# Allowed status transitions + required role
+STATUS_TRANSITIONS: dict[str, dict] = {
+    "new": {
+        "allowed_next": {"assigned", "cancelled"},
+        "requires_technician": True,
+        "requires_role": None,
+    },
+    "assigned": {
+        "allowed_next": {"in_progress", "cancelled"},
+        "requires_technician": False,
+        "requires_role": None,
+    },
+    "in_progress": {
+        "allowed_next": {"pending", "resolved"},
+        "requires_technician": False,
+        "requires_role": None,
+    },
+    "pending": {
+        "allowed_next": {"in_progress", "resolved", "cancelled"},
+        "requires_technician": False,
+        "requires_role": None,
+    },
+    "resolved": {
+        "allowed_next": {"closed", "in_progress"},  # có thể reopen
+        "requires_technician": False,
+        "requires_role": {"manager", "admin"},
+    },
+    "closed": {
+        "allowed_next": set(),  # terminal
+        "requires_technician": False,
+        "requires_role": None,
+    },
+    "cancelled": {
+        "allowed_next": set(),  # terminal
+        "requires_technician": False,
+        "requires_role": None,
+    },
+}
+
+
 class TicketResponse(BaseModel):
     id: str
     ticket_number: str
