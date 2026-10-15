@@ -14,6 +14,7 @@ from fastapi import Query
 from app.db.database import get_db
 from app.models.ticket import Ticket, TicketHistory
 from app.config import get_settings
+from app.core.security import get_current_user, TokenUser
 
 settings = get_settings()
 router = APIRouter()
@@ -165,6 +166,7 @@ async def _dispatch_n8n_webhook(ticket_id: UUID, ticket_number: str):
 
 @router.get("", response_model=TicketListResponse)
 async def list_tickets(
+    user: TokenUser = Depends(get_current_user),
     status: Optional[str] = None,
     priority: Optional[str] = None,
     category: Optional[str] = None,
@@ -236,7 +238,10 @@ async def list_tickets(
 
 
 @router.get("/stats/summary")
-async def get_stats(db: AsyncSession = Depends(get_db)):
+async def get_stats(
+    user: TokenUser = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db),
+):
     from sqlalchemy import func as f, cast, Text
 
     # DB schema dùng PostgreSQL ENUM cho status/priority nhưng ORM dùng String.
@@ -274,7 +279,10 @@ async def get_stats(db: AsyncSession = Depends(get_db)):
 
 
 @router.get("/overdue")
-async def get_overdue(db: AsyncSession = Depends(get_db)):
+async def get_overdue(
+    user: TokenUser = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db),
+):
     from sqlalchemy import cast, Text
     # DB status là enum nhưng ORM dùng String → cast sang TEXT
     s = cast(Ticket.status, Text)
@@ -289,7 +297,11 @@ async def get_overdue(db: AsyncSession = Depends(get_db)):
 
 
 @router.get("/{ticket_id}", response_model=TicketResponse)
-async def get_ticket(ticket_id: UUID, db: AsyncSession = Depends(get_db)):
+async def get_ticket(
+    ticket_id: UUID,
+    db: AsyncSession = Depends(get_db),
+    user: TokenUser = Depends(get_current_user),
+):
     result = await db.execute(select(Ticket).where(Ticket.id == ticket_id))
     ticket = result.scalar_one_or_none()
     if not ticket:
@@ -301,6 +313,7 @@ async def get_ticket(ticket_id: UUID, db: AsyncSession = Depends(get_db)):
 async def create_ticket(
     ticket_data: TicketCreate,
     background_tasks: BackgroundTasks,
+    user: TokenUser = Depends(get_current_user),
     db: AsyncSession = Depends(get_db),
 ):
     # 1. Generate ticket number
