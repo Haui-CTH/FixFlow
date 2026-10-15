@@ -194,3 +194,78 @@ async def list_comments(
         _build_comment_response(c, user_name=name_map.get(c.user_id))
         for c in comments
     ]
+
+
+# ─── DELETE /tickets/{id}/comments/{comment_id} ────────────────────────────
+
+
+@router.delete(
+    "/tickets/{ticket_id}/comments/{comment_id}",
+    status_code=204,
+)
+async def delete_comment(
+    ticket_id: UUID,
+    comment_id: UUID,
+    db: AsyncSession = Depends(get_db),
+    user: TokenUser = Depends(get_current_user),
+):
+    """
+    Delete a comment (soft semantics: xóa row nhưng vẫn ghi history).
+
+    Permission:
+    - Owner (người viết) OR
+    - Manager/admin
+    - Technician không phải owner → 403
+    - Customer không phải owner → 403
+    """
+    # 1. Fetch comment
+    result = await db.execute(
+        select(TicketComment).where(
+            TicketComment.id == comment_id,
+            TicketComment.ticket_id == ticket_id,
+        )
+    )
+    comment = result.scalar_one_or_none()
+    if not comment:
+        raise HTTPException(status_code=404, detail="Comment not found")
+
+    # 2. Resolve actor
+    actor_id: Optional[UUID] = None
+    if user.sub:
+        result = await db.execute(
+            select(User.id).where(User.keycloak_id == user.sub)
+        )
+        actor_id = result.scalar_one_or_none()
+        if actor_id is None:
+            result = await db.execute(
+                select(User.id).where(User.username == user.preferred_username)
+            )
+            actor_id = result.scalar_one_or_none()
+
+    # 3. Permission check
+    is_owner = actor_id is not None and comment.user_id == actor_id
+    is_admin_or_manager = user.role in ("admin", "manager")
+    if not (is_owner or is_admin_or_manager):
+        raise HTTPException(
+            status_code=403,
+            detail="Only comment author or manager/admin can delete",
+        )
+
+    # 4. Write history
+    history = TicketHistory(
+        ticket_id=ticket_id,
+        user_id=actor_id,
+        action="comment_removed",
+        old_value=(
+            f"Internal comment ({len(comment.content)} chars)"
+            if comment.is_internal
+            else f"Comment ({len(comment.content)} chars)"
+        ),
+    )
+    db.add(history)
+
+    # 5. Delete
+    await db.delete(comment)
+    await db.commit()
+
+    return None
