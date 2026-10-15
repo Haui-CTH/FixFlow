@@ -24,7 +24,7 @@
       "credentials": [
         {
           "type": "secret",
-          "value": "dxfsm-api-secret-2026"
+          "value": "${KEYCLOAK_CLIENT_SECRET:?required - Keycloak auto-generates one on import; set this from your Keycloak admin UI}"
         }
       ]
     },
