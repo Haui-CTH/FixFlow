@@ -15,6 +15,17 @@
   --success: #10b981;
   --warning: #f59e0b;
   --danger: #ef4444;
+
+  /* F5.5: Responsive breakpoints (for JS usage) */
+  --bp-sm: 480px;
+  --bp-md: 768px;
+  --bp-lg: 1024px;
+  --bp-xl: 1280px;
+}
+
+html {
+  /* Prevent layout shift from scrollbar appearing/disappearing */
+  scrollbar-gutter: stable;
 }
 
 body {
@@ -22,4 +33,44 @@ body {
   background: var(--bg);
   color: var(--text-primary);
   line-height: 1.5;
+  /* Smooth font on iOS */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  /* Prevent text zoom on iOS orientation change */
+  -webkit-text-size-adjust: 100%;
+}
+
+/* F5.5: Mobile base font size slightly smaller */
+@media (max-width: 768px) {
+  html {
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  html {
+    font-size: 13px;
+  }
+}
+
+/* F5.5: Reduce motion respect */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* F5.5: Touch target minimum size for mobile */
+@media (max-width: 768px) {
+  button, a {
+    min-height: 2.5rem;
+  }
+
+  /* Inputs/textarea comfortable on mobile */
+  input, textarea, select {
+    font-size: 16px; /* prevent iOS zoom on focus */
+  }
 }

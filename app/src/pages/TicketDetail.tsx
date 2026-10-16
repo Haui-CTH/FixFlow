@@ -1,9 +1,11 @@
-// DX-FSM Ticket Detail Page
+// SPDX-License-Identifier: Apache-2.0
+// DX-FSM Ticket Detail Page (F5.5: responsive)
 import { useParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { ticketApi } from '../lib/api';
 import { NotesPanel } from '../components/Notes/NotesPanel';
 import { HistoryTimeline } from '../components/History/HistoryTimeline';
+import styles from './TicketDetail.module.css';
 
 export default function TicketDetail() {
   const { id } = useParams<{ id: string }>();
@@ -14,21 +16,42 @@ export default function TicketDetail() {
     enabled: !!id,
   });
 
-  if (isLoading) return <p>Đang tải...</p>;
-  if (!ticket) return <p>Ticket không tìm thấy</p>;
+  if (isLoading) return <p className={styles.loading}>Đang tải...</p>;
+  if (!ticket) return <p className={styles.error}>Ticket không tìm thấy</p>;
 
   return (
-    <div>
-      <h1>{ticket.ticket_number}</h1>
-      <div style={{ marginTop: '1rem', background: 'white', padding: '1.5rem', borderRadius: '0.5rem', border: '1px solid #e5e7eb' }}>
-        <h2 style={{ fontSize: '1.25rem', fontWeight: 600 }}>{ticket.title}</h2>
-        <p style={{ marginTop: '0.5rem', color: '#6b7280' }}>{ticket.description || 'Không có mô tả'}</p>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1rem', marginTop: '1.5rem' }}>
-          <div><strong>Trạng thái:</strong> {ticket.status}</div>
-          <div><strong>Ưu tiên:</strong> {ticket.priority}</div>
-          <div><strong>Danh mục:</strong> {ticket.category}</div>
-          <div><strong>KTV:</strong> {ticket.technician_name || 'Chưa giao'}</div>
-          <div><strong>Khách hàng:</strong> {ticket.customer_name || '-'}</div>
+    <div className={styles.page}>
+      <h1 className={styles.title}>{ticket.ticket_number}</h1>
+      <div className={styles.card}>
+        <h2 className={styles.heading}>{ticket.title}</h2>
+        <p className={styles.description}>
+          {ticket.description || 'Không có mô tả'}
+        </p>
+        <div className={styles.metaGrid}>
+          <div className={styles.metaItem}>
+            <div className={styles.metaLabel}>Trạng thái</div>
+            <div className={styles.metaValue}>{ticket.status}</div>
+          </div>
+          <div className={styles.metaItem}>
+            <div className={styles.metaLabel}>Ưu tiên</div>
+            <div className={styles.metaValue}>{ticket.priority}</div>
+          </div>
+          <div className={styles.metaItem}>
+            <div className={styles.metaLabel}>Danh mục</div>
+            <div className={styles.metaValue}>{ticket.category}</div>
+          </div>
+          <div className={styles.metaItem}>
+            <div className={styles.metaLabel}>KTV</div>
+            <div className={styles.metaValue}>
+              {ticket.technician_name || 'Chưa giao'}
+            </div>
+          </div>
+          <div className={styles.metaItem}>
+            <div className={styles.metaLabel}>Khách hàng</div>
+            <div className={styles.metaValue}>
+              {ticket.customer_name || '-'}
+            </div>
+          </div>
         </div>
       </div>
 
