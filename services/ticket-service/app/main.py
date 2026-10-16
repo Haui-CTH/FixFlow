@@ -14,6 +14,7 @@ from app.db.database import init_db
 from app.routes import tickets, users, auth, health, comments, attachments, admin, notes, history, metrics
 from app.services.sla_monitor import sla_monitor_loop, SCAN_INTERVAL_SEC
 from app.services.outbox_dispatcher import outbox_worker_loop, WORKER_INTERVAL_SEC
+from app.services.alert_dispatcher import alert_worker_loop, WORKER_INTERVAL_SEC as ALERT_INTERVAL_SEC
 
 logger = logging.getLogger(__name__)
 
@@ -41,13 +42,23 @@ async def lifespan(app: FastAPI):
     app.state.outbox_task = outbox_task
     logger.info(f"Outbox worker scheduled (interval={WORKER_INTERVAL_SEC}s)")
 
+    # Start Alert dispatcher (B5.3)
+    alert_stop = asyncio.Event()
+    alert_task = asyncio.create_task(
+        alert_worker_loop(alert_stop)
+    )
+    app.state.alert_stop = alert_stop
+    app.state.alert_task = alert_task
+    logger.info(f"Alert dispatcher scheduled (interval={ALERT_INTERVAL_SEC}s)")
+
     try:
         yield
     finally:
         # Graceful shutdown
         sla_stop.set()
         outbox_stop.set()
-        for task in (sla_task, outbox_task):
+        alert_stop.set()
+        for task in (sla_task, outbox_task, alert_task):
             try:
                 await asyncio.wait_for(task, timeout=5.0)
             except asyncio.TimeoutError:

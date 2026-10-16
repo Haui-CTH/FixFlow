@@ -153,12 +153,15 @@ CREATE TABLE outbox_events (
   max_attempts INTEGER NOT NULL DEFAULT 5,
   last_error TEXT,
   next_retry_at TIMESTAMP WITH TIME ZONE,
+  last_alerted_at TIMESTAMP WITH TIME ZONE,
   created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
   sent_at TIMESTAMP WITH TIME ZONE,
   updated_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW()
 );
 
 CREATE INDEX ix_outbox_status_next_retry ON outbox_events(status, next_retry_at);
+CREATE INDEX ix_outbox_failed_unalerted ON outbox_events(status, last_alerted_at)
+  WHERE status = 'failed' AND last_alerted_at IS NULL;
 
 -- Notifications
 CREATE TABLE notifications (

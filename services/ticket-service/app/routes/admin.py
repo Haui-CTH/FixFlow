@@ -16,6 +16,7 @@ from app.db.database import get_db
 from app.models.outbox import OutboxEvent
 from app.services.sla_monitor import run_sla_check_once
 from app.services.outbox_dispatcher import run_outbox_worker_once
+from app.services.alert_dispatcher import trigger_alert_scan_now
 
 router = APIRouter()
 
@@ -25,6 +26,13 @@ class SLACheckResponse(BaseModel):
     breached: int
     dispatched: int
     errors: int
+
+
+class AlertScanResponse(BaseModel):
+    alerted: int
+    started_at: str
+    finished_at: str
+    webhook_configured: bool
 
 
 class OutboxEventResponse(BaseModel):
@@ -126,3 +134,24 @@ async def list_outbox_events(
         )
         for e in events
     ]
+
+
+# ─── POST /admin/alert/scan (B5.3) ──────────────────────────────────────
+
+
+@router.post("/admin/alert/scan", response_model=AlertScanResponse)
+async def trigger_alert_scan(user: TokenUser = Depends(get_current_user)):
+    """
+    Chạy alert scan thủ công cho failed outbox events. Manager/admin only.
+
+    B5.3: Quét outbox_events status='failed' chưa alert → POST tới
+    ALERT_WEBHOOK_URL. Idempotent qua last_alerted_at.
+    """
+    if user.role not in ("admin", "manager"):
+        raise HTTPException(
+            status_code=403,
+            detail="Only admin or manager can trigger alert scan",
+        )
+
+    summary = await trigger_alert_scan_now()
+    return AlertScanResponse(**summary)

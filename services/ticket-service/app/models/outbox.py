@@ -42,6 +42,8 @@ class OutboxEvent(Base):
 
     created_at = Column(DateTime(timezone=True), nullable=False, default=lambda: datetime.now(timezone.utc))
     sent_at = Column(DateTime(timezone=True), nullable=True)
+    # B5.3: đánh dấu alert đã gửi (idempotent — chỉ alert 1 lần/event)
+    last_alerted_at = Column(DateTime(timezone=True), nullable=True)
     updated_at = Column(
         DateTime(timezone=True),
         nullable=False,
