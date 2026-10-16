@@ -8,7 +8,7 @@ from functools import lru_cache
 class Settings(BaseSettings):
     # Service
     service_name: str = "DX-FSM Notification Service"
-    service_version: str = "1.0.0"
+    service_version: str = "1.2.0"
 
     # SMTP (email channel)
     smtp_host: str = "mailhog"          # mailhog for local dev

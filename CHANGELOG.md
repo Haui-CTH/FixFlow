@@ -7,6 +7,60 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [v1.2.0-sprint5] – 2026-01-16
+
+Sprint 5 — notification service, outbox dead-letter alerting, security hardening.
+
+### Added
+
+- **Notification Service (B5.1)** — multi-channel provider
+  - `POST /notify` — email/sms/push dispatch với channel routing
+  - Channels: email (aiosmtplib, production-ready), sms (stub), push (stub)
+  - Service-to-service auth: Bearer `SERVICE_TOKEN`
+  - Validation: 1-200 chars title, 1-5000 chars message, max 3 channels
+  - 25+ tests covering routing, validation, status aggregation, auth
+  - Local dev: mailhog SMTP (port 1025, Web UI 8025)
+
+- **Outbox Dead-Letter Alerting (B5.3)** — webhook for failed events
+  - Background worker scan mỗi 60s
+  - POST failed events tới `ALERT_WEBHOOK_URL` (Slack/PagerDuty/email gateway)
+  - Idempotent qua `last_alerted_at` column
+  - `POST /admin/alert/scan` — manual trigger (manager/admin only)
+  - 17 tests covering scan, send, retry, idempotency
+  - Migration: `002_outbox_alerting.sql` (idempotent)
+
+### Security
+
+- **Secrets Hardening (B5.6)** — no more hardcoded passwords
+  - All passwords qua env var với `${VAR:?must be set in .env}` syntax
+  - Removed from: `docker-compose.yml`, `core/keycloak/realm-export.json`
+  - `.env.example` rewritten với Security Notice + rotation policy
+  - Rotation policy: 90 days (passwords), 30 days (API keys), 180 days (svc accounts)
+  - Updated `docs/SECURITY.md` với setup guide
+
+### Changed
+
+- **docker-compose.yml**
+  - Added `mailhog` service (SMTP 1025, Web UI 8025)
+  - Added 9 notification env vars (SMTP/SMS/PUSH/SERVICE_TOKEN)
+  - Added 2 alert env vars (ALERT_WEBHOOK_URL, ALERT_INTERVAL_SEC)
+
+- **Database schema** — `outbox_events`:
+  - Added `last_alerted_at TIMESTAMP WITH TIME ZONE` column
+  - Added partial index `ix_outbox_failed_unalerted`
+
+- **Version bumps**:
+  - ticket-service: 1.1.0 → 1.2.0
+  - ai-service: 1.1.0 → 1.2.0
+  - notification-service: 1.0.0 → 1.2.0
+
+### Documentation
+
+- `RELEASE-NOTES-v1.2.0-sprint5.md` — full release notes với migration guide
+- `docs/sprint/backend-sprint5.md` — sprint planning
+- `docs/SECURITY.md` — rotation policy + setup steps
+- `.env.example` — security notice + all new env vars
+
 ## [v1.1.0-sprint4] – 2026-01-15
 
 Sprint 4 — ticket workflow completion, audit trail, outbox pattern, test coverage, dashboard metrics.
