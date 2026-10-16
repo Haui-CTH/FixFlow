@@ -79,6 +79,28 @@ trong `.env` (xem `.env.example`).
 
 ## 4. Rotation
 
+### 4.0. Quick rotation (4 services trong 1 lệnh)
+
+```bash
+# Xem trước changes
+./scripts/rotate-secrets.sh --dry-run
+
+# Rotate tất cả (postgres, keycloak, minio, n8n)
+./scripts/rotate-secrets.sh
+
+# Rotate 1 service
+./scripts/rotate-secrets.sh postgres
+./scripts/rotate-secrets.sh keycloak
+./scripts/rotate-secrets.sh minio
+./scripts/rotate-secrets.sh n8n
+```
+
+Script tự động:
+- Generate 4 passwords mới qua `openssl rand -base64 32`
+- Backup `.env` → `.env.bak.<timestamp>`
+- Replace values, preserve comments
+- In next steps (Keycloak update, restart services)
+
 ### 4.1. Keycloak client secret (`dx-fsm-api`)
 
 ```bash
@@ -117,6 +139,19 @@ echo "POSTGRES_PASSWORD=NEW_PASSWORD" >> .env
 # 3. Update DATABASE_URL
 # 4. Restart
 ```
+
+---
+
+### 4.4. Rotation log
+
+Ghi lại mỗi lần rotate:
+
+| Date | Service | Reason | Performed by |
+|---|---|---|---|
+| YYYY-MM-DD | Initial setup | Sprint 5 bootstrap | truong-newbie |
+| | | | |
+| | | | |
+| | | | |
 
 ---
 
