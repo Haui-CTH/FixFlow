@@ -50,18 +50,28 @@ curl -s "http://localhost:8080/admin/realms/dx-fsm/clients/dx-fsm-api/client-sec
 ## 3. Demo Credentials (LOCAL DEV ONLY)
 
 Các credentials dưới đây dùng trong docs/README là **placeholder**,
-không phải real production secrets. KHÔNG dùng cho prod.
+KHÔNG phải real passwords. Cấu hình local dev dùng giá trị khác
+trong `.env` (xem `.env.example`).
 
-| Username | Password | Role | File |
+| Username | Password (in docs) | Role | Real password |
 |---|---|---|---|
-| `admin` | `admin123` | admin | seed-data |
-| `manager` | `manager123` | manager | seed-data |
-| `technician` | `tech123` | technician | seed-data |
-| `customer` | `customer123` | customer | seed-data |
+| `admin` | `admin123` (placeholder) | admin | Set in `.env` KEYCLOAK_ADMIN_PASSWORD |
+| `manager` | `manager123` (placeholder) | manager | Set in Keycloak admin |
+| `technician` | `tech123` (placeholder) | technician | Set in Keycloak admin |
+| `customer` | `customer123` (placeholder) | customer | Set in Keycloak admin |
 
-> **Trước khi deploy production**:
-> 1. Đổi tất cả password này trong Keycloak admin
-> 2. Rotate client secret cho `dx-fsm-api`
+> **Setup lần đầu** (xem CONTRIBUTING.md):
+> 1. Copy `.env.example` → `.env`
+> 2. Generate passwords: `openssl rand -base64 32`
+> 3. Set `KEYCLOAK_ADMIN_PASSWORD` trong `.env`
+> 4. `docker compose up -d keycloak` sẽ import realm với
+>    `temporary: true` → Keycloak force change password on first login
+
+> **Rotation policy:**
+> - Password: mỗi **90 ngày**
+> - API key: mỗi **30 ngày**
+> - Service account: mỗi **180 ngày**
+> - Ngay sau khi có nghi ngờ compromise
 > 3. Update `.env` với secret mới
 > 4. Xóa file `core/keycloak/realm-export.json` khỏi git (nếu có)
 
