@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { ticketApi } from '../lib/api';
 import { NotesPanel } from '../components/Notes/NotesPanel';
+import { HistoryTimeline } from '../components/History/HistoryTimeline';
 
 export default function TicketDetail() {
   const { id } = useParams<{ id: string }>();
@@ -33,6 +34,9 @@ export default function TicketDetail() {
 
       {/* F5.3: Internal notes panel (staff only, auto-hidden for customer) */}
       {id && <NotesPanel ticketId={id} />}
+
+      {/* F5.4: History timeline (visible to all roles) */}
+      {id && <HistoryTimeline ticketId={id} />}
     </div>
   );
 }
