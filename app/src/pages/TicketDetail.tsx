@@ -2,6 +2,7 @@
 import { useParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { ticketApi } from '../lib/api';
+import { NotesPanel } from '../components/Notes/NotesPanel';
 
 export default function TicketDetail() {
   const { id } = useParams<{ id: string }>();
@@ -29,6 +30,9 @@ export default function TicketDetail() {
           <div><strong>Khách hàng:</strong> {ticket.customer_name || '-'}</div>
         </div>
       </div>
+
+      {/* F5.3: Internal notes panel (staff only, auto-hidden for customer) */}
+      {id && <NotesPanel ticketId={id} />}
     </div>
   );
 }
