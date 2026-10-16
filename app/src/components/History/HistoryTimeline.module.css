@@ -1,0 +1,199 @@
+/* SPDX-License-Identifier: Apache-2.0
+ * DX-FSM HistoryTimeline Styles (F5.4)
+ */
+
+.panel {
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.5rem;
+  padding: 1.25rem;
+  margin-top: 1.5rem;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.25rem;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.title {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #111827;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.titleIcon {
+  font-size: 1.25rem;
+}
+
+.count {
+  font-size: 0.875rem;
+  color: #6b7280;
+  font-weight: normal;
+  margin-left: 0.25rem;
+}
+
+/* ─── Timeline ─────────────────────────────────────── */
+
+.timeline {
+  position: relative;
+  padding-left: 2rem;
+}
+
+.timeline::before {
+  content: '';
+  position: absolute;
+  left: 0.6875rem;
+  top: 0.5rem;
+  bottom: 0.5rem;
+  width: 2px;
+  background: linear-gradient(to bottom, #e5e7eb 0%, #e5e7eb 100%);
+  border-radius: 1px;
+}
+
+.event {
+  position: relative;
+  padding: 0.625rem 0 0.625rem 1.25rem;
+  margin-bottom: 0.5rem;
+}
+
+.event:last-child {
+  margin-bottom: 0;
+}
+
+.iconWrap {
+  position: absolute;
+  left: -1.5rem;
+  top: 0.625rem;
+  width: 1.5rem;
+  height: 1.5rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 0.75rem;
+  font-weight: 700;
+  border: 2px solid white;
+  box-shadow: 0 0 0 1px #e5e7eb;
+  flex-shrink: 0;
+  z-index: 1;
+}
+
+.eventBody {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.eventText {
+  font-size: 0.875rem;
+  color: #111827;
+  line-height: 1.5;
+  margin: 0;
+}
+
+.eventTextMuted {
+  color: #6b7280;
+  font-style: italic;
+}
+
+.eventMeta {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.75rem;
+  color: #6b7280;
+}
+
+.eventTime {
+  cursor: help;
+  text-decoration: underline dotted;
+  text-underline-offset: 2px;
+}
+
+.eventAction {
+  display: inline-block;
+  padding: 0.0625rem 0.375rem;
+  background: #f3f4f6;
+  color: #4b5563;
+  font-size: 0.6875rem;
+  font-weight: 500;
+  border-radius: 0.25rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.eventValue {
+  display: inline-block;
+  padding: 0.0625rem 0.375rem;
+  background: #fef3c7;
+  color: #92400e;
+  font-size: 0.75rem;
+  border-radius: 0.25rem;
+  font-family: ui-monospace, 'SF Mono', monospace;
+}
+
+.eventArrow {
+  color: #9ca3af;
+  font-weight: 700;
+}
+
+/* ─── Empty / loading / error ─────────────────────── */
+
+.empty {
+  text-align: center;
+  padding: 1.5rem 1rem;
+  color: #9ca3af;
+  font-size: 0.875rem;
+}
+
+.center {
+  text-align: center;
+  padding: 1.5rem 1rem;
+  color: #6b7280;
+}
+
+.spinner {
+  display: inline-block;
+  width: 1.5rem;
+  height: 1.5rem;
+  border: 2px solid #e5e7eb;
+  border-top-color: #3b82f6;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 0.5rem;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.errorBox {
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  color: #b91c1c;
+  padding: 0.625rem 0.75rem;
+  border-radius: 0.375rem;
+  font-size: 0.875rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.errorBox button {
+  background: white;
+  border: 1px solid #fecaca;
+  color: #b91c1c;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.25rem;
+  cursor: pointer;
+  font-size: 0.75rem;
+}
