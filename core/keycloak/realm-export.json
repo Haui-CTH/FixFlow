@@ -71,8 +71,8 @@
       "credentials": [
         {
           "type": "password",
-          "value": "admin123",
-          "temporary": false
+          "value": "CHANGE_ME_admin_32_chars",
+          "temporary": true
         }
       ],
       "realmRoles": ["admin"]
@@ -123,8 +123,8 @@
       "credentials": [
         {
           "type": "password",
-          "value": "customer123",
-          "temporary": false
+          "value": "CHANGE_ME_customer_32_chars",
+          "temporary": true
         }
       ],
       "realmRoles": ["customer"]
