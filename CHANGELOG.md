@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [v1.2.0-sprint5] – 2026-01-16
 
-Sprint 5 — notification service, outbox dead-letter alerting, security hardening, E2E tests, secrets rotation.
+Sprint 5 — notification service, outbox dead-letter alerting, security hardening, E2E tests, secrets rotation, **frontend integration (Dashboard/Notifications/Notes/History/Responsive/Error UX)**.
 
 ### Added
 
@@ -28,6 +28,67 @@ Sprint 5 — notification service, outbox dead-letter alerting, security hardeni
   - `POST /admin/alert/scan` — manual trigger (manager/admin only)
   - 17 tests covering scan, send, retry, idempotency
   - Migration: `002_outbox_alerting.sql` (idempotent)
+
+- **Dashboard wired to `/admin/metrics` (F5.1)**
+  - `metricsApi.get(window_days=30)` — full KPI payload
+  - 4 MetricCard components: tickets / SLA breach rate / open / avg resolution
+  - 4 Panel components: SLA breakdown, status distribution, outbox health,
+    top assignees
+  - Auto-refresh 60s, manual refresh button
+  - 30 tests (MetricCard, OutboxPanel, SLAPanel, DistributionBar, AssigneeTable)
+
+- **Notifications center page (F5.2)**
+  - `/notifications` route với sidebar nav link
+  - Mock data store (6 mẫu) — BE chưa có list endpoint
+  - Filter tabs: All / Unread (với count badge)
+  - Mark single as read (optimistic update + rollback)
+  - Mark all as read
+  - Click row → mark read + navigate to ticket
+  - Pagination, loading/error/empty states
+  - 34 tests (helpers + NotificationItem + Notifications page)
+
+- **Notes viewer (staff) + composer (F5.3)**
+  - `<NotesPanel ticketId={id} />` tích hợp vào TicketDetail
+  - Auto-hide cho customer role (logic inside component)
+  - Composer: textarea + char count + Cmd/Ctrl+Enter shortcut
+  - Client-side validation: empty/whitespace/5000 chars (matches BE)
+  - Optimistic insert + rollback on error
+  - 48 tests (helpers + NoteItem + NoteComposer)
+
+- **History timeline (F5.4)**
+  - `<HistoryTimeline ticketId={id} />` — visible to all roles
+  - Vertical timeline với icon circles + colors per action
+  - 14 action types: created/status_changed/assigned/sla_breached/...
+  - Vietnamese descriptions ("Alice tạo ticket", "đổi status: new → in_progress")
+  - Old → new value tags cho transitions
+  - Relative time + tooltip full timestamp
+  - 33 tests (helpers + component)
+
+- **Responsive mobile breakpoints (F5.5)**
+  - Sidebar → drawer on mobile (≤768px) với backdrop + slide animation
+  - Hamburger button (sticky top bar, ARIA proper)
+  - Close on route change / Esc / backdrop click
+  - Body scroll lock khi drawer open
+  - Tickets: table → card list on mobile (line-clamp 2 title)
+  - Global: `--bp-sm/md/lg/xl` CSS vars, font scaling (14/13px)
+  - `prefers-reduced-motion` respect
+  - Touch target min 2.5rem; iOS font-zoom prevention (16px input)
+  - 8 tests (Layout hamburger/close/Esc)
+
+- **Error boundary + toast notification (F5.6)**
+  - `<ErrorBoundary>` wraps entire App — catches render errors
+  - Default fallback: red title, error details, "Thử lại" + "Về trang chủ"
+  - Custom fallback prop + onError callback
+  - Auto-reset on children change (route change)
+  - Toast system: 4 types (info/success/warning/error), auto-dismiss 4-6s
+  - Module-level store (axios interceptor compatible)
+  - `useToast()` hook + fallback khi outside provider
+  - Axios interceptor hooks:
+    - 401 → logout + warning toast
+    - 403 → error "không có quyền"
+    - 500 → error "lỗi máy chủ"
+    - network → error "không kết nối"
+  - 15 tests (toast API + useToast + ErrorBoundary)
 
 ### Security
 
@@ -49,26 +110,54 @@ Sprint 5 — notification service, outbox dead-letter alerting, security hardeni
   - Added `last_alerted_at TIMESTAMP WITH TIME ZONE` column
   - Added partial index `ix_outbox_failed_unalerted`
 
+- **Frontend (app/)** — refactor to CSS modules
+  - `Layout.tsx` — inline styles → Layout.module.css (responsive drawer)
+  - `Tickets.tsx` — inline styles → Tickets.module.css (table + mobile cards)
+  - `TicketDetail.tsx` — inline styles → TicketDetail.module.css (responsive grid)
+  - `Login.module.css` — fix `min-width: 360px` overflow on mobile
+  - `index.css` — added CSS vars, font scaling, reduced-motion, touch targets
+  - `lib/api.ts` — added toast hooks trong response interceptor
+
 - **Version bumps**:
   - ticket-service: 1.1.0 → 1.2.0
   - ai-service: 1.1.0 → 1.2.0
   - notification-service: 1.0.0 → 1.2.0
+  - frontend: 1.1.0 → 1.2.0
 
 ### Documentation
 
 - `RELEASE-NOTES-v1.2.0-sprint5.md` — full release notes với migration guide
 - `docs/sprint/backend-sprint5.md` — sprint planning
+- `docs/sprint/frontend-sprint5.md` — frontend sprint planning
 - `docs/SECURITY.md` — rotation policy + setup steps + rotation log
 - `.env.example` — security notice + all new env vars
 
-### Tests (B5.2)
+### Tests
 
-- **E2E test suite** (15 tests, 4 files)
+- **E2E backend (B5.2)** — 15 tests, 4 files
   - `test_ticket_lifecycle.py` — 7-step flow (create→assign→in_progress→pending→resolved→closed)
   - `test_outbox_flow.py` — outbox events emitted on create/status change
   - `test_sla_breach.py` — backdate deadline → breach detection
   - `test_metrics_aggregate.py` — counts, categories, activity window
   - Auto-skip khi Postgres không có sẵn ở localhost:5432
+
+- **Frontend (vitest)** — **168 tests across 16 files** (0 → 168)
+  - `lib/notifications.test.ts` (20) — F5.2 helpers + API mock
+  - `lib/notes.test.ts` (24) — F5.3 helpers (validation, normalize, format)
+  - `lib/history.test.ts` (26) — F5.4 helpers (action colors/icons, descriptions)
+  - `lib/toast.test.tsx` (10) — F5.6 toast API + useToast hook
+  - `components/Notifications/NotificationItem.test.tsx` (8) — F5.2
+  - `components/Notes/NoteItem.test.tsx` (7) — F5.3
+  - `components/Notes/NoteComposer.test.tsx` (17) — F5.3
+  - `components/History/HistoryTimeline.test.tsx` (7) — F5.4
+  - `components/Dashboard/MetricCard.test.tsx` (5) — F5.1
+  - `components/Dashboard/OutboxPanel.test.tsx` (6) — F5.1
+  - `components/Dashboard/DistributionBar.test.tsx` (5) — F5.1
+  - `components/Dashboard/SLAPanel.test.tsx` (6) — F5.1
+  - `components/Dashboard/AssigneeTable.test.tsx` (8) — F5.1
+  - `components/Layout.test.tsx` (8) — F5.5 responsive
+  - `components/ErrorBoundary.test.tsx` (5) — F5.6
+  - `pages/Notifications.test.tsx` (6) — F5.2
 
 ### Tooling (B5.5)
 
