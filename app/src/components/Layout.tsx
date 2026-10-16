@@ -15,6 +15,7 @@ export default function Layout() {
   const navItems = [
     { path: '/', label: 'Dashboard' },
     { path: '/tickets', label: 'Tickets' },
+    { path: '/notifications', label: 'Notifications' },
   ];
 
   return (
