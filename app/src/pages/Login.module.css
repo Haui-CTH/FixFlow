@@ -4,6 +4,7 @@
   align-items: center;
   justify-content: center;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 1rem;
 }
 
 .card {
@@ -12,7 +13,8 @@
   border-radius: 1rem;
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
   text-align: center;
-  min-width: 360px;
+  width: 100%;
+  max-width: 420px;
 }
 
 .title {
@@ -42,4 +44,16 @@
 
 .button:hover {
   background: #4338ca;
+}
+
+@media (max-width: 480px) {
+  .card {
+    padding: 2rem 1.5rem;
+  }
+  .title {
+    font-size: 2rem;
+  }
+  .subtitle {
+    font-size: 0.875rem;
+  }
 }

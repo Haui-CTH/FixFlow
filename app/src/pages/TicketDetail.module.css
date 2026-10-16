@@ -1,0 +1,86 @@
+/* SPDX-License-Identifier: Apache-2.0
+ * DX-FSM TicketDetail Styles (F5.5)
+ */
+
+.page {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0 0 1rem 0;
+  word-break: break-all;
+}
+
+.card {
+  background: white;
+  padding: 1.5rem;
+  border-radius: 0.5rem;
+  border: 1px solid var(--border);
+}
+
+.heading {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin: 0;
+  word-break: break-word;
+}
+
+.description {
+  margin-top: 0.5rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+
+.metaGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.metaItem {
+  font-size: 0.875rem;
+}
+
+.metaLabel {
+  color: var(--text-secondary);
+  font-weight: 500;
+  margin-bottom: 0.25rem;
+}
+
+.metaValue {
+  color: var(--text-primary);
+  word-break: break-word;
+}
+
+.loading,
+.error {
+  text-align: center;
+  padding: 3rem 1rem;
+  color: var(--text-secondary);
+}
+
+@media (max-width: 640px) {
+  .title {
+    font-size: 1.25rem;
+  }
+
+  .card {
+    padding: 1rem;
+  }
+
+  .heading {
+    font-size: 1.125rem;
+  }
+
+  .metaGrid {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+  }
+}
