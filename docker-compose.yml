@@ -170,6 +170,16 @@ services:
       dockerfile: Dockerfile
     container_name: dxfsm-notification-service
     restart: unless-stopped
+    environment:
+      SMTP_HOST: ${NOTIFICATION_SMTP_HOST:-mailhog}
+      SMTP_PORT: ${NOTIFICATION_SMTP_PORT:-1025}
+      SMTP_USER: ${NOTIFICATION_SMTP_USER:-}
+      SMTP_PASSWORD: ${NOTIFICATION_SMTP_PASSWORD:-}
+      SMTP_FROM: ${NOTIFICATION_SMTP_FROM:-noreply@dx-fsm.local}
+      SMTP_USE_TLS: ${NOTIFICATION_SMTP_USE_TLS:-false}
+      SMS_ENABLED: ${NOTIFICATION_SMS_ENABLED:-false}
+      PUSH_ENABLED: ${NOTIFICATION_PUSH_ENABLED:-false}
+      SERVICE_TOKEN: ${NOTIFICATION_SERVICE_TOKEN:-}
     ports:
       - "8003:8003"
     healthcheck:
@@ -178,6 +188,18 @@ services:
       timeout: 5s
       retries: 3
       start_period: 15s
+    depends_on:
+      - mailhog
+    networks:
+      - dxfsm-net
+
+  mailhog:
+    image: mailhog/mailhog:latest
+    container_name: dxfsm-mailhog
+    restart: unless-stopped
+    ports:
+      - "1025:1025"  # SMTP
+      - "8025:8025"  # Web UI (http://localhost:8025)
     networks:
       - dxfsm-net
 
