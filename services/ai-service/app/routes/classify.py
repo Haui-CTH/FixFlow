@@ -1,72 +1,50 @@
 # SPDX-License-Identifier: Apache-2.0
-# DX-FSM AI Service – Ticket Classification
+# DX-FSM AI Service – Ticket Classification (A5.1)
+# Hybrid: cache → Ollama LLM → rule-based fallback
 
-from fastapi import APIRouter
-from pydantic import BaseModel
+from fastapi import APIRouter, HTTPException
+from pydantic import BaseModel, Field
 from typing import Optional
+
+from app.services.ai_classifier import classify, cache_clear, cache_size
 
 router = APIRouter()
 
 
 class ClassifyRequest(BaseModel):
-    title: str
-    description: Optional[str] = None
+    title: str = Field(..., min_length=1, max_length=200)
+    description: Optional[str] = Field(None, max_length=5000)
 
 
 class ClassifyResponse(BaseModel):
     category: str
     priority: str
     confidence: float
+    method: str  # "ai" | "rule_based" | "cached"
     recommendation: Optional[str] = None
-
-
-CATEGORY_KEYWORDS = {
-    "hardware": ["máy in", "màn hình", "bàn phím", "chuột", "máy tính", "laptop", "ram", "ổ cứng", "cpu"],
-    "software": ["phần mềm", "ứng dụng", "lỗi", "cập nhật", "windows", "license", "đăng nhập", "app"],
-    "network": ["wifi", "internet", "mạng", "lan", "router", "switch", "vpn", "dns", "wifi"],
-    "electrical": ["điện", "ổ cắm", "aptomat", "ups", "nguồn", "dây điện"],
-}
-
-PRIORITY_KEYWORDS = {
-    "critical": ["khẩn cấp", "quan trọng", "server", "mất dữ liệu", "hỏa hoạn", "ngừng hoạt động"],
-    "high": ["không hoạt động", "lỗi nghiêm trọng", "không in được", "mất kết nối"],
-    "medium": ["chậm", "lỗi nhẹ", "bất thường"],
-    "low": ["bảo trì", "định kỳ", "nâng cấp", "tối ưu"],
-}
-
-
-def rule_based_classify(title: str, description: str = "") -> ClassifyResponse:
-    text = (title + " " + (description or "")).lower()
-
-    # Classify category
-    category = "other"
-    max_matches = 0
-    for cat, keywords in CATEGORY_KEYWORDS.items():
-        matches = sum(1 for kw in keywords if kw in text)
-        if matches > max_matches:
-            max_matches = matches
-            category = cat
-
-    # Classify priority
-    priority = "medium"
-    max_prio = 0
-    for prio, keywords in PRIORITY_KEYWORDS.items():
-        matches = sum(1 for kw in keywords if kw in text)
-        if matches > max_prio:
-            max_prio = matches
-            priority = prio
-
-    confidence = min(95.0, 60.0 + max_matches * 10 + max_prio * 5)
-
-    return ClassifyResponse(
-        category=category,
-        priority=priority,
-        confidence=confidence,
-        recommendation=f"Gửi ticket đến bộ phận {category}",
-    )
+    reasoning: Optional[str] = None
 
 
 @router.post("", response_model=ClassifyResponse)
 async def classify_ticket(request: ClassifyRequest):
-    # Rule-based fallback (Ollama integration placeholder)
-    return rule_based_classify(request.title, request.description)
+    result = classify(request.title, request.description)
+    return ClassifyResponse(
+        category=result.category,
+        priority=result.priority,
+        confidence=result.confidence,
+        method=result.method,
+        recommendation=f"Gửi ticket đến bộ phận {result.category}",
+        reasoning=(result.details or {}).get("reasoning"),
+    )
+
+
+@router.post("/cache/clear")
+async def clear_cache():
+    """Clear in-memory classification cache."""
+    n = cache_clear()
+    return {"cleared": n}
+
+
+@router.get("/cache/size")
+async def get_cache_size():
+    return {"size": cache_size()}
