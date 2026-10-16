@@ -129,6 +129,9 @@ services:
       MINIO_ACCESS_KEY: ${MINIO_ROOT_USER:-minioadmin}
       MINIO_SECRET_KEY: ${MINIO_ROOT_PASSWORD:?must be set in .env}
       AI_SERVICE_URL: http://ai-service:8002
+      # B5.3: Alert webhook (Slack/PagerDuty/email gateway)
+      ALERT_WEBHOOK_URL: ${ALERT_WEBHOOK_URL:-}
+      ALERT_INTERVAL_SEC: ${ALERT_INTERVAL_SEC:-60}
     ports:
       - "8001:8001"
     depends_on:
