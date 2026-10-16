@@ -1,5 +1,6 @@
 // DX-FSM API Client
 import axios from 'axios';
+import { toastApi } from './toast';
 
 const API_BASE = import.meta.env.VITE_API_BASE_URL || 'http://localhost:9180/api/v1';
 
@@ -19,13 +20,28 @@ api.interceptors.request.use((config) => {
   return config;
 });
 
-// Response interceptor
+// Response interceptor (F5.6: show toast on errors)
 api.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response?.status === 401) {
       localStorage.removeItem('access_token');
-      window.location.href = '/login';
+      // Avoid toast loop on login page
+      if (!window.location.pathname.startsWith('/login')) {
+        toastApi.warning('Phiên đăng nhập hết hạn', 'Vui lòng đăng nhập lại');
+        window.location.href = '/login';
+      }
+    } else if (error.response?.status === 403) {
+      toastApi.error('Bạn không có quyền thực hiện thao tác này', '403 Forbidden');
+    } else if (error.response?.status === 404) {
+      // Skip 404 toast — components often handle 404s explicitly
+    } else if (error.response?.status === 500) {
+      toastApi.error('Lỗi máy chủ, vui lòng thử lại sau', '500 Server Error');
+    } else if (error.response?.status >= 500) {
+      toastApi.error(`Lỗi ${error.response.status}: ${error.response.statusText || 'Server error'}`);
+    } else if (!error.response) {
+      // Network error
+      toastApi.error('Không kết nối được tới máy chủ', 'Lỗi mạng');
     }
     return Promise.reject(error);
   }
