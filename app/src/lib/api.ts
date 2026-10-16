@@ -57,3 +57,69 @@ export const ticketApi = {
   create: (data: Partial<Ticket>) =>
     api.post<Ticket>('/tickets', data),
 };
+
+// ─── Metrics API (F5.1) ───────────────────────────────────
+
+export interface StatusCount {
+  status: string;
+  count: number;
+}
+
+export interface PriorityCount {
+  priority: string;
+  count: number;
+}
+
+export interface CategoryCount {
+  category: string;
+  count: number;
+}
+
+export interface SLAStats {
+  total_active: number;
+  on_time: number;
+  breached: number;
+  met: number;
+  not_met: number;
+  breach_rate: number;
+}
+
+export interface RecentActivity {
+  last_24h_created: number;
+  last_24h_resolved: number;
+  last_24h_breached: number;
+}
+
+export interface OutboxHealth {
+  pending: number;
+  sending: number;
+  sent: number;
+  failed: number;
+  oldest_pending_age_sec: number | null;
+}
+
+export interface TopAssignee {
+  user_id: string;
+  username: string | null;
+  full_name: string | null;
+  active_tickets: number;
+  resolved_tickets: number;
+}
+
+export interface MetricsResponse {
+  generated_at: string;
+  window_days: number;
+  total_tickets: number;
+  by_status: StatusCount[];
+  by_priority: PriorityCount[];
+  by_category: CategoryCount[];
+  sla: SLAStats;
+  activity: RecentActivity;
+  outbox: OutboxHealth;
+  top_assignees: TopAssignee[];
+}
+
+export const metricsApi = {
+  get: (params?: { window_days?: number }) =>
+    api.get<MetricsResponse>('/admin/metrics', { params }),
+};
