@@ -67,9 +67,6 @@ describe('Layout', () => {
 
   it('clicking close button toggles sidebar state', async () => {
     setup();
-    // Initial: aside does not have sidebarOpen class
-    const initialAsideClasses = document.querySelector('aside')?.className || '';
-    const sidebarOpenClass = initialAsideClasses.split(' ').find(c => c.includes('sidebarOpen') || c.startsWith('_sidebarOpen') || c.endsWith('sidebarOpen')) || 'sidebarOpen';
     // Open
     fireEvent.click(screen.getByLabelText('Mở menu'));
     await waitFor(() => {
