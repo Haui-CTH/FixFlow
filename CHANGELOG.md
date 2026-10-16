@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [v1.2.0-sprint5] – 2026-01-16
 
-Sprint 5 — notification service, outbox dead-letter alerting, security hardening.
+Sprint 5 — notification service, outbox dead-letter alerting, security hardening, E2E tests, secrets rotation.
 
 ### Added
 
@@ -58,8 +58,25 @@ Sprint 5 — notification service, outbox dead-letter alerting, security hardeni
 
 - `RELEASE-NOTES-v1.2.0-sprint5.md` — full release notes với migration guide
 - `docs/sprint/backend-sprint5.md` — sprint planning
-- `docs/SECURITY.md` — rotation policy + setup steps
+- `docs/SECURITY.md` — rotation policy + setup steps + rotation log
 - `.env.example` — security notice + all new env vars
+
+### Tests (B5.2)
+
+- **E2E test suite** (15 tests, 4 files)
+  - `test_ticket_lifecycle.py` — 7-step flow (create→assign→in_progress→pending→resolved→closed)
+  - `test_outbox_flow.py` — outbox events emitted on create/status change
+  - `test_sla_breach.py` — backdate deadline → breach detection
+  - `test_metrics_aggregate.py` — counts, categories, activity window
+  - Auto-skip khi Postgres không có sẵn ở localhost:5432
+
+### Tooling (B5.5)
+
+- **`scripts/rotate-secrets.sh`** — rotate 4 passwords (postgres, keycloak, minio, n8n)
+  - Dry-run mode
+  - Per-service rotation
+  - Auto backup `.env.bak.<timestamp>`
+  - Generate qua `openssl rand -base64 32`
 
 ## [v1.1.0-sprint4] – 2026-01-15
 
