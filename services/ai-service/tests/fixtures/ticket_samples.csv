@@ -1,0 +1,201 @@
+id,title,description,expected_category,expected_priority
+1,Máy in HP không hoạt động,Đèn báo nhấp nháy cam liên tục,hardware,high
+2,Máy in bị kẹt giấy,Kéo giấy ra nhưng vẫn báo lỗi,hardware,medium
+3,Máy in hết mực,Cần thay cartridge mới,hardware,low
+4,Laptop không lên nguồn,Đã thử cắm sạc nhưng không phản hồi,hardware,high
+5,Màn hình laptop bị sọc ngang,Hiển thị bất thường ở nửa dưới,hardware,medium
+6,Bàn phím laptop bị liệt,Phím A S D không gõ được,hardware,medium
+7,Chuột không dây không kết nối,Đã thay pin nhưng vẫn không sáng đèn,hardware,medium
+8,Ổ cứng phát ra tiếng kêu lạ,Tiếng click lách cách liên tục,hardware,high
+9,Ram laptop bị lỏng,Máy khởi động nhưng dump xanh,hardware,high
+10,Webcam laptop mờ,Hiển thị mờ khi họp online,hardware,low
+11,Loa ngoài không phát âm thanh,Đã kiểm tra driver,hardware,medium
+12,Máy tính bị treo liên tục,Sau khi cài phần mềm mới,software,medium
+13,Phần mềm kế toán báo lỗi,Không mở được file Excel đính kèm,software,high
+14,Windows bị blue screen,Máy restart liên tục với BSOD,software,high
+15,Microsoft Word không mở được,Báo lỗi corrupted file,software,medium
+16,Outlook không gửi email được,Đã thử restart nhưng vẫn lỗi,software,high
+17,Excel chạy rất chậm,File có 50K rows,software,medium
+18,Phần mềm antivirus báo nhiễm virus,Máy chạy chậm bất thường,software,high
+19,License Office hết hạn,Cần gia hạn,software,medium
+20,Cập nhật Windows bị lỗi,Update 22H2 fail,software,medium
+21,Driver card màn hình cũ,Cần cập nhật driver mới,software,low
+22,Phần mềm CRM đơ liên tục,Restart 3 lần trong ngày,software,high
+23,Chrome chạy chậm,Nhiều tab mở,software,low
+24,Đăng nhập Windows báo password sai,Chắc chắn đúng password,software,medium
+25,Phần mềm backup tự động fail,Backup lúc 3h sáng không chạy,software,medium
+26,Cài đặt phần mềm mới cho máy bộ phận kế toán,Cần AutoCAD 2024,service_request,low
+27,Yêu cầu cấp laptop mới,Phòng marketing tuyển thêm người,service_request,low
+28,Xin thêm màn hình phụ,Cần cho công việc đa nhiệm,service_request,low
+29,Yêu cầu nâng cấp RAM lên 16GB,Máy chậm khi mở nhiều app,service_request,low
+30,Cấp phát chuột không dây mới,Chuột cũ hỏng,service_request,low
+31,Mượn máy chiếu cho buổi họp,Họp ngày mai,service_request,low
+32,Đổi bàn phím cơ,Phòng IT còn model nào tốt hơn không,service_request,low
+33,Yêu cầu bảo trì máy tính định kỳ,Đến lịch 6 tháng,service_request,low
+34,Vệ sinh laptop cho nhân viên mới,Setup workstation,service_request,low
+35,Cần thêm quyền truy cập folder HR,Phòng HR mới tuyển,access_control,medium
+36,Phân quyền user mới vào hệ thống,Nhân viên mới vào làm ngày mai,access_control,medium
+37,Thẻ từ không mở được cửa văn phòng,Đã thử 3 lần vẫn fail,access_control,high
+38,Hệ thống chấm công không nhận vân tay,5 nhân viên không chấm công được,access_control,high
+39,Camera an ninh tầng 5 mất tín hiệu,Không xem được live feed,access_control,high
+40,Yêu cầu thu hồi quyền admin,Nhân viên nghỉ việc,access_control,medium
+41,Quên password domain account,Không đăng nhập được máy tính công ty,access_control,medium
+42,Cổng từ bị lỗi,Nhân viên ra vào không quét được,access_control,high
+43,Yêu cầu reset mật khẩu VPN,Công tác nước ngoài tuần sau,access_control,medium
+44,Mất quyền truy cập shared folder,Từ hôm qua,access_control,medium
+45,Camera IP tại reception bị treo,Restart không lên,access_control,medium
+46,Mất kết nối WiFi toàn bộ tầng 3,10 nhân viên không vào mạng được,network,critical
+47,Internet công ty chậm bất thường,Tốc độ 1Mbps thay vì 100Mbps,network,high
+48,VPN không kết nối được,Làm việc từ xa,network,high
+49,Router văn phòng bị treo,Reboot không lên,network,high
+50,Switch tầng 4 mất port,5 máy không kết nối được,network,high
+51,WiFi không thấy SSID công ty,Smartphone và laptop đều không thấy,network,medium
+52,Mạng LAN chậm khi copy file,Transfer 1GB mất 30 phút,network,medium
+53,DNS không phân giải được,ping 8.8.8.8 được nhưng ping google.com fail,network,high
+54,Cáp mạng tại bàn làm việc bị đứt,Đã kiểm tra physically,network,medium
+55,Yêu cầu cấp quyền truy cập internet,Phòng sản xuất cần update firmware,access_control,low
+56,Mất điện toàn bộ tầng 5,Khẩn cấp,electrical,critical
+57,Ổ cắm tại phòng họp bị cháy,Có mùi khét,electrical,critical
+58,Aptomat nhảy liên tục,Bật thiết bị là aptomat nhảy,electrical,high
+59,UPS phát còi báo động,Pin yếu,electrical,high
+60,Đèn tại khu vực làm việc không sáng,Bóng đèn hỏng,electrical,medium
+61,Dây điện máy in bị hở,Cần thay dây mới,electrical,high
+62,Chập điện tại phòng server,Khẩn cấp ngắt nguồn,electrical,critical
+63,Đường điện 3 pha bị lỗi,Máy móc không chạy ổn định,electrical,high
+64,Yêu cầu lắp thêm ổ cắm,Phòng mới chưa có,electrical,low
+65,Bóng đèn huỳnh quang nhấp nháy,Cần thay LED,electrical,low
+66,Máy in báo offline,Máy có điện nhưng không kết nối mạng,network,medium
+67,Máy in in ra giấy trắng,Đã thay mực,hardware,medium
+68,Laptop quá nóng,Quạt tản nhiệt kêu to,hardware,medium
+69,Pin laptop chai,Sạc không vào,hardware,medium
+70,Máy tính không nhận USB,Đã thử 3 USB khác nhau,hardware,medium
+71,Tai nghe bluetooth không kết nối,Pair lại không được,hardware,medium
+72,Micro họp trực tuyến không thu tiếng,Zoom meeting không ai nghe thấy,hardware,high
+73,Máy scan bị lỗi,Kẹt giấy liên tục,hardware,medium
+74,Card màn hình rời bị lỗi,Màn hình nhấp nháy,hardware,high
+75,Nguồn máy tính kêu to,Có tiếng rít,hardware,medium
+76,Mainboard laptop chập chờn,Máy tự restart,hardware,high
+77,Ổ SSD không nhận,Bios không detect,hardware,high
+78,RAM 8GB lỗi,Máy dump xanh liên tục,hardware,high
+79,CPU quá nhiệt,Thermal throttle,hardware,medium
+80,Quạt tản CPU không quay,Máy quá nóng,hardware,high
+81,Phần mềm ERP không load được,Báo lỗi database connection,software,critical
+82,Hệ thống POS bị treo,Toàn bộ cửa hàng không bán được hàng,software,critical
+83,Email công ty không gửi/nhận được,Toàn bộ phòng ban,network,critical
+84,Server database down,Production,software,critical
+85,Hệ thống backup tự động fail,Backup tối qua không chạy,software,high
+86,Phần mềm diệt virus block nhầm ứng dụng,Excel bị block,software,medium
+87,Windows update gây xung đột driver,Máy không nhận card màn hình,software,high
+88,VPN chập chờn,Mất kết nối mỗi 5 phút,network,high
+89,Mạng WiFi yếu tại khu vực cafeteria,Sóng yếu,network,low
+90,Cần thêm access point,Tầng 6 chưa có WiFi,network,low
+91,Firewall chặn nhầm ứng dụng nội bộ,Phần mềm kế toán không sync,network,medium
+92,IP address xung đột,2 máy trùng IP,network,high
+93,Cần cấu hình proxy mới,Đổi nhà cung cấp internet,network,medium
+94,Subnet mask sai,Máy không ping lẫn nhau,network,medium
+95,Yêu cầu cấp IP tĩnh,Cho máy chủ nội bộ,network,low
+96,Yêu cầu mở port firewall,Cho ứng dụng mới,network,low
+97,Đứt cáp quang,Toàn bộ công ty mất mạng,network,critical
+98,Bộ phát WiFi bị hỏng,Reboot không lên,network,high
+99,Tường lửa chặn truy cập web,HTTPS bị block,network,high
+100,Máy in mạng không thấy,Driver báo không tìm thấy,network,medium
+101,Phần mềm thiết kế Adobe báo lỗi license,Đã mua bản quyền,software,medium
+102,Ổ cứng di động không nhận,Đèn không sáng,hardware,medium
+103,Yêu cầu format máy tính,Máy bị nhiễm virus nặng,service_request,medium
+104,Setup máy tính cho nhân viên mới,Phòng IT support,service_request,medium
+105,Cài lại Windows cho laptop,Cập nhật lên Windows 11,service_request,low
+106,Yêu cầu sao lưu dữ liệu trước khi nâng cấp,Phòng kế toán,service_request,low
+107,Máy tính bị virus mã hóa dữ liệu,Ransomware,software,critical
+108,Hệ thống bị tấn công DDoS,Website công ty down,network,critical
+109,Máy in in ra ký tự lạ,Font bị lỗi,hardware,medium
+110,Bàn phím cơ không gõ được một số phím,Switch bị hỏng,hardware,medium
+111,Chuột bị double-click,Click 1 lần nhưng thành 2,hardware,medium
+112,Webcam không hoạt động trên Zoom,Đã thử trên Google Meet cũng không được,hardware,medium
+113,Cổng HDMI không xuất được hình ảnh,Laptop không nhận tín hiệu ra màn hình ngoài,hardware,medium
+114,Cổng USB-C không sạc,Adapter không nhận,hardware,medium
+115,Tai nghe bị rè,Âm thanh nhiễu,hardware,low
+116,Loa bluetooth không pair được,Đã thử 2 thiết bị,hardware,low
+117,Pin Bluetooth keyboard hết nhanh,1 tuần là hết,hardware,low
+118,Trackpad laptop không nhạy,Di chuyển khó khăn,hardware,medium
+119,Đèn bàn phím laptop không sáng,Đã bật nhưng không lên,hardware,low
+120,Fingerprint reader không nhận,Tay khô,hardware,low
+121,Excel báo lỗi khi mở file CSV,Encoding không đúng,software,medium
+122,PowerPoint bị crash khi insert video,software,medium
+123,Teams không nhận micro,Đã cấp quyền trong Settings,software,medium
+124,Zoom bị giật lag,Họp 10 người,software,medium
+125,Slack gửi thông báo liên tục,Đã tắt nhưng vẫn bật,software,low
+126,Chrome extension bị conflict,Mở Gmail chậm,software,medium
+127,Adobe Acrobat không mở file PDF,Báo lỗi damaged file,software,medium
+128,AutoCAD yêu cầu license server,Đang làm dở,software,high
+129,Visual Studio crash khi build,RAM 32GB nhưng vẫn crash,software,high
+130,Python environment bị hỏng,requirements.txt fail install,software,medium
+131,SQL Server Management Studio timeout,Kết nối database chậm,software,medium
+132,Adobe Photoshop báo hết RAM,File PSD 500MB,software,medium
+133,Phần mềm kế toán MISA lỗi,Không vào được menu,software,high
+134,Phần mềm quản lý kho bị lỗi đồng bộ,Dữ liệu không update,software,high
+135,Yêu cầu cài thêm font chữ,Cho bộ phận marketing,service_request,low
+136,Yêu cầu nâng cấp Office 365 lên E5,Cần nhiều tính năng hơn,service_request,low
+137,Yêu cầu cài phần mềm diệt virus,Cho máy mới,service_request,low
+138,Cần license Windows Server,Cho máy chủ mới,service_request,low
+139,Đề xuất mua license Adobe Creative Cloud,Cho bộ phận thiết kế,service_request,low
+140,Mượn máy chiếu,Họp phòng ban tháng,service_request,low
+141,Yêu cầu thiết lập email cho nhân viên mới,Tạo account,service_request,medium
+142,Cần thêm dung lượng OneDrive,Hết 1TB,service_request,low
+143,Đề xuất nâng cấp máy chủ file,Server cũ quá tải,service_request,medium
+144,Yêu cầu bảo trì máy lạnh phòng server,Nhiệt độ cao,service_request,high
+145,Vệ sinh bàn phím,Định kỳ 6 tháng,service_request,low
+146,Đề nghị thay chuột mới,Chuột cũ đã cũ,service_request,low
+147,Cần thêm license cho phần mềm ERP,Sắp hết user,service_request,medium
+148,Yêu cầu mua tai nghe mới,Cho phòng họp,service_request,low
+149,Đề xuất nâng cấp RAM cho server,Server chậm,service_request,medium
+150,Cần thêm ổ cứng lưu trữ,Hết dung lượng,service_request,medium
+151,Thẻ từ nhân viên mới chưa có,Tạo mới,access_control,medium
+152,Phân quyền admin cho trưởng phòng,Yêu cầu,access_control,medium
+153,Camera an ninh không lưu được,HDD đầy,access_control,high
+154,Hệ thống access control không sync,Log không đồng bộ,access_control,high
+155,Chuông cửa không reo,Đã kiểm tra pin,access_control,medium
+156,Cảm biến cửa báo sai,Đóng cửa nhưng vẫn báo mở,access_control,medium
+157,Yêu cầu thêm user cho phần mềm CRM,Nhân viên mới,access_control,low
+158,Reset password cho tài khoản admin,Quên password,access_control,medium
+159,Disable account nhân viên nghỉ việc,HR yêu cầu,access_control,medium
+160,Enable account cho nhân viên quay lại,Sau thai sản,access_control,medium
+161,Mất điện khu vực cafeteria,electrical,medium
+162,Đèn emergency không sáng khi mất điện,Kiểm tra pin,electrical,high
+163,Ổ cắm tại phòng họp chập chờn,Cắm/rút nhiều lần,electrical,medium
+164,Máy phát điện không khởi động,Test hàng tuần,electrical,high
+165,Yêu cầu kiểm tra hệ thống điện,Định kỳ,electrical,low
+166,Đèn tại bãi đỗ xe không sáng,electrical,medium
+167,UPS tại phòng server hết pin,Cần thay,electrical,high
+168,Máy tính bị sốc điện,Do chập điện tòa nhà,electrical,high
+169,Đứt dây điện máy lạnh,Máy lạnh tắt đột ngột,electrical,high
+170,Yêu cầu lắp ổ cắm cho máy in mới,service_request,low
+171,Máy in nhãn bị lỗi,In ra giấy trắng,hardware,medium
+172,Đầu đọc thẻ từ bị hỏng,Không nhận thẻ,hardware,high
+173,Máy quét mã vạch không hoạt động,Laser không sáng,hardware,medium
+174,Server bị quá nhiệt,Fan không quay,hardware,critical
+175,RAM server lỗi,Hệ thống restart,hardware,critical
+176,Card RAID bị lỗi,RAID 5 degraded,hardware,critical
+177,Nguồn server redundant fail,Chỉ còn 1 PSU hoạt động,hardware,high
+178,Ổ cứng server báo S.M.A.R.T. error,Kiểm tra sớm,hardware,high
+179,Đèn báo lỗi trên switch,Nghi ngờ port hỏng,network,medium
+180,Module quang bị lỗi,Fiber connection down,network,high
+181,Cổng console switch không truy cập được,Để debug,network,medium
+182,Router BGP session down,Mất kết nối ISP,network,critical
+183,Load balancer không phân phối traffic,Website chậm,network,high
+184,Firewall rule bị sai,Block nhầm user,network,high
+185,Cần rule mới trên firewall,Cho ứng dụng mới,network,low
+186,Yêu cầu mở port 443,Cho HTTPS,network,low
+187,VPN site-to-site down,Kết nối 2 chi nhánh,network,critical
+188,DHCP server hết scope,Không cấp IP,network,high
+189,DNS server down,Không phân giải,network,critical
+190,IP helper address sai,DHCP relay không hoạt động,network,medium
+191,Phần mềm accounting không connect database,software,critical
+192,Hệ thống bán hàng bị lỗi sync,Chi nhánh không thấy data,software,critical
+193,Website công ty không truy cập được,DNS issue,network,critical
+194,API server timeout,Ứng dụng mobile không sync,software,high
+195,Database connection pool exhausted,Quá nhiều kết nối,software,high
+196,Yêu cầu tăng tốc độ internet,100Mbps → 200Mbps,service_request,low
+197,Đề xuất thêm WiFi cho tầng mới,Mở rộng văn phòng,service_request,low
+198,Cần trang bị máy tính cho nhân viên mới,Tuyển 5 người,service_request,medium
+199,Yêu cầu backup dữ liệu quan trọng,Trước khi nâng cấp server,service_request,low
+200,Yêu cầu cài đặt phần mềm quản lý dự án,Cho team mới,service_request,low
