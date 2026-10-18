@@ -1,0 +1,82 @@
+[
+  {
+    "id": "tech-001",
+    "name": "Trần Văn Kỹ Thuật",
+    "employee_code": "TECH001",
+    "specialties": ["hardware", "electrical"],
+    "skills": ["windows", "linux", "dell", "hp", "cisco", "ups"],
+    "level": 3,
+    "shift": "business_hours",
+    "active": true
+  },
+  {
+    "id": "tech-002",
+    "name": "Lê Thị Bảo Trì",
+    "employee_code": "TECH002",
+    "specialties": ["software", "network"],
+    "skills": ["windows", "office", "azure", "active-directory", "vpn", "firewall"],
+    "level": 3,
+    "shift": "business_hours",
+    "active": true
+  },
+  {
+    "id": "tech-003",
+    "name": "Phạm Minh Hùng",
+    "employee_code": "TECH003",
+    "specialties": ["network", "hardware"],
+    "skills": ["cisco", "router", "switch", "wifi", "server", "linux"],
+    "level": 4,
+    "shift": "extended",
+    "active": true
+  },
+  {
+    "id": "tech-004",
+    "name": "Nguyễn Thị Hương",
+    "employee_code": "TECH004",
+    "specialties": ["access_control", "software"],
+    "skills": ["active-directory", "azure-ad", "keycloak", "okta", "office"],
+    "level": 2,
+    "shift": "business_hours",
+    "active": true
+  },
+  {
+    "id": "tech-005",
+    "name": "Hoàng Minh Tuấn",
+    "employee_code": "TECH005",
+    "specialties": ["electrical", "hardware"],
+    "skills": ["ups", "aptomat", "cabling", "datacenter"],
+    "level": 3,
+    "shift": "oncall",
+    "active": true
+  },
+  {
+    "id": "tech-006",
+    "name": "Đỗ Quang Vinh",
+    "employee_code": "TECH006",
+    "specialties": ["software", "service_request"],
+    "skills": ["windows", "office", "google-workspace", "slack", "teams"],
+    "level": 1,
+    "shift": "business_hours",
+    "active": true
+  },
+  {
+    "id": "tech-007",
+    "name": "Vũ Thị Lan",
+    "employee_code": "TECH007",
+    "specialties": ["service_request", "access_control"],
+    "skills": ["helpdesk", "asset-management"],
+    "level": 1,
+    "shift": "business_hours",
+    "active": true
+  },
+  {
+    "id": "tech-008",
+    "name": "Bùi Anh Đức",
+    "employee_code": "TECH008",
+    "specialties": ["network", "electrical"],
+    "skills": ["fiber", "cisco", "firewall", "datacenter"],
+    "level": 3,
+    "shift": "oncall",
+    "active": true
+  }
+]

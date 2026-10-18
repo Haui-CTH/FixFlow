@@ -40,9 +40,9 @@ export function tokenize(text: string): string[] {
     .filter((t) => t && !STOP_WORDS_VI.has(t) && t.length > 1);
 }
 
-// ─── TF / IDF ──────────────────────────────────────
+// ─── TF / IDF (also exported for recommender) ─────
 
-function computeTf(tokens: string[]): Record<string, number> {
+export function computeTf(tokens: string[]): Record<string, number> {
   if (!tokens.length) return {};
   const counts: Record<string, number> = {};
   for (const t of tokens) counts[t] = (counts[t] || 0) + 1;
@@ -52,7 +52,7 @@ function computeTf(tokens: string[]): Record<string, number> {
   return tf;
 }
 
-function computeIdf(documents: string[][]): Record<string, number> {
+export function computeIdf(documents: string[][]): Record<string, number> {
   const n = documents.length;
   if (n === 0) return {};
   const df: Record<string, number> = {};
@@ -67,7 +67,11 @@ function computeIdf(documents: string[][]): Record<string, number> {
   return idf;
 }
 
-function vectorize(text: string, idf: Record<string, number>): Record<string, number> {
+export function buildIdf(documents: string[][]): Record<string, number> {
+  return computeIdf(documents);
+}
+
+export function vectorize(text: string, idf: Record<string, number>): Record<string, number> {
   const tokens = tokenize(text);
   const tf = computeTf(tokens);
   const v: Record<string, number> = {};
@@ -77,7 +81,7 @@ function vectorize(text: string, idf: Record<string, number>): Record<string, nu
   return v;
 }
 
-function cosineSim(a: Record<string, number>, b: Record<string, number>): number {
+export function cosineSim(a: Record<string, number>, b: Record<string, number>): number {
   const keys = Object.keys(a).filter((k) => k in b);
   if (!keys.length) return 0;
   const dot = keys.reduce((s, k) => s + a[k] * b[k], 0);
