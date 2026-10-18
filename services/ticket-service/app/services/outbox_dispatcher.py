@@ -5,6 +5,7 @@
 
 import asyncio
 import logging
+import time
 import uuid
 from datetime import datetime, timezone, timedelta
 from typing import Optional
@@ -16,6 +17,8 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.db.database import AsyncSessionLocal
 from app.models.outbox import OutboxEvent
 from app.config import get_settings
+from app.services.outbox_metrics import get_metrics
+from app.services.outbox_dlq_dispatcher import move_to_dlq
 
 logger = logging.getLogger(__name__)
 settings = get_settings()
@@ -137,55 +140,73 @@ async def mark_event_failed(
     await db.execute(stmt)
 
 
-async def call_n8n(event: OutboxEvent) -> tuple[bool, Optional[str]]:
+async def call_n8n(event: OutboxEvent) -> tuple[bool, Optional[str], float]:
     """
-    Gọi n8n webhook. Trả về (ok, error_message).
+    Gọi n8n webhook. Trả về (ok, error_message, latency_ms).
     """
     url = f"{settings.n8n_webhook_url}/{event.event_type}"
+    start = time.time()
     try:
         async with httpx.AsyncClient(timeout=5.0) as client:
             resp = await client.post(url, json=event.payload)
+            latency_ms = (time.time() - start) * 1000
             if 200 <= resp.status_code < 300:
-                return True, None
-            return False, f"HTTP {resp.status_code}: {resp.text[:200]}"
+                return True, None, latency_ms
+            return False, f"HTTP {resp.status_code}: {resp.text[:200]}", latency_ms
     except httpx.ConnectError:
-        return False, "ConnectError (n8n unavailable)"
+        return False, "ConnectError (n8n unavailable)", (time.time() - start) * 1000
     except httpx.TimeoutException:
-        return False, "Timeout"
+        return False, "Timeout", (time.time() - start) * 1000
     except Exception as e:
-        return False, f"Exception: {e}"
+        return False, f"Exception: {e}", (time.time() - start) * 1000
 
 
 async def process_one_event(event: OutboxEvent) -> str:
     """
     Xử lý một event: claim, call n8n, update status.
-    Trả về "sent" | "retry" | "failed".
+    Trả về "sent" | "retry" | "failed" | "dlq".
+    Tích hợp metrics + DLQ.
     """
+    metrics = get_metrics()
+    # Circuit breaker check
+    if metrics.is_circuit_open():
+        return "skipped"
+
     async with AsyncSessionLocal() as db:
         # Atomic claim
         claimed = await mark_event_sending(db, event.id)
         if not claimed:
-            # Có worker khác đã xử lý rồi
             return "skipped"
         await db.commit()
 
     # Gọi n8n NGOÀI transaction
-    ok, error = await call_n8n(event)
+    ok, error, latency_ms = await call_n8n(event)
 
     async with AsyncSessionLocal() as db:
         if ok:
             await mark_event_sent(db, event.id)
             await db.commit()
+            metrics.record_sent(latency_ms)
             return "sent"
         else:
             await mark_event_failed(db, event, error or "unknown")
             await db.commit()
-            return "failed"
+            metrics.record_failed(error or "unknown")
+            # Re-fetch để biết status thực sự
+            fresh = await db.get(OutboxEvent, event.id)
+            if fresh and fresh.status == "failed":
+                await move_to_dlq(db, fresh)
+                await db.commit()
+                metrics.record_dlq()
+                if metrics._consecutive_failures >= 5:
+                    metrics.open_circuit()
+                return "dlq"
+    return "failed"
 
 
 async def run_outbox_worker_once() -> dict:
     """Một lần scan. Trả về summary."""
-    summary = {"fetched": 0, "sent": 0, "retry": 0, "failed": 0, "skipped": 0}
+    summary = {"fetched": 0, "sent": 0, "retry": 0, "failed": 0, "skipped": 0, "dlq": 0}
 
     async with AsyncSessionLocal() as db:
         events = await fetch_pending_events(db)
@@ -198,14 +219,14 @@ async def run_outbox_worker_once() -> dict:
             summary["sent"] += 1
         elif result == "failed":
             # Cần xem lại: max_attempts đạt → failed, chưa → retry
-            # Fetch lại để check status thực tế
             async with AsyncSessionLocal() as db2:
                 fresh = await db2.get(OutboxEvent, ev.id)
                 if fresh and fresh.status == "failed":
                     summary["failed"] += 1
                 else:
                     summary["retry"] += 1
-
+        elif result == "dlq":
+            summary["dlq"] += 1
         elif result == "skipped":
             summary["skipped"] += 1
 
@@ -222,7 +243,8 @@ async def outbox_worker_loop(stop_event: asyncio.Event, interval_sec: int = WORK
                 logger.info(
                     f"Outbox: fetched={summary['fetched']} "
                     f"sent={summary['sent']} retry={summary['retry']} "
-                    f"failed={summary['failed']} skipped={summary['skipped']}"
+                    f"failed={summary['failed']} dlq={summary['dlq']} "
+                    f"skipped={summary['skipped']}"
                 )
         except Exception as e:
             logger.error(f"Outbox loop error: {e}", exc_info=True)
