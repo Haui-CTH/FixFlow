@@ -1,0 +1,393 @@
+{
+  "name": "DX-FSM: Smart Ticket Routing",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "ticket-created",
+        "responseMode": "lastNode",
+        "options": {}
+      },
+      "id": "webhook-ticket-created",
+      "name": "Webhook: Ticket Created",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [100, 400]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{$env.AI_SERVICE_URL}}/classify",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "title",
+              "value": "={{$json.body.title}}"
+            },
+            {
+              "name": "description",
+              "value": "={{$json.body.description}}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "ai-classify",
+      "name": "AI: Classify Ticket",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 3,
+      "position": [350, 400]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{$env.AI_SERVICE_URL}}/recommend",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "ticket_id",
+              "value": "={{$json.body.ticket_id}}"
+            },
+            {
+              "name": "title",
+              "value": "={{$json.body.title}}"
+            },
+            {
+              "name": "description",
+              "value": "={{$json.body.description}}"
+            },
+            {
+              "name": "category",
+              "value": "={{$json.ai_category}}"
+            },
+            {
+              "name": "priority",
+              "value": "={{$json.ai_priority}}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "ai-recommend",
+      "name": "AI: Recommend Technician",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 3,
+      "position": [600, 400]
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "={{$env.AI_SERVICE_URL}}/kb/search",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "q",
+              "value": "={{$json.body.title}}"
+            },
+            {
+              "name": "top_k",
+              "value": "3"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "kb-search",
+      "name": "KB: Search Articles",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 3,
+      "position": [600, 600]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{$env.TICKET_SERVICE_URL}}/tickets/ai-result",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "ticket_id",
+              "value": "={{$json.body.ticket_id}}"
+            },
+            {
+              "name": "ai_category",
+              "value": "={{$('AI: Classify Ticket').$json.category}}"
+            },
+            {
+              "name": "ai_priority",
+              "value": "={{$('AI: Classify Ticket').$json.priority}}"
+            },
+            {
+              "name": "ai_confidence",
+              "value": "={{$('AI: Classify Ticket').$json.confidence}}"
+            },
+            {
+              "name": "ai_recommendation",
+              "value": "={{$('AI: Recommend Technician').$json.recommendations[0].technician_name}}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "save-ai-result",
+      "name": "Save AI Result",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 3,
+      "position": [850, 400]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{$env.TICKET_SERVICE_URL}}/tickets/assign",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "ticket_id",
+              "value": "={{$json.body.ticket_id}}"
+            },
+            {
+              "name": "technician_id",
+              "value": "={{$('AI: Recommend Technician').$json.recommendations[0].technician_id}}"
+            },
+            {
+              "name": "assigned_by",
+              "value": "ai-system"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "assign-technician",
+      "name": "Assign Technician",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 3,
+      "position": [1100, 400]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "priority-critical",
+              "leftValue": "={{$('AI: Classify Ticket').$json.priority}}",
+              "rightValue": "critical",
+              "operator": "equals"
+            }
+          ],
+          "combinator": "or"
+        },
+        "options": {}
+      },
+      "id": "check-critical",
+      "name": "Check: Critical Priority",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [1350, 400]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{$env.NOTIFICATION_SERVICE_URL}}/notify-managers",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "title",
+              "value": "=?🔴 Ticket Critical mới"
+            },
+            {
+              "name": "message",
+              "value": "=?Ticket #{{$json.body.ticket_id}} — {{$json.body.title}}\\n\\nCategory: {{$('AI: Classify Ticket').$json.category}}\\nPriority: {{$('AI: Classify Ticket').$json.priority}}\\nAssigned to: {{$('AI: Recommend Technician').$json.recommendations[0].technician_name}}\\n\\n⚠️ Yêu cầu xử lý ngay"
+            },
+            {
+              "name": "type",
+              "value": "critical_ticket"
+            },
+            {
+              "name": "priority",
+              "value": "high"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "notify-managers-critical",
+      "name": "Notify: Managers (Critical)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 3,
+      "position": [1600, 250]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{$env.NOTIFICATION_SERVICE_URL}}/notify",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "title",
+              "value": "=?🎫 Ticket được giao cho bạn"
+            },
+            {
+              "name": "message",
+              "value": "=?Ticket #{{$json.body.ticket_id}}: {{$json.body.title}}\\n\\nCategory: {{$('AI: Classify Ticket').$json.category}}\\nPriority: {{$('AI: Classify Ticket').$json.priority}}\\n\\n📋 KB Articles:\\n{{$('KB: Search Articles').$json.hits.map(h => '• ' + h.title + ': ' + h.snippet.substring(0,80)).join('\\n')}}\\n\\nVui lòng xử lý trong SLA."
+            },
+            {
+              "name": "user_id",
+              "value": "={{$('AI: Recommend Technician').$json.recommendations[0].technician_id}}"
+            },
+            {
+              "name": "type",
+              "value": "ticket_assigned"
+            },
+            {
+              "name": "ticket_id",
+              "value": "={{$json.body.ticket_id}}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "notify-technician",
+      "name": "Notify: Technician",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 3,
+      "position": [1600, 400]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{$env.NOTIFICATION_SERVICE_URL}}/notify",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "title",
+              "value": "=?✅ Ticket của bạn đã được tiếp nhận"
+            },
+            {
+              "name": "message",
+              "value": "=?Ticket #{{$json.body.ticket_id}}: {{$json.body.title}}\\n\\nChúng tôi đã tiếp nhận và đang xử lý.\\nCategory: {{$('AI: Classify Ticket').$json.category}}\\nPriority: {{$('AI: Classify Ticket').$json.priority}}\\n\\n📋 Tham khảo KB:\\n{{$('KB: Search Articles').$json.hits.map(h => '• ' + h.title).join('\\n')}}"
+            },
+            {
+              "name": "user_id",
+              "value": "={{$json.body.customer_id}}"
+            },
+            {
+              "name": "type",
+              "value": "ticket_acknowledged"
+            },
+            {
+              "name": "ticket_id",
+              "value": "={{$json.body.ticket_id}}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "notify-customer",
+      "name": "Notify: Customer",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 3,
+      "position": [1600, 550]
+    },
+    {
+      "parameters": {
+        "expression": "={{ {\"status\": \"routed\", \"ticket_id\": $json.body.ticket_id, \"category\": $('AI: Classify Ticket').$json.category, \"priority\": $('AI: Classify Ticket').$json.priority, \"technician\": $('AI: Recommend Technician').$json.recommendations[0].technician_name} }}",
+        "options": {}
+      },
+      "id": "respond-success",
+      "name": "Respond Success",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [1850, 400]
+    }
+  ],
+  "connections": {
+    "Webhook: Ticket Created": {
+      "main": [
+        [
+          {"node": "AI: Classify Ticket", "type": "main", "index": 0}
+        ]
+      ]
+    },
+    "AI: Classify Ticket": {
+      "main": [
+        [
+          {"node": "AI: Recommend Technician", "type": "main", "index": 0},
+          {"node": "KB: Search Articles", "type": "main", "index": 0}
+        ]
+      ]
+    },
+    "AI: Recommend Technician": {
+      "main": [
+        [
+          {"node": "Save AI Result", "type": "main", "index": 0}
+        ]
+      ]
+    },
+    "KB: Search Articles": {
+      "main": [
+        [
+          {"node": "Save AI Result", "type": "main", "index": 0}
+        ]
+      ]
+    },
+    "Save AI Result": {
+      "main": [
+        [
+          {"node": "Assign Technician", "type": "main", "index": 0}
+        ]
+      ]
+    },
+    "Assign Technician": {
+      "main": [
+        [
+          {"node": "Check: Critical Priority", "type": "main", "index": 0}
+        ]
+      ]
+    },
+    "Check: Critical Priority": {
+      "main": [
+        [
+          {"node": "Notify: Managers (Critical)", "type": "main", "index": 0}
+        ],
+        [
+          {"node": "Notify: Technician", "type": "main", "index": 0}
+        ]
+      ]
+    },
+    "Notify: Managers (Critical)": {
+      "main": [
+        [
+          {"node": "Notify: Technician", "type": "main", "index": 0}
+        ]
+      ]
+    },
+    "Notify: Technician": {
+      "main": [
+        [
+          {"node": "Notify: Customer", "type": "main", "index": 0}
+        ]
+      ]
+    },
+    "Notify: Customer": {
+      "main": [
+        [
+          {"node": "Respond Success", "type": "main", "index": 0}
+        ]
+      ]
+    }
+  },
+  "settings": {},
+  "staticData": null
+}
