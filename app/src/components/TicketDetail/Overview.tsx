@@ -6,22 +6,23 @@ import { formatDate } from '../../lib/format';
 import { categoryMeta } from '../../lib/ticket-meta';
 import { Card } from '../ui/Card';
 import styles from './TicketDetail.module.css';
+import { t } from '../../lib/i18n';
 
 export function Overview({ ticket }: { ticket: Ticket }) {
   const rows: [string, string][] = [
-    ['Khách hàng', ticket.customer_name || '-'],
+    [t('overview.khach_hang'), ticket.customer_name || '-'],
     ['Email', ticket.customer_email || '-'],
-    ['Địa điểm', ticket.customer_location || '-'],
-    ['Kỹ thuật viên', ticket.technician_name || 'Chưa giao'],
-    ['Danh mục', categoryMeta(ticket.category).label],
-    ['Ngày tạo', formatDate(ticket.created_at, true)],
-    ['Cập nhật', formatDate(ticket.updated_at, true)],
+    [t('overview.dia_diem'), ticket.customer_location || '-'],
+    [t('overview.ky_thuat_vien'), ticket.technician_name || t('overview.chua_giao')],
+    [t('overview.danh_muc'), categoryMeta(ticket.category).label],
+    [t('overview.ngay_tao'), formatDate(ticket.created_at, true)],
+    [t('overview.cap_nhat'), formatDate(ticket.updated_at, true)],
   ];
   return (
     <Card>
-      <h2 className={styles.h2}>Mô tả</h2>
-      <p className={styles.description}>{ticket.description || 'Không có mô tả'}</p>
-      <h2 className={styles.h2}>Thông tin</h2>
+      <h2 className={styles.h2}>{t('overview.mo_ta')}</h2>
+      <p className={styles.description}>{ticket.description || t('overview.khong_co_mo_ta')}</p>
+      <h2 className={styles.h2}>{t('overview.thong_tin')}</h2>
       <dl className={styles.metaGrid}>
         {rows.map(([k, v]) => (
           <div key={k} className={styles.metaItem}>

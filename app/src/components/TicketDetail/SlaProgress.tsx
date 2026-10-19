@@ -5,6 +5,7 @@ import { AlarmClock, Clock } from 'lucide-react';
 import type { Ticket } from '../../lib/api';
 import { slaInfo } from '../../lib/sla';
 import styles from './TicketDetail.module.css';
+import { t } from '../../lib/i18n';
 
 export function slaPercent(ticket: Pick<Ticket, 'created_at' | 'sla_deadline'>, now: number): number {
   const start = Date.parse(ticket.created_at ?? '');
@@ -18,7 +19,7 @@ export function SlaProgress({ ticket, now }: { ticket: Ticket; now: number }) {
   if (!info) return null;
   const pct = slaPercent(ticket, now);
   const Icon = info.level === 'overdue' ? AlarmClock : Clock;
-  const label = info.level === 'overdue' ? 'Quá hạn' : info.level === 'warning' ? 'Sắp hết hạn' : 'Trong hạn';
+  const label = info.level === 'overdue' ? t('sla_progress.qua_han') : info.level === 'warning' ? t('sla_progress.sap_het_han') : t('sla_progress.trong_han');
   return (
     <div className={styles.sla}>
       <span className={`${styles.slaText} ${styles['sla-' + info.level]} tabular`}>
@@ -27,7 +28,7 @@ export function SlaProgress({ ticket, now }: { ticket: Ticket; now: number }) {
       </span>
       <div
         role="progressbar"
-        aria-label="Tiến độ SLA"
+        aria-label={t('sla_progress.tien_do_sla')}
         aria-valuemin={0}
         aria-valuemax={100}
         aria-valuenow={pct}

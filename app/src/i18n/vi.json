@@ -1,0 +1,511 @@
+{
+  "action": {
+    "assign": "Phân công",
+    "cancel": "Huỷ ticket",
+    "cancel_confirm": "Huỷ ticket này? Không thể hoàn tác.",
+    "close": "Đóng ticket",
+    "close_confirm": "Đóng ticket? Sau khi đóng sẽ không thể mở lại.",
+    "customer_close": "Xác nhận & đóng ticket",
+    "customer_close_confirm": "Xác nhận sự cố đã được xử lý và đóng ticket?",
+    "customer_reopen": "Chưa xong, mở lại",
+    "pause": "Tạm dừng",
+    "reassign": "Phân công lại",
+    "reopen": "Mở lại",
+    "resolve": "Đã giải quyết",
+    "resume": "Tiếp tục xử lý",
+    "start": "Bắt đầu xử lý",
+    "take": "Nhận ticket"
+  },
+  "activity_panel": {
+    "da_giai_quyet": "Đã giải quyết",
+    "hoat_dong_24_gio_qua": "Hoạt động 24 giờ qua",
+    "tao_moi": "Tạo mới",
+    "vi_pham_sla": "Vi phạm SLA"
+  },
+  "ai_insights_card": {
+    "category": "Danh mục",
+    "chua_co_phan_tich_ai_cho_ticket_na": "Chưa có phân tích AI cho ticket này. Bạn vẫn xử lý bình thường.",
+    "do_tin_cay": "Độ tin cậy",
+    "do_tin_cay_ai": "Độ tin cậy AI",
+    "goi_y_ky_thuat_vien": "Gợi ý kỹ thuật viên",
+    "priority": "Ưu tiên"
+  },
+  "ai_suggestion": {
+    "ap_dung_goi_y": "Áp dụng gợi ý",
+    "confidence": "Độ tin cậy {{pct}}%",
+    "da_tu_dien_vao_form_ban_van_co_the": "Đã tự điền vào form, bạn vẫn có thể sửa.",
+    "headline": "Gợi ý AI: {{category}} · ưu tiên {{priority}}"
+  },
+  "api": {
+    "ban_khong_co_quyen_thuc_hien_thao": "Bạn không có quyền thực hiện thao tác này",
+    "error_status": "Lỗi {{status}}: {{text}}",
+    "khong_ket_noi_duoc_toi_may_chu": "Không kết nối được tới máy chủ",
+    "loi_mang": "Lỗi mạng",
+    "loi_may_chu_vui_long_thu_lai_sau": "Lỗi máy chủ, vui lòng thử lại sau",
+    "phien_dang_nhap_het_han": "Phiên đăng nhập hết hạn",
+    "vui_long_dang_nhap_lai": "Vui lòng đăng nhập lại"
+  },
+  "app": {
+    "ban_khong_co_quyen_tao_ticket": "Bạn không có quyền tạo ticket"
+  },
+  "assign_modal": {
+    "assigned_to": "Đã phân công cho {{name}}",
+    "chua_co_ky_thuat_vien_nao": "Chưa có kỹ thuật viên nào.",
+    "chua_khai_bao_chuyen_mon": "Chưa khai báo chuyên môn",
+    "da_day": " · đã đầy",
+    "de_xuat": "Đề xuất",
+    "huy_bo": "Huỷ bỏ",
+    "khong_phan_cong_duoc_vui_long_thu": "Không phân công được. Vui lòng thử lại.",
+    "khong_san_sang": "Không sẵn sàng",
+    "khong_tai_duoc_danh_sach_ktv": "Không tải được danh sách KTV",
+    "ky_thuat_vien": "kỹ thuật viên",
+    "ky_thuat_vien_2": "Kỹ thuật viên",
+    "load_aria": "Tải của {{name}}",
+    "phan_cong_ky_thuat_vien": "Phân công kỹ thuật viên",
+    "xac_nhan_phan_cong": "Xác nhận phân công"
+  },
+  "assignee_table": {
+    "chua_co_ky_thuat_vien": "Chưa có kỹ thuật viên",
+    "da_giai_quyet": "Đã giải quyết",
+    "dang_xu_ly": "Đang xử lý",
+    "ky_thuat_vien": "Kỹ thuật viên",
+    "ky_thuat_vien_noi_bat": "Kỹ thuật viên nổi bật",
+    "tong": "Tổng",
+    "top_title": "Kỹ thuật viên nổi bật ({{count}} người)"
+  },
+  "attachments_panel": {
+    "an_danh": "Ẩn danh",
+    "chua_co_file_dinh_kem": "Chưa có file đính kèm",
+    "da_tai_len": "Đã tải lên",
+    "da_xoa_file": "Đã xoá file",
+    "delete_msg": "Xoá \"{{name}}\"?",
+    "dinh_kem": "Đính kèm",
+    "download": "Tải {{name}}",
+    "khong_tai_duoc_dinh_kem": "Không tải được đính kèm",
+    "khong_tai_duoc_file": "Không tải được file.",
+    "khong_xoa_duoc_file": "Không xoá được file.",
+    "remove": "Xoá {{name}}",
+    "them_file": "Thêm file",
+    "upload_failed": "{{count}} file chưa tải lên được.",
+    "upload_n": "Tải lên {{count}} file",
+    "xoa": "Xoá",
+    "xoa_file": "Xoá file"
+  },
+  "auth_guard": {
+    "dang_tai": "Đang tải",
+    "khong_ket_noi_duoc_may_chu_dang_nh": "Không kết nối được máy chủ đăng nhập",
+    "kiem_tra_mang_hoac_dich_vu_keycloa": "Kiểm tra mạng hoặc dịch vụ Keycloak rồi thử lại."
+  },
+  "category": {
+    "electrical": "Điện",
+    "hardware": "Phần cứng",
+    "hvac": "Điều hoà",
+    "network": "Mạng",
+    "other": "Khác",
+    "plumbing": "Cấp thoát nước",
+    "software": "Phần mềm"
+  },
+  "comments_panel": {
+    "an_danh": "Ẩn danh",
+    "binh_luan": "Bình luận",
+    "chua_co_binh_luan": "Chưa có bình luận",
+    "da_xoa_binh_luan": "Đã xoá bình luận",
+    "gui": "Gửi",
+    "hay_la_nguoi_dau_tien_binh_luan": "Hãy là người đầu tiên bình luận.",
+    "khong_gui_duoc_binh_luan_vui_long": "Không gửi được bình luận. Vui lòng thử lại.",
+    "khong_tai_duoc_binh_luan": "Không tải được bình luận",
+    "khong_xoa_duoc_binh_luan": "Không xoá được bình luận.",
+    "noi_bo": "Nội bộ",
+    "noi_bo_khach_hang_khong_thay": "Nội bộ (khách hàng không thấy)",
+    "viet_binh_luan": "Viết bình luận",
+    "xoa": "Xoá",
+    "xoa_binh_luan": "Xoá bình luận",
+    "xoa_binh_luan_nay_thao_tac_khong_t": "Xoá bình luận này? Thao tác không thể hoàn tác."
+  },
+  "confirm_dialog": {
+    "huy_bo": "Huỷ bỏ",
+    "xac_nhan": "Xác nhận"
+  },
+  "dashboard": {
+    "dang_tai_so_lieu": "Đang tải số liệu",
+    "dang_xu_ly": "Đang xử lý",
+    "days": "{{count}} ngày",
+    "empty_title": "Chưa có dữ liệu trong {{days}} ngày",
+    "khoang_thoi_gian": "Khoảng thời gian",
+    "khong_tai_duoc_so_lieu": "Không tải được số liệu",
+    "kiem_tra_ket_noi_roi_thu_lai": "Kiểm tra kết nối rồi thử lại.",
+    "lam_moi": "Làm mới",
+    "lam_moi_so_lieu": "Làm mới số liệu",
+    "outbox_loi": "Outbox lỗi",
+    "outbox_pending": "Đang chờ: {{count}}",
+    "subtitle": "Hoạt động 24 giờ qua và cửa sổ {{days}} ngày",
+    "theo_danh_muc": "Theo danh mục",
+    "theo_muc_uu_tien": "Theo mức ưu tiên",
+    "theo_trang_thai": "Theo trạng thái",
+    "thu_chon_khoang_thoi_gian_dai_hon": "Thử chọn khoảng thời gian dài hơn.",
+    "ti_le_vi_pham_sla": "Tỉ lệ vi phạm SLA",
+    "tong_quan_van_hanh": "Tổng quan vận hành",
+    "tong_ticket": "Tổng ticket",
+    "updated_at": "cập nhật lúc {{time}}",
+    "xem_365_ngay": "Xem 365 ngày"
+  },
+  "distribution_bar": {
+    "aria": "{{label}}: {{count}} trên {{total}}"
+  },
+  "error_boundary": {
+    "chi_tiet_loi_developer": "Chi tiết lỗi (developer)",
+    "da_xay_ra_loi": "Đã xảy ra lỗi",
+    "thu_lai": "Thử lại",
+    "ung_dung_gap_loi_khong_mong_muon_b": "Ứng dụng gặp lỗi không mong muốn. Bạn có thể thử lại hoặc quay về trang chủ.",
+    "ve_trang_chu": "Về trang chủ"
+  },
+  "error_summary": {
+    "count": "Có {{count}} mục cần sửa:"
+  },
+  "file_dropzone": {
+    "chon_file": "Chọn file",
+    "chon_file_dinh_kem": "Chọn file đính kèm",
+    "err_max": "Tối đa {{max}} file",
+    "err_size": "\"{{name}}\": vượt quá 10 MB",
+    "err_type": "\"{{name}}\": chỉ nhận ảnh (JPG, PNG, GIF, WebP) hoặc PDF",
+    "file_da_chon": "File đã chọn",
+    "hint": "Tối đa {{max}} file, mỗi file ≤ 10 MB",
+    "keo_tha_anh_pdf_vao_day_hoac": "Kéo thả ảnh/PDF vào đây hoặc",
+    "remove": "Xoá {{name}}"
+  },
+  "history": {
+    "assigned": "{{actor}} gán cho {{to}}",
+    "category_changed": "{{actor}} đổi danh mục: {{from}} → {{to}}",
+    "closed": "{{actor}} đóng ticket",
+    "comment_added": "{{actor}} thêm bình luận",
+    "created": "{{actor}} tạo ticket",
+    "note_added": "{{actor}} thêm note nội bộ",
+    "priority_changed": "{{actor}} đổi ưu tiên: {{from}} → {{to}}",
+    "reopened": "{{actor}} mở lại ticket",
+    "resolved": "{{actor}} đánh dấu resolved",
+    "sla_breached": "SLA breach — quá deadline {{minutes}}m",
+    "sla_met": "{{actor}} hoàn thành trong SLA",
+    "status_changed": "{{actor}} đổi trạng thái: {{from}} → {{to}}",
+    "system": "Hệ thống",
+    "unassigned": "{{actor}} bỏ gán",
+    "updated": "{{actor}} cập nhật ticket"
+  },
+  "history_timeline": {
+    "chua_co_su_kien_nao_tren_ticket_na": "Chưa có sự kiện nào trên ticket này.",
+    "dang_tai_lich_su": "Đang tải lịch sử…",
+    "khong_ro": "Không rõ",
+    "lich_su": "Lịch sử",
+    "lich_su_ticket": "Lịch sử ticket",
+    "load_error": "Lỗi tải lịch sử: {{error}}",
+    "thu_lai": "Thử lại"
+  },
+  "lang": {
+    "en": "Tiếng Anh",
+    "label": "Ngôn ngữ",
+    "vi": "Tiếng Việt"
+  },
+  "layout": {
+    "bo_qua_toi_noi_dung_chinh": "Bỏ qua tới nội dung chính"
+  },
+  "login": {
+    "ai_goi_y_phan_loai_va_ky_thuat_vie": "AI gợi ý phân loại và kỹ thuật viên phù hợp",
+    "chua_co_tai_khoan_lien_he_quan_tri": "Chưa có tài khoản? Liên hệ quản trị viên.",
+    "dang_nhap": "Đăng nhập",
+    "dang_nhap_dx_fsm": "Đăng nhập — DX-FSM",
+    "dang_nhap_mot_lan_sso_phan_quyen_t": "Đăng nhập một lần (SSO), phân quyền theo vai trò",
+    "dang_nhap_voi_sso": "Đăng nhập với SSO",
+    "dev_tai_khoan_demo_admin_manager_t": "Dev: tài khoản demo admin, manager, technician, customer.",
+    "dung_tai_khoan_cong_ty_cua_ban_de": "Dùng tài khoản công ty của bạn để tiếp tục.",
+    "quan_ly_dich_vu_thuc_dia": "Quản lý dịch vụ thực địa",
+    "theo_doi_ticket_tu_tiep_nhan_den_h": "Theo dõi ticket từ tiếp nhận đến hoàn tất"
+  },
+  "modal": {
+    "dong": "Đóng"
+  },
+  "nav": {
+    "all_tickets": "Tất cả ticket",
+    "dashboard": "Tổng quan",
+    "my_tickets": "Ticket của tôi",
+    "new_ticket": "Tạo ticket",
+    "not_found": "Không tìm thấy trang",
+    "notifications": "Thông báo",
+    "ticket_detail": "Chi tiết ticket"
+  },
+  "not_found": {
+    "duong_dan_khong_ton_tai_hoac_da_du": "Đường dẫn không tồn tại hoặc đã được di chuyển.",
+    "khong_tim_thay_trang": "Không tìm thấy trang",
+    "ve_trang_chu": "Về trang chủ"
+  },
+  "note_composer": {
+    "dang_gui": "Đang gửi…",
+    "gui_note": "Gửi note",
+    "noi_dung_note": "Nội dung note",
+    "viet_note_noi_bo_cmd_ctrl_enter_de": "Viết note nội bộ... (Cmd/Ctrl+Enter để gửi)",
+    "xoa": "Xóa"
+  },
+  "notes": {
+    "empty": "Nội dung note không được để trống",
+    "too_long": "Nội dung note tối đa {{max}} ký tự (hiện tại: {{current}})"
+  },
+  "notes_panel": {
+    "chi_nhan_vien": "Chỉ nhân viên",
+    "chua_co_note_nao_hay_them_note_noi": "Chưa có note nào. Hãy thêm note nội bộ đầu tiên.",
+    "dang_tai_notes": "Đang tải notes…",
+    "dong": "Đóng",
+    "ghi_chu_noi_bo": "Ghi chú nội bộ",
+    "khong_ro": "Không rõ",
+    "load_error": "Lỗi tải notes: {{error}}",
+    "loi_khi_tao_note": "Lỗi khi tạo note",
+    "send_error": "Không gửi được note: {{error}}",
+    "thu_lai": "Thử lại"
+  },
+  "notification_bell": {
+    "aria": "Thông báo, {{count}} chưa đọc",
+    "ban_da_xem_het_thong_bao": "Bạn đã xem hết thông báo.",
+    "danh_dau_tat_ca_da_doc": "Đánh dấu tất cả đã đọc",
+    "khong_co_thong_bao_chua_doc": "Không có thông báo chưa đọc",
+    "load_error": "Không tải được thông báo.",
+    "n_new": "Có {{count}} thông báo mới",
+    "sr_unread": "{{count}} thông báo chưa đọc",
+    "thong_bao": "Thông báo",
+    "thu_lai": "Thử lại",
+    "xem_tat_ca": "Xem tất cả"
+  },
+  "notification_item": {
+    "canh_bao": "Cảnh báo",
+    "loi": "Lỗi",
+    "moi": "Mới",
+    "thanh_cong": "Thành công",
+    "thong_tin": "Thông tin",
+    "unread_aria": "Chưa đọc: {{title}}"
+  },
+  "notifications": {
+    "ban_da_xem_het_thong_bao": "Bạn đã xem hết thông báo",
+    "cap_nhat_ticket_va_canh_bao_sla_se": "Cập nhật ticket và cảnh báo SLA sẽ hiện ở đây.",
+    "chua_co_thong_bao_nao": "Chưa có thông báo nào",
+    "cu_hon": "Cũ hơn",
+    "danh_dau_tat_ca_da_doc": "Đánh dấu tất cả đã đọc",
+    "hom_nay": "Hôm nay",
+    "hom_qua": "Hôm qua",
+    "khong_tai_duoc_thong_bao": "Không tải được thông báo",
+    "loc_thong_bao": "Lọc thông báo",
+    "tab_all": "Tất cả",
+    "tab_unread": "Chưa đọc",
+    "tai_them": "Tải thêm",
+    "thong_bao": "Thông báo",
+    "unread_aria": "{{count}} chưa đọc"
+  },
+  "outbox_panel": {
+    "co_loi": "Có lỗi",
+    "da_gui": "Đã gửi",
+    "dang_cho": "Đang chờ",
+    "dang_cho_gui": "Đang chờ gửi",
+    "dang_gui": "Đang gửi",
+    "hang_doi_su_kien": "Hàng đợi sự kiện",
+    "khoe": "Khoẻ",
+    "loi": "Lỗi",
+    "oldest": "Chờ lâu nhất: {{age}}"
+  },
+  "overview": {
+    "cap_nhat": "Cập nhật",
+    "chua_giao": "Chưa giao",
+    "danh_muc": "Danh mục",
+    "dia_diem": "Địa điểm",
+    "khach_hang": "Khách hàng",
+    "khong_co_mo_ta": "Không có mô tả",
+    "ky_thuat_vien": "Kỹ thuật viên",
+    "mo_ta": "Mô tả",
+    "ngay_tao": "Ngày tạo",
+    "thong_tin": "Thông tin"
+  },
+  "pagination": {
+    "moi_trang": "Mỗi trang",
+    "page_n": "Trang {{n}}",
+    "phan_trang": "Phân trang",
+    "sau": "Sau",
+    "showing": "Hiển thị {{from}}–{{to}} / {{total}}",
+    "trang_sau": "Trang sau",
+    "trang_truoc": "Trang trước",
+    "truoc": "Trước"
+  },
+  "priority": {
+    "critical": "Khẩn cấp",
+    "high": "Cao",
+    "low": "Thấp",
+    "medium": "Trung bình"
+  },
+  "priority_selector": {
+    "muc_uu_tien": "Mức ưu tiên",
+    "xu_ly_trong_24_gio": "Xử lý trong 24 giờ",
+    "xu_ly_trong_3_ngay": "Xử lý trong 3 ngày",
+    "xu_ly_trong_4_gio": "Xử lý trong 4 giờ",
+    "xu_ly_trong_7_ngay": "Xử lý trong 7 ngày"
+  },
+  "s_l_a_panel": {
+    "chu_y": "Chú ý",
+    "dat_sla_da_giai_quyet_dong": "Đạt SLA (đã giải quyết/đóng)",
+    "dung_han": "Đúng hạn",
+    "hieu_suat_sla": "Hiệu suất SLA",
+    "khong_dat_sla": "Không đạt SLA",
+    "nguy_cap": "Nguy cấp",
+    "qua_han_dang_xu_ly": "Quá hạn (đang xử lý)",
+    "ti_le_vi_pham": "tỉ lệ vi phạm",
+    "ticket_dang_xu_ly": "Ticket đang xử lý",
+    "tot": "Tốt"
+  },
+  "sidebar": {
+    "dieu_huong_chinh": "Điều hướng chính",
+    "dong_menu": "Đóng menu",
+    "mo_rong_thanh_ben": "Mở rộng thanh bên",
+    "thu_gon_thanh_ben": "Thu gọn thanh bên",
+    "aside": "Thanh bên"
+  },
+  "skeleton": {
+    "dang_tai": "Đang tải"
+  },
+  "sla": {
+    "days": "{{count}} ngày",
+    "hours": "{{count}} giờ",
+    "left": "còn {{span}}",
+    "minutes": "{{count}} phút",
+    "overdue": "quá {{span}}"
+  },
+  "sla_panel": {
+    "gauge_aria": "Tỉ lệ vi phạm SLA {{pct}}%, mức {{level}}"
+  },
+  "sla_progress": {
+    "qua_han": "Quá hạn",
+    "sap_het_han": "Sắp hết hạn",
+    "tien_do_sla": "Tiến độ SLA",
+    "trong_han": "Trong hạn"
+  },
+  "states": {
+    "da_xay_ra_loi": "Đã xảy ra lỗi",
+    "thu_lai": "Thử lại"
+  },
+  "status": {
+    "assigned": "Đã giao",
+    "cancelled": "Đã huỷ",
+    "closed": "Đã đóng",
+    "in_progress": "Đang xử lý",
+    "new": "Mới",
+    "pending": "Chờ",
+    "resolved": "Đã giải quyết",
+    "sla_breached": "Quá SLA"
+  },
+  "status_actions": {
+    "hanh_dong": "Hành động",
+    "khong_doi_duoc_trang_thai_co_the_b": "Không đổi được trạng thái. Có thể bạn không có quyền hoặc ticket đã thay đổi.",
+    "moved_to": "Đã chuyển sang \"{{status}}\"",
+    "tai_khoan_cua_ban_chua_co_ho_so_ky": "Tài khoản của bạn chưa có hồ sơ kỹ thuật viên."
+  },
+  "ticket_card": {
+    "chua_giao": "Chưa giao"
+  },
+  "ticket_create": {
+    "chon_danh_muc": "Chọn danh mục…",
+    "chua_lay_duoc_goi_y_ai_ban_van_co": "Chưa lấy được gợi ý AI. Bạn vẫn có thể tự chọn danh mục và mức ưu tiên.",
+    "created": "Đã tạo ticket {{number}}",
+    "danh_muc": "Danh mục *",
+    "description_helper": "Nêu thiết bị, triệu chứng, thời điểm xảy ra. ({{count}} ký tự)",
+    "dia_chi_vi_tri": "Địa chỉ / vị trí",
+    "dia_diem": "Địa điểm",
+    "dinh_kem_tuy_chon": "Đính kèm (tuỳ chọn)",
+    "gia_tri_khong_hop_le": "Giá trị không hợp lệ",
+    "goi_y_bang_ai": "Gợi ý bằng AI",
+    "hay_chon_muc_uu_tien": "Hãy chọn mức ưu tiên",
+    "hay_nhap_mo_ta": "Hãy nhập mô tả",
+    "hay_nhap_tieu_de": "Hãy nhập tiêu đề",
+    "huy": "Huỷ",
+    "la_thong_tin_bat_buoc": "* là thông tin bắt buộc",
+    "mo_ta": "Mô tả *",
+    "mo_ta_can_it_nhat_10_ky_tu": "Mô tả cần ít nhất 10 ký tự",
+    "muc_uu_tien": "Mức ưu tiên *",
+    "nhap_tieu_de_va_mo_ta_de_dung_goi": "Nhập tiêu đề và mô tả để dùng gợi ý.",
+    "phan_loai": "Phân loại",
+    "pick_category": "Hãy chọn danh mục",
+    "tao_ticket": "Tạo ticket",
+    "thong_tin_su_co": "Thông tin sự cố",
+    "tieu_de": "Tiêu đề *",
+    "tieu_de_can_it_nhat_5_ky_tu": "Tiêu đề cần ít nhất 5 ký tự",
+    "tieu_de_toi_da_200_ky_tu": "Tiêu đề tối đa 200 ký tự",
+    "upload_failed": "{{count}} file chưa tải lên được. Bạn có thể thêm lại trong trang chi tiết.",
+    "uploading": "Đang tải lên file {{i}}/{{n}}…"
+  },
+  "ticket_detail": {
+    "binh_luan": "Bình luận",
+    "dang_tai_ticket": "Đang tải ticket",
+    "dinh_kem": "Đính kèm",
+    "ghi_chu_noi_bo": "Ghi chú nội bộ",
+    "khong_tai_duoc_ticket": "Không tải được ticket",
+    "khong_tim_thay_ticket": "Không tìm thấy ticket",
+    "lich_su": "Lịch sử",
+    "thong_tin_phu": "Thông tin phụ",
+    "ticket_khong_ton_tai_hoac_ban_khon": "Ticket không tồn tại hoặc bạn không có quyền xem.",
+    "tong_quan": "Tổng quan",
+    "ve_danh_sach_ticket": "Về danh sách ticket"
+  },
+  "ticket_filters": {
+    "all_of": "{{label}}: tất cả",
+    "danh_muc": "Danh mục",
+    "moi_nhat": "Mới nhất",
+    "remove_filter": "Bỏ lọc {{text}}",
+    "sap_xep": "Sắp xếp",
+    "search_chip": "Tìm: {{q}}",
+    "sla_gan_het_han_truoc": "SLA gần hết hạn trước",
+    "tim_theo_tieu_de": "Tìm theo tiêu đề",
+    "tim_ticket_theo_tieu_de": "Tìm ticket theo tiêu đề",
+    "trang_thai": "Trạng thái",
+    "tuy_chinh_theo_cot": "Tuỳ chỉnh (theo cột)",
+    "uu_tien": "Ưu tiên",
+    "uu_tien_cao_truoc": "Ưu tiên cao trước",
+    "xoa_loc": "Xoá lọc"
+  },
+  "ticket_header": {
+    "created_by": "Tạo bởi {{name}} · {{when}}",
+    "khong_ro": "không rõ",
+    "quay_lai_danh_sach": "Quay lại danh sách"
+  },
+  "ticket_table": {
+    "chua_giao": "Chưa giao",
+    "ktv": "KTV",
+    "ma": "Mã",
+    "ngay_tao": "Ngày tạo",
+    "tieu_de": "Tiêu đề",
+    "trang_thai": "Trạng thái",
+    "uu_tien": "Ưu tiên"
+  },
+  "tickets": {
+    "chua_co_ticket_nao": "Chưa có ticket nào",
+    "hay_tao_ticket_dau_tien": "Hãy tạo ticket đầu tiên.",
+    "khong_co_ticket_khop_bo_loc": "Không có ticket khớp bộ lọc",
+    "khong_tai_duoc_danh_sach_ticket": "Không tải được danh sách ticket",
+    "kiem_tra_ket_noi_roi_thu_lai": "Kiểm tra kết nối rồi thử lại.",
+    "tao_ticket": "Tạo ticket",
+    "tat_ca_ticket": "Tất cả ticket",
+    "thu_doi_tu_khoa_hoac_bo_bot_bo_loc": "Thử đổi từ khoá hoặc bỏ bớt bộ lọc.",
+    "ticket_cua_toi": "Ticket của tôi",
+    "xoa_loc": "Xoá lọc"
+  },
+  "time": {
+    "d_ago": "{{n}}d trước",
+    "h_ago": "{{n}}h trước",
+    "just_now": "vừa xong",
+    "m_ago": "{{n}}m trước",
+    "s_ago": "{{n}}s trước"
+  },
+  "toast": {
+    "dong_thong_bao": "Đóng thông báo",
+    "region": "Thông báo"
+  },
+  "top_bar": {
+    "account": "Tài khoản {{name}}",
+    "chuyen_sang_giao_dien_sang": "Chuyển sang giao diện sáng",
+    "chuyen_sang_giao_dien_toi": "Chuyển sang giao diện tối",
+    "dang_xuat": "Đăng xuất",
+    "mo_menu": "Mở menu"
+  },
+  "use_notifications": {
+    "thong_bao_moi": "Thông báo mới"
+  }
+}

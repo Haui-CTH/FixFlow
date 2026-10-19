@@ -18,6 +18,7 @@ import { useRole } from '../hooks/useRole';
 import { aiApi, attachmentApi, ticketApi, type AiClassifyResult } from '../lib/api';
 import { CATEGORY_META, CATEGORY_VALUES } from '../lib/ticket-meta';
 import { toastApi } from '../lib/toast';
+import { t } from '../lib/i18n';
 
 interface FormValues {
   title: string;
@@ -74,7 +75,7 @@ export default function TicketCreate() {
 
   // priority không có ô nhập thật: đăng ký để validate
   useEffect(() => {
-    register('priority', { required: 'Hãy chọn mức ưu tiên' });
+    register('priority', { required: t('ticket_create.hay_chon_muc_uu_tien') });
   }, [register]);
 
   // Nháp: lưu mỗi lần đổi
@@ -94,7 +95,7 @@ export default function TicketCreate() {
       });
       let failed = 0;
       for (let i = 0; i < files.length; i++) {
-        setProgress(`Đang tải lên file ${i + 1}/${files.length}…`);
+        setProgress(t('ticket_create.uploading', { i: i + 1, n: files.length }));
         try {
           await attachmentApi.upload(ticket.id, files[i]);
         } catch {
@@ -105,8 +106,8 @@ export default function TicketCreate() {
     },
     onSuccess: ({ ticket, failed }) => {
       clearDraft();
-      if (failed > 0) toastApi.warning(`${failed} file chưa tải lên được. Bạn có thể thêm lại trong trang chi tiết.`);
-      else toastApi.success(`Đã tạo ticket ${ticket.ticket_number}`);
+      if (failed > 0) toastApi.warning(t('ticket_create.upload_failed', { count: failed }));
+      else toastApi.success(t('ticket_create.created', { number: ticket.ticket_number }));
       navigate(`/tickets/${ticket.id}`, { replace: true });
     },
     onSettled: () => setProgress(''),
@@ -121,7 +122,7 @@ export default function TicketCreate() {
   }, [isDirty, create.isPending]);
 
   const onInvalid = (errs: typeof errors) => {
-    const list = Object.entries(errs).map(([name, e]) => ({ name, message: String(e?.message ?? 'Giá trị không hợp lệ') }));
+    const list = Object.entries(errs).map(([name, e]) => ({ name, message: String(e?.message ?? t('ticket_create.gia_tri_khong_hop_le')) }));
     if (list.length === 1) {
       setSummary([]);
       const n = list[0].name;
@@ -138,7 +139,7 @@ export default function TicketCreate() {
       if (auto) applyAi(r);
       setAi({ result: r, applied: auto });
     } catch {
-      toastApi.info('Chưa lấy được gợi ý AI. Bạn vẫn có thể tự chọn danh mục và mức ưu tiên.');
+      toastApi.info(t('ticket_create.chua_lay_duoc_goi_y_ai_ban_van_co'));
     } finally {
       setAiBusy(false);
     }
@@ -153,37 +154,37 @@ export default function TicketCreate() {
 
   return (
     <div className={styles.page}>
-      <PageHeader title="Tạo ticket" description="* là thông tin bắt buộc" />
+      <PageHeader title={t('ticket_create.tao_ticket')} description={t('ticket_create.la_thong_tin_bat_buoc')} />
       <form noValidate onSubmit={handleSubmit((v) => create.mutate(v), onInvalid)} className={styles.form}>
         <ErrorSummary errors={summary} />
 
         <fieldset className={styles.group}>
-          <legend>Thông tin sự cố</legend>
+          <legend>{t('ticket_create.thong_tin_su_co')}</legend>
           <Input
-            label="Tiêu đề *"
+            label={t('ticket_create.tieu_de')}
             maxLength={200}
             error={errors.title?.message}
             {...register('title', {
-              required: 'Hãy nhập tiêu đề',
-              minLength: { value: 5, message: 'Tiêu đề cần ít nhất 5 ký tự' },
-              maxLength: { value: 200, message: 'Tiêu đề tối đa 200 ký tự' },
+              required: t('ticket_create.hay_nhap_tieu_de'),
+              minLength: { value: 5, message: t('ticket_create.tieu_de_can_it_nhat_5_ky_tu') },
+              maxLength: { value: 200, message: t('ticket_create.tieu_de_toi_da_200_ky_tu') },
             })}
           />
           <Textarea
-            label="Mô tả *"
-            helper={`Nêu thiết bị, triệu chứng, thời điểm xảy ra. (${description?.length ?? 0} ký tự)`}
+            label={t('ticket_create.mo_ta')}
+            helper={t('ticket_create.description_helper', { count: description?.length ?? 0 })}
             error={errors.description?.message}
             {...register('description', {
-              required: 'Hãy nhập mô tả',
-              minLength: { value: 10, message: 'Mô tả cần ít nhất 10 ký tự' },
+              required: t('ticket_create.hay_nhap_mo_ta'),
+              minLength: { value: 10, message: t('ticket_create.mo_ta_can_it_nhat_10_ky_tu') },
             })}
           />
         </fieldset>
 
         <fieldset className={styles.group}>
-          <legend>Phân loại</legend>
-          <Select label="Danh mục *" error={errors.category?.message} {...register('category', { required: 'Hãy chọn danh mục' })}>
-            <option value="">Chọn danh mục…</option>
+          <legend>{t('ticket_create.phan_loai')}</legend>
+          <Select label={t('ticket_create.danh_muc')} error={errors.category?.message} {...register('category', { required: t('ticket_create.pick_category') })}>
+            <option value="">{t('ticket_create.chon_danh_muc')}</option>
             {CATEGORY_VALUES.map((c) => (
               <option key={c} value={c}>
                 {CATEGORY_META[c].label}
@@ -191,7 +192,7 @@ export default function TicketCreate() {
             ))}
           </Select>
           <div>
-            <span className={styles.legendLike}>Mức ưu tiên *</span>
+            <span className={styles.legendLike}>{t('ticket_create.muc_uu_tien')}</span>
             <PrioritySelector
               value={priority}
               error={errors.priority?.message}
@@ -206,30 +207,30 @@ export default function TicketCreate() {
           <div>
             <Button variant="secondary" onClick={askAi} loading={aiBusy} disabled={!canAsk}>
               <Sparkles size={16} aria-hidden="true" />
-              Gợi ý bằng AI
+              {t('ticket_create.goi_y_bang_ai')}
             </Button>
-            {!canAsk && <span className={styles.hint}> Nhập tiêu đề và mô tả để dùng gợi ý.</span>}
+            {!canAsk && <span className={styles.hint}>{t('ticket_create.nhap_tieu_de_va_mo_ta_de_dung_goi')}</span>}
           </div>
           {ai && <AiSuggestion result={ai.result} applied={ai.applied} onApply={() => { applyAi(ai.result); setAi({ ...ai, applied: true }); }} />}
         </fieldset>
 
         <fieldset className={styles.group}>
-          <legend>Địa điểm</legend>
-          <Input label="Địa chỉ / vị trí" autoComplete="street-address" {...register('customer_location')} />
+          <legend>{t('ticket_create.dia_diem')}</legend>
+          <Input label={t('ticket_create.dia_chi_vi_tri')} autoComplete="street-address" {...register('customer_location')} />
         </fieldset>
 
         <fieldset className={styles.group}>
-          <legend>Đính kèm (tuỳ chọn)</legend>
+          <legend>{t('ticket_create.dinh_kem_tuy_chon')}</legend>
           <FileDropzone files={files} onChange={setFiles} />
         </fieldset>
 
         <div className={styles.actions}>
           {progress && <span role="status">{progress}</span>}
           <Button variant="secondary" onClick={cancel} disabled={create.isPending}>
-            Huỷ
+            {t('ticket_create.huy')}
           </Button>
           <Button type="submit" loading={create.isPending}>
-            Tạo ticket
+            {t('ticket_create.tao_ticket')}
           </Button>
         </div>
       </form>

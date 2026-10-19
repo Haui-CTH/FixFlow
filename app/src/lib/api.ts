@@ -3,6 +3,7 @@
 import axios from 'axios';
 import { toastApi } from './toast';
 import keycloak from './auth';
+import { t } from './i18n';
 
 const API_BASE = import.meta.env.VITE_API_BASE_URL || '/api/v1';
 
@@ -31,20 +32,20 @@ api.interceptors.response.use(
     if (error.response?.status === 401) {
       // Avoid toast loop on login page
       if (!window.location.pathname.startsWith('/login')) {
-        toastApi.warning('Phiên đăng nhập hết hạn', 'Vui lòng đăng nhập lại');
+        toastApi.warning(t('api.phien_dang_nhap_het_han'), t('api.vui_long_dang_nhap_lai'));
         keycloak.login({ redirectUri: window.location.href });
       }
     } else if (error.response?.status === 403) {
-      toastApi.error('Bạn không có quyền thực hiện thao tác này', '403 Forbidden');
+      toastApi.error(t('api.ban_khong_co_quyen_thuc_hien_thao'), '403 Forbidden');
     } else if (error.response?.status === 404) {
       // Skip 404 toast — components often handle 404s explicitly
     } else if (error.response?.status === 500) {
-      toastApi.error('Lỗi máy chủ, vui lòng thử lại sau', '500 Server Error');
+      toastApi.error(t('api.loi_may_chu_vui_long_thu_lai_sau'), '500 Server Error');
     } else if (error.response?.status >= 500) {
-      toastApi.error(`Lỗi ${error.response.status}: ${error.response.statusText || 'Server error'}`);
+      toastApi.error(t('api.error_status', { status: error.response.status, text: error.response.statusText || 'Server error' }));
     } else if (!error.response) {
       // Network error
-      toastApi.error('Không kết nối được tới máy chủ', 'Lỗi mạng');
+      toastApi.error(t('api.khong_ket_noi_duoc_toi_may_chu'), t('api.loi_mang'));
     }
     return Promise.reject(error);
   }

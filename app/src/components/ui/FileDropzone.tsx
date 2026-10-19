@@ -5,6 +5,7 @@ import { FileText, Paperclip, X } from 'lucide-react';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { Button } from './Button';
 import styles from './ui.module.css';
+import { t } from '../../lib/i18n';
 
 export const MAX_FILE_BYTES = 10 * 1024 * 1024; // khớp BE (attachments.py)
 const ACCEPT = ['image/jpeg', 'image/png', 'image/gif', 'image/webp', 'application/pdf'];
@@ -14,8 +15,8 @@ export function validateFiles(incoming: File[]): { ok: File[]; errors: string[] 
   const ok: File[] = [];
   const errors: string[] = [];
   for (const f of incoming) {
-    if (!ACCEPT.includes(f.type)) errors.push(`"${f.name}": chỉ nhận ảnh (JPG, PNG, GIF, WebP) hoặc PDF`);
-    else if (f.size > MAX_FILE_BYTES) errors.push(`"${f.name}": vượt quá 10 MB`);
+    if (!ACCEPT.includes(f.type)) errors.push(t('file_dropzone.err_type', { name: f.name }));
+    else if (f.size > MAX_FILE_BYTES) errors.push(t('file_dropzone.err_size', { name: f.name }));
     else ok.push(f);
   }
   return { ok, errors };
@@ -31,7 +32,7 @@ export function FileDropzone({ files, onChange, max = 5 }: { files: File[]; onCh
   const add = (list: FileList | File[]) => {
     const { ok, errors: errs } = validateFiles(Array.from(list));
     const room = max - files.length;
-    if (ok.length > room) errs.push(`Tối đa ${max} file`);
+    if (ok.length > room) errs.push(t('file_dropzone.err_max', { max }));
     setErrors(errs);
     if (ok.length) onChange([...files, ...ok.slice(0, Math.max(room, 0))]);
   };
@@ -55,18 +56,18 @@ export function FileDropzone({ files, onChange, max = 5 }: { files: File[]; onCh
         }}
       >
         <Paperclip size={24} aria-hidden="true" />
-        <p>Kéo thả ảnh/PDF vào đây hoặc</p>
+        <p>{t('file_dropzone.keo_tha_anh_pdf_vao_day_hoac')}</p>
         <Button variant="secondary" onClick={() => input.current?.click()}>
-          Chọn file
+          {t('file_dropzone.chon_file')}
         </Button>
-        <p className={styles.helper}>Tối đa {max} file, mỗi file ≤ 10 MB</p>
+        <p className={styles.helper}>{t('file_dropzone.hint', { max })}</p>
         <input
           ref={input}
           type="file"
           multiple
           hidden
           accept={ACCEPT.join(',')}
-          aria-label="Chọn file đính kèm"
+          aria-label={t('file_dropzone.chon_file_dinh_kem')}
           onChange={(e) => {
             if (e.target.files) add(e.target.files);
             e.target.value = '';
@@ -81,13 +82,13 @@ export function FileDropzone({ files, onChange, max = 5 }: { files: File[]; onCh
         </ul>
       )}
       {files.length > 0 && (
-        <ul className={styles.fileList} aria-label="File đã chọn">
+        <ul className={styles.fileList} aria-label={t('file_dropzone.file_da_chon')}>
           {files.map((f, i) => (
             <li key={`${f.name}-${i}`}>
               {previews[i] ? <img src={previews[i]!} alt="" width={40} height={40} /> : <FileText size={40} aria-hidden="true" />}
               <span className={styles.fileName}>{f.name}</span>
               <span className={styles.helper}>{kb(f.size)}</span>
-              <Button variant="ghost" iconOnly aria-label={`Xoá ${f.name}`} onClick={() => onChange(files.filter((_, j) => j !== i))}>
+              <Button variant="ghost" iconOnly aria-label={t('file_dropzone.remove', { name: f.name })} onClick={() => onChange(files.filter((_, j) => j !== i))}>
                 <X size={18} aria-hidden="true" />
               </Button>
             </li>

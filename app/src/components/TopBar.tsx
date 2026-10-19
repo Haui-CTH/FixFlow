@@ -4,11 +4,13 @@
 import { LogOut, Menu, Moon, Sun } from 'lucide-react';
 import { useEffect, useRef, useState, type ReactNode } from 'react';
 import { useLocation } from 'react-router-dom';
+import { LanguageSwitcher } from './LanguageSwitcher';
 import { Badge } from './ui/Badge';
 import { Button } from './ui/Button';
 import { NAV_ITEMS, isActive } from '../lib/nav';
 import { getTheme, setTheme, type Theme } from '../lib/theme';
 import styles from './Layout.module.css';
+import { t } from '../lib/i18n';
 
 export function ThemeToggle() {
   const [theme, set] = useState<Theme>(getTheme);
@@ -17,7 +19,7 @@ export function ThemeToggle() {
     <Button
       variant="ghost"
       iconOnly
-      aria-label={next === 'dark' ? 'Chuyển sang giao diện tối' : 'Chuyển sang giao diện sáng'}
+      aria-label={next === 'dark' ? t('top_bar.chuyen_sang_giao_dien_toi') : t('top_bar.chuyen_sang_giao_dien_sang')}
       onClick={() => {
         setTheme(next);
         set(next);
@@ -64,7 +66,7 @@ export function UserMenu({ user, onLogout }: { user: User; onLogout: () => void 
         className={styles.userBtn}
         aria-haspopup="true"
         aria-expanded={open}
-        aria-label={`Tài khoản ${user.username}`}
+        aria-label={t('top_bar.account', { name: user.username })}
         onClick={() => setOpen((o) => !o)}
       >
         <span className={styles.avatar} aria-hidden="true">
@@ -81,7 +83,7 @@ export function UserMenu({ user, onLogout }: { user: User; onLogout: () => void 
           </div>
           <button className={styles.logoutBtn} onClick={onLogout}>
             <LogOut size={16} aria-hidden="true" />
-            Đăng xuất
+            {t('top_bar.dang_xuat')}
           </button>
         </div>
       )}
@@ -111,7 +113,7 @@ export function TopBar({
         iconOnly
         className={styles.hamburger}
         onClick={onOpenMenu}
-        aria-label="Mở menu"
+        aria-label={t('top_bar.mo_menu')}
         aria-expanded={menuOpen}
       >
         <Menu size={20} aria-hidden="true" />
@@ -120,6 +122,7 @@ export function TopBar({
       <span className={styles.pageName}>{title}</span>
       <div className={styles.topActions}>
         {slot}
+        <LanguageSwitcher />
         <ThemeToggle />
         <UserMenu user={user} onLogout={onLogout} />
       </div>

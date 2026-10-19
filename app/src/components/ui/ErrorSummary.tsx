@@ -3,6 +3,7 @@
 
 import { useEffect, useRef } from 'react';
 import styles from './ui.module.css';
+import { t } from '../../lib/i18n';
 
 export interface FieldError {
   name: string;
@@ -20,7 +21,7 @@ export function ErrorSummary({ errors }: { errors: FieldError[] }) {
   if (errors.length === 0) return null;
   return (
     <div ref={ref} tabIndex={-1} role="alert" className={styles.errorSummary}>
-      <strong>Có {errors.length} mục cần sửa:</strong>
+      <strong>{t('error_summary.count', { count: errors.length })}</strong>
       <ul>
         {errors.map((e) => (
           <li key={e.name}>

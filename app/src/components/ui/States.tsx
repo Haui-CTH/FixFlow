@@ -5,6 +5,7 @@ import { AlertTriangle, Inbox, type LucideIcon } from 'lucide-react';
 import type { ReactNode } from 'react';
 import { Button } from './Button';
 import styles from './ui.module.css';
+import { t } from '../../lib/i18n';
 
 export function EmptyState({
   icon: Icon = Inbox,
@@ -31,7 +32,7 @@ export function EmptyState({
 }
 
 export function ErrorState({
-  title = 'Đã xảy ra lỗi',
+  title = t('states.da_xay_ra_loi'),
   message,
   onRetry,
   headingLevel = 2,
@@ -49,7 +50,7 @@ export function ErrorState({
       {message && <p>{message}</p>}
       {onRetry && (
         <Button variant="secondary" onClick={onRetry}>
-          Thử lại
+          {t('states.thu_lai')}
         </Button>
       )}
     </div>

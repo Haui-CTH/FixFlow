@@ -12,6 +12,7 @@ import { useAuthStore } from '../../lib/store';
 import { NoteItem } from './NoteItem';
 import { NoteComposer } from './NoteComposer';
 import styles from './NotesPanel.module.css';
+import { t } from '../../lib/i18n';
 
 interface NotesPanelProps {
   ticketId: string;
@@ -74,7 +75,7 @@ export function NotesPanel({ ticketId }: NotesPanelProps) {
         queryClient.setQueryData(['notes', ticketId], context.previous);
       }
       setSubmitError(
-        err?.response?.data?.detail || err?.message || 'Lỗi khi tạo note'
+        err?.response?.data?.detail || err?.message || t('notes_panel.loi_khi_tao_note')
       );
     },
     onSuccess: () => {
@@ -91,13 +92,13 @@ export function NotesPanel({ ticketId }: NotesPanelProps) {
   }
 
   return (
-    <section className={styles.panel} aria-label="Ghi chú nội bộ">
+    <section className={styles.panel} aria-label={t('notes_panel.ghi_chu_noi_bo')}>
       {/* Header */}
       <header className={styles.header}>
         <h2 className={styles.title}>
           <span className={styles.titleIcon} aria-hidden="true">📝</span>
-          Ghi chú nội bộ
-          <span className={styles.staffBadge}>Chỉ nhân viên</span>
+          {t('notes_panel.ghi_chu_noi_bo')}
+          <span className={styles.staffBadge}>{t('notes_panel.chi_nhan_vien')}</span>
           <span className={styles.count}>({notes.length})</span>
         </h2>
       </header>
@@ -113,8 +114,8 @@ export function NotesPanel({ ticketId }: NotesPanelProps) {
       {/* Submit error (from mutation) */}
       {submitError && (
         <div className={styles.errorBox} role="alert">
-          <span>Không gửi được note: {submitError}</span>
-          <button onClick={() => setSubmitError(null)}>Đóng</button>
+          <span>{t('notes_panel.send_error', { error: submitError })}</span>
+          <button onClick={() => setSubmitError(null)}>{t('notes_panel.dong')}</button>
         </div>
       )}
 
@@ -122,20 +123,20 @@ export function NotesPanel({ ticketId }: NotesPanelProps) {
       {isLoading && (
         <div className={styles.center}>
           <div className={styles.spinner} />
-          <div>Đang tải notes…</div>
+          <div>{t('notes_panel.dang_tai_notes')}</div>
         </div>
       )}
 
       {isError && (
         <div className={styles.errorBox} role="alert">
-          <span>Lỗi tải notes: {(error as Error)?.message || 'Không rõ'}</span>
-          <button onClick={() => refetch()}>Thử lại</button>
+          <span>{t('notes_panel.load_error', { error: (error as Error)?.message || t('notes_panel.khong_ro') })}</span>
+          <button onClick={() => refetch()}>{t('notes_panel.thu_lai')}</button>
         </div>
       )}
 
       {!isLoading && !isError && notes.length === 0 && (
         <div className={styles.empty}>
-          Chưa có note nào. Hãy thêm note nội bộ đầu tiên.
+          {t('notes_panel.chua_co_note_nao_hay_them_note_noi')}
         </div>
       )}
 

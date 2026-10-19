@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: Apache-2.0
 // DX-FSM ticket metadata (D1.5) — nguồn duy nhất cho nhãn/tone/icon của status, priority, category.
+// `label` là getter: dịch theo ngôn ngữ hiện tại mỗi lần đọc (đổi ngôn ngữ không cần tạo lại map).
 
 import {
   AlarmClock,
@@ -16,6 +17,7 @@ import {
   XCircle,
   type LucideIcon,
 } from 'lucide-react';
+import { t } from './i18n';
 
 export type Tone = 'info' | 'assigned' | 'warning' | 'muted' | 'success' | 'dark' | 'danger';
 export interface Meta {
@@ -24,35 +26,43 @@ export interface Meta {
   icon?: LucideIcon;
 }
 
+const meta = (key: string, tone: Tone, icon?: LucideIcon): Meta => ({
+  get label() {
+    return t(key);
+  },
+  tone,
+  icon,
+});
+
 export const STATUS_META: Record<string, Meta> = {
-  new: { label: 'Mới', tone: 'info', icon: CircleDot },
-  assigned: { label: 'Đã giao', tone: 'assigned', icon: UserCheck },
-  in_progress: { label: 'Đang xử lý', tone: 'warning', icon: Loader },
-  pending: { label: 'Chờ', tone: 'muted', icon: PauseCircle },
-  resolved: { label: 'Đã giải quyết', tone: 'success', icon: CheckCircle2 },
-  closed: { label: 'Đã đóng', tone: 'dark', icon: Archive },
-  cancelled: { label: 'Đã huỷ', tone: 'danger', icon: XCircle },
-  sla_breached: { label: 'Quá SLA', tone: 'danger', icon: AlarmClock },
+  new: meta('status.new', 'info', CircleDot),
+  assigned: meta('status.assigned', 'assigned', UserCheck),
+  in_progress: meta('status.in_progress', 'warning', Loader),
+  pending: meta('status.pending', 'muted', PauseCircle),
+  resolved: meta('status.resolved', 'success', CheckCircle2),
+  closed: meta('status.closed', 'dark', Archive),
+  cancelled: meta('status.cancelled', 'danger', XCircle),
+  sla_breached: meta('status.sla_breached', 'danger', AlarmClock),
 };
 
 // BE/DB dùng 'critical' (enum ticket_priority); 'urgent' chỉ là bí danh (metrics/Dashboard cũ).
-const URGENT: Meta = { label: 'Khẩn cấp', tone: 'danger', icon: Flame };
+const URGENT = meta('priority.critical', 'danger', Flame);
 export const PRIORITY_META: Record<string, Meta> = {
-  low: { label: 'Thấp', tone: 'success', icon: ArrowDown },
-  medium: { label: 'Trung bình', tone: 'info', icon: Minus },
-  high: { label: 'Cao', tone: 'warning', icon: ArrowUp },
+  low: meta('priority.low', 'success', ArrowDown),
+  medium: meta('priority.medium', 'info', Minus),
+  high: meta('priority.high', 'warning', ArrowUp),
   critical: URGENT,
   urgent: URGENT,
 };
 
 export const CATEGORY_META: Record<string, Meta> = {
-  hardware: { label: 'Phần cứng', tone: 'muted' },
-  software: { label: 'Phần mềm', tone: 'info' },
-  network: { label: 'Mạng', tone: 'assigned' },
-  electrical: { label: 'Điện', tone: 'warning' },
-  plumbing: { label: 'Cấp thoát nước', tone: 'info' },
-  hvac: { label: 'Điều hoà', tone: 'warning' },
-  other: { label: 'Khác', tone: 'muted' },
+  hardware: meta('category.hardware', 'muted'),
+  software: meta('category.software', 'info'),
+  network: meta('category.network', 'assigned'),
+  electrical: meta('category.electrical', 'warning'),
+  plumbing: meta('category.plumbing', 'info'),
+  hvac: meta('category.hvac', 'warning'),
+  other: meta('category.other', 'muted'),
 };
 
 const lookup =

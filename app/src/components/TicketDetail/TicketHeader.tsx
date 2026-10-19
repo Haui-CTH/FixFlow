@@ -9,6 +9,7 @@ import { formatRelative } from '../../lib/format';
 import { PriorityBadge, StatusBadge } from '../ui/Badge';
 import { SlaProgress } from './SlaProgress';
 import styles from './TicketDetail.module.css';
+import { t } from '../../lib/i18n';
 
 export function TicketHeader({
   ticket,
@@ -25,7 +26,7 @@ export function TicketHeader({
     <header className={styles.header}>
       <Link to={backTo} className={styles.back}>
         <ArrowLeft size={16} aria-hidden="true" />
-        Quay lại danh sách
+        {t('ticket_header.quay_lai_danh_sach')}
       </Link>
       <div className={styles.headTop}>
         <span className={styles.code}>{ticket.ticket_number}</span>
@@ -34,7 +35,7 @@ export function TicketHeader({
       </div>
       <h1 className={styles.title}>{ticket.title}</h1>
       <p className={styles.metaLine}>
-        Tạo bởi {ticket.customer_name || 'không rõ'} · {formatRelative(ticket.created_at)}
+        {t('ticket_header.created_by', { name: ticket.customer_name || t('ticket_header.khong_ro'), when: formatRelative(ticket.created_at) })}
       </p>
       <SlaProgress ticket={ticket} now={now} />
       {actions}

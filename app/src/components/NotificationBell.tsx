@@ -10,6 +10,7 @@ import { NotificationItem } from './Notifications/NotificationItem';
 import { Button } from './ui/Button';
 import { SkeletonRows } from './ui/Skeleton';
 import styles from './NotificationBell.module.css';
+import { t } from '../lib/i18n';
 
 export function NotificationBell() {
   const { items, unread, isLoading, isError, refetch } = useNotificationBell();
@@ -45,7 +46,7 @@ export function NotificationBell() {
         className={styles.bell}
         aria-haspopup="true"
         aria-expanded={open}
-        aria-label={`Thông báo, ${unread} chưa đọc`}
+        aria-label={t('notification_bell.aria', { count: unread })}
         onClick={() => setOpen((o) => !o)}
       >
         <Bell size={20} aria-hidden="true" />
@@ -53,15 +54,15 @@ export function NotificationBell() {
       </button>
       {/* thông báo thay đổi số lượng cho screen reader, không cướp focus */}
       <span className="sr-only" aria-live="polite">
-        {unread > 0 ? `${unread} thông báo chưa đọc` : 'Không có thông báo chưa đọc'}
+        {unread > 0 ? t('notification_bell.sr_unread', { count: unread }) : t('notification_bell.khong_co_thong_bao_chua_doc')}
       </span>
 
       {open && (
-        <div className={styles.panel} role="dialog" aria-label="Thông báo">
+        <div className={styles.panel} role="dialog" aria-label={t('notification_bell.thong_bao')}>
           <div className={styles.head}>
-            <strong>Thông báo</strong>
+            <strong>{t('notification_bell.thong_bao')}</strong>
             <Button variant="ghost" size="sm" disabled={unread === 0 || markAll.isPending} onClick={() => markAll.mutate()}>
-              Đánh dấu tất cả đã đọc
+              {t('notification_bell.danh_dau_tat_ca_da_doc')}
             </Button>
           </div>
           <div className={styles.list}>
@@ -69,13 +70,13 @@ export function NotificationBell() {
               <SkeletonRows rows={3} />
             ) : isError ? (
               <p className={styles.note} role="alert">
-                Không tải được thông báo.{' '}
+                {t('notification_bell.load_error')}{' '}
                 <button className={styles.link} onClick={() => refetch()}>
-                  Thử lại
+                  {t('notification_bell.thu_lai')}
                 </button>
               </p>
             ) : items.length === 0 ? (
-              <p className={styles.note}>Bạn đã xem hết thông báo.</p>
+              <p className={styles.note}>{t('notification_bell.ban_da_xem_het_thong_bao')}</p>
             ) : (
               items.map((n) => (
                 <NotificationItem key={n.id} notification={n} onMarkRead={(id) => markRead.mutate(id)} onNavigate={() => setOpen(false)} />
@@ -83,7 +84,7 @@ export function NotificationBell() {
             )}
           </div>
           <Link to="/notifications" className={styles.all} onClick={() => setOpen(false)}>
-            Xem tất cả
+            {t('notification_bell.xem_tat_ca')}
           </Link>
         </div>
       )}

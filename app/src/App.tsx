@@ -10,6 +10,7 @@ import NotFound from './pages/NotFound';
 import { AuthGuard } from './components/AuthGuard';
 import { RoleGuard } from './components/RoleGuard';
 import { SkeletonBlock } from './components/ui/Skeleton';
+import { t } from './lib/i18n';
 
 const Dashboard = lazy(() => import('./pages/Dashboard'));
 const TicketDetail = lazy(() => import('./pages/TicketDetail'));
@@ -50,7 +51,7 @@ function App() {
             <Route
               path="tickets/new"
               element={
-                <RoleGuard roles={['customer', 'manager', 'admin']} deniedMessage="Bạn không có quyền tạo ticket">
+                <RoleGuard roles={['customer', 'manager', 'admin']} deniedMessage={t('app.ban_khong_co_quyen_tao_ticket')}>
                   <TicketCreate />
                 </RoleGuard>
               }

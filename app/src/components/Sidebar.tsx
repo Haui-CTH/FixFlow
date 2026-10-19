@@ -5,6 +5,7 @@ import { ChevronsLeft, ChevronsRight, X } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 import { isActive, navFor } from '../lib/nav';
 import styles from './Layout.module.css';
+import { t } from '../lib/i18n';
 
 interface Props {
   open: boolean;
@@ -19,15 +20,15 @@ export function Sidebar({ open, collapsed, user, onClose, onToggleCollapse }: Pr
   const cls = [styles.sidebar, open && styles.sidebarOpen, collapsed && styles.collapsed].filter(Boolean).join(' ');
 
   return (
-    <aside className={cls} aria-label="Sidebar navigation">
+    <aside className={cls} aria-label={t('sidebar.aside')}>
       <div className={styles.brand}>
         <img src="/logo.svg" alt="" width={32} height={32} />
         <span className={styles.brandText}>DX-FSM</span>
-        <button className={styles.closeBtn} onClick={onClose} aria-label="Đóng menu">
+        <button className={styles.closeBtn} onClick={onClose} aria-label={t('sidebar.dong_menu')}>
           <X size={20} aria-hidden="true" />
         </button>
       </div>
-      <nav className={styles.nav} aria-label="Điều hướng chính">
+      <nav className={styles.nav} aria-label={t('sidebar.dieu_huong_chinh')}>
         {navFor(user?.role).map(({ path, label, icon: Icon }) => {
           const active = isActive(path, pathname);
           return (
@@ -47,7 +48,7 @@ export function Sidebar({ open, collapsed, user, onClose, onToggleCollapse }: Pr
       <button
         className={styles.collapseBtn}
         onClick={onToggleCollapse}
-        aria-label={collapsed ? 'Mở rộng thanh bên' : 'Thu gọn thanh bên'}
+        aria-label={collapsed ? t('sidebar.mo_rong_thanh_ben') : t('sidebar.thu_gon_thanh_ben')}
       >
         {collapsed ? <ChevronsRight size={18} aria-hidden="true" /> : <ChevronsLeft size={18} aria-hidden="true" />}
       </button>

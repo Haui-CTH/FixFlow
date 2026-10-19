@@ -6,6 +6,7 @@ import type { Ticket } from '../../lib/api';
 import { PriorityBadge, StatusBadge } from '../ui/Badge';
 import { SlaCountdown } from './SlaCountdown';
 import styles from './Tickets.module.css';
+import { t } from '../../lib/i18n';
 
 export function TicketCard({ ticket, now }: { ticket: Ticket; now: number }) {
   return (
@@ -17,7 +18,7 @@ export function TicketCard({ ticket, now }: { ticket: Ticket; now: number }) {
       <p className={styles.cardTitle}>{ticket.title}</p>
       <div className={styles.cardBottom}>
         <PriorityBadge priority={ticket.priority} />
-        <span>{ticket.technician_name ?? 'Chưa giao'}</span>
+        <span>{ticket.technician_name ?? t('ticket_card.chua_giao')}</span>
         <SlaCountdown ticket={ticket} now={now} />
       </div>
     </Link>

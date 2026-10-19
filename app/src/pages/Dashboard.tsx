@@ -15,6 +15,7 @@ import { EmptyState, ErrorState } from '../components/ui/States';
 import { metricsApi, type StatusCount } from '../lib/api';
 import { categoryMeta, priorityMeta, statusMeta, type Tone } from '../lib/ticket-meta';
 import styles from './Dashboard.module.css';
+import { locale, t } from '../lib/i18n';
 
 const WINDOW_DAYS_OPTIONS = [7, 30, 90, 365];
 const DEFAULT_DAYS = 30;
@@ -61,19 +62,19 @@ export default function Dashboard() {
       {/* ─── Header ──────────────────────────────────── */}
       <div className={styles.header}>
         <div>
-          <h1 className={styles.title}>Tổng quan vận hành</h1>
+          <h1 className={styles.title}>{t('dashboard.tong_quan_van_hanh')}</h1>
           <div className={styles.subtitle}>
-            Hoạt động 24 giờ qua và cửa sổ {windowDays} ngày
+            {t('dashboard.subtitle', { days: windowDays })}
             {data && (
               <span className={styles.refreshed}>
                 {' '}
-                · cập nhật lúc {new Date(data.generated_at).toLocaleTimeString('vi-VN')}
+                · {t('dashboard.updated_at', { time: new Date(data.generated_at).toLocaleTimeString(locale()) })}
               </span>
             )}
           </div>
         </div>
         <div className={styles.windowSelector}>
-          <div role="radiogroup" aria-label="Khoảng thời gian" className={styles.segmented}>
+          <div role="radiogroup" aria-label={t('dashboard.khoang_thoi_gian')} className={styles.segmented}>
             {WINDOW_DAYS_OPTIONS.map((d) => (
               <label key={d}>
                 <input
@@ -84,23 +85,23 @@ export default function Dashboard() {
                   onChange={() => setDays(d)}
                   className="sr-only"
                 />
-                {d} ngày
+                {t('dashboard.days', { count: d })}
               </label>
             ))}
           </div>
-          <Button variant="secondary" onClick={() => refetch()} loading={isFetching && !isLoading} aria-label="Làm mới số liệu">
+          <Button variant="secondary" onClick={() => refetch()} loading={isFetching && !isLoading} aria-label={t('dashboard.lam_moi_so_lieu')}>
             {!isFetching && <RefreshCw size={16} aria-hidden="true" />}
-            Làm mới
+            {t('dashboard.lam_moi')}
           </Button>
         </div>
       </div>
 
       {/* ─── Error state ────────────────────────────── */}
-      {isError && !data && <ErrorState title="Không tải được số liệu" message="Kiểm tra kết nối rồi thử lại." onRetry={() => refetch()} />}
+      {isError && !data && <ErrorState title={t('dashboard.khong_tai_duoc_so_lieu')} message={t('dashboard.kiem_tra_ket_noi_roi_thu_lai')} onRetry={() => refetch()} />}
 
       {/* ─── Loading state ──────────────────────────── */}
       {isLoading && (
-        <div className={styles.skelGrid} role="status" aria-label="Đang tải số liệu">
+        <div className={styles.skelGrid} role="status" aria-label={t('dashboard.dang_tai_so_lieu')}>
           <div className={styles.statGrid}>
             {[0, 1, 2, 3].map((i) => (
               <SkeletonBlock key={i} height={96} />
@@ -115,12 +116,12 @@ export default function Dashboard() {
       {data && data.total_tickets === 0 && (
         <EmptyState
           icon={BarChart3}
-          title={`Chưa có dữ liệu trong ${windowDays} ngày`}
-          description="Thử chọn khoảng thời gian dài hơn."
+          title={t('dashboard.empty_title', { days: windowDays })}
+          description={t('dashboard.thu_chon_khoang_thoi_gian_dai_hon')}
           action={
             windowDays < 365 ? (
               <Button variant="secondary" onClick={() => setDays(365)}>
-                Xem 365 ngày
+                {t('dashboard.xem_365_ngay')}
               </Button>
             ) : undefined
           }
@@ -131,26 +132,26 @@ export default function Dashboard() {
       {data && data.total_tickets > 0 && (
         <>
           <div className={styles.statGrid}>
-            <MetricCard icon={Ticket} label="Tổng ticket" value={data.total_tickets} color="blue" />
-            <MetricCard icon={Activity} label="Đang xử lý" value={data.sla.total_active} color="purple" />
+            <MetricCard icon={Ticket} label={t('dashboard.tong_ticket')} value={data.total_tickets} color="blue" />
+            <MetricCard icon={Activity} label={t('dashboard.dang_xu_ly')} value={data.sla.total_active} color="purple" />
             <MetricCard
               icon={Gauge}
-              label="Tỉ lệ vi phạm SLA"
+              label={t('dashboard.ti_le_vi_pham_sla')}
               value={`${(data.sla.breach_rate * 100).toFixed(1)}%`}
               color={data.sla.breach_rate >= 0.25 ? 'red' : data.sla.breach_rate >= 0.1 ? 'yellow' : 'green'}
             />
             <MetricCard
               icon={AlertTriangle}
-              label="Outbox lỗi"
+              label={t('dashboard.outbox_loi')}
               value={data.outbox.failed}
-              hint={`Đang chờ: ${data.outbox.pending}`}
+              hint={t('dashboard.outbox_pending', { count: data.outbox.pending })}
               color={data.outbox.failed > 0 ? 'red' : data.outbox.pending > 0 ? 'yellow' : 'green'}
             />
           </div>
 
           <div className={styles.sectionGrid}>
             <div className={styles.section}>
-              <h2 className={styles.sectionTitle}>Theo trạng thái</h2>
+              <h2 className={styles.sectionTitle}>{t('dashboard.theo_trang_thai')}</h2>
               {data.by_status.map((s: StatusCount) => (
                 <DistributionBar
                   key={s.status}
@@ -163,7 +164,7 @@ export default function Dashboard() {
             </div>
 
             <div className={styles.section}>
-              <h2 className={styles.sectionTitle}>Theo mức ưu tiên</h2>
+              <h2 className={styles.sectionTitle}>{t('dashboard.theo_muc_uu_tien')}</h2>
               {data.by_priority.map((p) => (
                 <DistributionBar
                   key={p.priority}
@@ -178,7 +179,7 @@ export default function Dashboard() {
 
           <div className={styles.sectionGrid}>
             <div className={styles.section}>
-              <h2 className={styles.sectionTitle}>Theo danh mục</h2>
+              <h2 className={styles.sectionTitle}>{t('dashboard.theo_danh_muc')}</h2>
               {data.by_category.map((c) => (
                 <DistributionBar
                   key={c.category}

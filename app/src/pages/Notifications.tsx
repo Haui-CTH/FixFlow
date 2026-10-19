@@ -11,6 +11,7 @@ import { EmptyState, ErrorState } from '../components/ui/States';
 import { useNotificationActions } from '../hooks/useNotifications';
 import { notificationsApi, type Notification } from '../lib/notifications';
 import styles from './Notifications.module.css';
+import { t } from '../lib/i18n';
 
 type Filter = 'all' | 'unread';
 const PAGE = 20;
@@ -19,10 +20,11 @@ const PAGE = 20;
 export function groupByDay(items: Notification[], now = new Date()): { label: string; items: Notification[] }[] {
   const day = (d: Date) => new Date(d.getFullYear(), d.getMonth(), d.getDate()).getTime();
   const today = day(now);
-  const groups: Record<string, Notification[]> = { 'Hôm nay': [], 'Hôm qua': [], 'Cũ hơn': [] };
+  const [TODAY, YESTERDAY, OLDER] = [t('notifications.hom_nay'), t('notifications.hom_qua'), t('notifications.cu_hon')];
+  const groups: Record<string, Notification[]> = { [TODAY]: [], [YESTERDAY]: [], [OLDER]: [] };
   for (const n of items) {
     const diff = Math.round((today - day(new Date(n.created_at))) / 86_400_000);
-    groups[diff <= 0 ? 'Hôm nay' : diff === 1 ? 'Hôm qua' : 'Cũ hơn'].push(n);
+    groups[diff <= 0 ? TODAY : diff === 1 ? YESTERDAY : OLDER].push(n);
   }
   return Object.entries(groups)
     .filter(([, v]) => v.length)
@@ -54,26 +56,26 @@ export default function Notifications() {
     <div className={styles.page}>
       <div className={styles.header}>
         <h1 className={styles.title}>
-          Thông báo
-          <span className={`${styles.unreadBadge} ${unread === 0 ? styles.unreadBadgeEmpty : ''}`} aria-label={`${unread} chưa đọc`}>
+          {t('notifications.thong_bao')}
+          <span className={`${styles.unreadBadge} ${unread === 0 ? styles.unreadBadgeEmpty : ''}`} aria-label={t('notifications.unread_aria', { count: unread })}>
             {unread}
           </span>
         </h1>
         <div className={styles.actions}>
           <Button variant="secondary" onClick={() => markAll.mutate()} disabled={unread === 0} loading={markAll.isPending}>
-            Đánh dấu tất cả đã đọc
+            {t('notifications.danh_dau_tat_ca_da_doc')}
           </Button>
         </div>
       </div>
 
-      <div className={styles.filters} role="tablist" aria-label="Lọc thông báo">
+      <div className={styles.filters} role="tablist" aria-label={t('notifications.loc_thong_bao')}>
         <button
           role="tab"
           aria-selected={filter === 'all'}
           className={`${styles.filterTab} ${filter === 'all' ? styles.filterTabActive : ''}`}
           onClick={() => pick('all')}
         >
-          Tất cả {filter === 'all' && <span className={styles.filterCount}>{total}</span>}
+          {t('notifications.tab_all')} {filter === 'all' && <span className={styles.filterCount}>{total}</span>}
         </button>
         <button
           role="tab"
@@ -81,19 +83,19 @@ export default function Notifications() {
           className={`${styles.filterTab} ${filter === 'unread' ? styles.filterTabActive : ''}`}
           onClick={() => pick('unread')}
         >
-          Chưa đọc <span className={styles.filterCount}>{unread}</span>
+          {t('notifications.tab_unread')} <span className={styles.filterCount}>{unread}</span>
         </button>
       </div>
 
       {isError && !data ? (
-        <ErrorState title="Không tải được thông báo" onRetry={() => refetch()} />
+        <ErrorState title={t('notifications.khong_tai_duoc_thong_bao')} onRetry={() => refetch()} />
       ) : isLoading ? (
         <SkeletonRows rows={5} />
       ) : items.length === 0 ? (
         <EmptyState
           icon={BellOff}
-          title={filter === 'unread' ? 'Bạn đã xem hết thông báo' : 'Chưa có thông báo nào'}
-          description={filter === 'unread' ? undefined : 'Cập nhật ticket và cảnh báo SLA sẽ hiện ở đây.'}
+          title={filter === 'unread' ? t('notifications.ban_da_xem_het_thong_bao') : t('notifications.chua_co_thong_bao_nao')}
+          description={filter === 'unread' ? undefined : t('notifications.cap_nhat_ticket_va_canh_bao_sla_se')}
         />
       ) : (
         <>
@@ -110,7 +112,7 @@ export default function Notifications() {
           {items.length < total && (
             <div className={styles.more}>
               <Button variant="secondary" onClick={() => setLimit((l) => l + PAGE)}>
-                Tải thêm
+                {t('notifications.tai_them')}
               </Button>
             </div>
           )}

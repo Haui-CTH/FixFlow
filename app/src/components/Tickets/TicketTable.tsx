@@ -8,24 +8,25 @@ import { formatDate } from '../../lib/format';
 import { PriorityBadge, StatusBadge } from '../ui/Badge';
 import { SlaCountdown } from './SlaCountdown';
 import styles from './Tickets.module.css';
+import { t } from '../../lib/i18n';
 
 export interface Sort {
   by: string;
   dir: 'asc' | 'desc';
 }
 
-const COLUMNS: { key: string; label: string; sortBy?: string }[] = [
-  { key: 'code', label: 'Mã' },
-  { key: 'title', label: 'Tiêu đề' },
-  { key: 'status', label: 'Trạng thái' },
-  { key: 'priority', label: 'Ưu tiên', sortBy: 'priority' },
-  { key: 'tech', label: 'KTV' },
+const columns = (): { key: string; label: string; sortBy?: string }[] => [
+  { key: 'code', label: t('ticket_table.ma') },
+  { key: 'title', label: t('ticket_table.tieu_de') },
+  { key: 'status', label: t('ticket_table.trang_thai') },
+  { key: 'priority', label: t('ticket_table.uu_tien'), sortBy: 'priority' },
+  { key: 'tech', label: t('ticket_table.ktv') },
   { key: 'sla', label: 'SLA', sortBy: 'sla_deadline' },
-  { key: 'created', label: 'Ngày tạo', sortBy: 'created_at' },
+  { key: 'created', label: t('ticket_table.ngay_tao'), sortBy: 'created_at' },
 ];
 
 function Tech({ name }: { name?: string | null }) {
-  if (!name) return <span className={styles.muted}>Chưa giao</span>;
+  if (!name) return <span className={styles.muted}>{t('ticket_table.chua_giao')}</span>;
   return (
     <span className={styles.tech}>
       <span className={styles.avatar} aria-hidden="true">
@@ -52,7 +53,7 @@ export function TicketTable({
       <table className={styles.table}>
         <thead>
           <tr>
-            {COLUMNS.map((c) => {
+            {columns().map((c) => {
               const active = c.sortBy === sort.by;
               const Icon = !active ? ChevronsUpDown : sort.dir === 'asc' ? ArrowUp : ArrowDown;
               return (

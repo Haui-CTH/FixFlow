@@ -3,19 +3,29 @@
 
 import { Bell, LayoutDashboard, Ticket, UserCheck, type LucideIcon } from 'lucide-react';
 import type { Role } from './auth';
+import { t } from './i18n';
 
 export interface NavItem {
   path: string;
-  label: string;
+  label: string; // getter: dịch theo ngôn ngữ hiện tại
   icon: LucideIcon;
   roles: Role[];
 }
 
+const item = (path: string, key: string, icon: LucideIcon, roles: Role[]): NavItem => ({
+  path,
+  get label() {
+    return t(key);
+  },
+  icon,
+  roles,
+});
+
 export const NAV_ITEMS: NavItem[] = [
-  { path: '/', label: 'Tổng quan', icon: LayoutDashboard, roles: ['admin', 'manager'] },
-  { path: '/tickets', label: 'Tất cả ticket', icon: Ticket, roles: ['admin', 'manager'] },
-  { path: '/my-tickets', label: 'Ticket của tôi', icon: UserCheck, roles: ['technician', 'customer'] },
-  { path: '/notifications', label: 'Thông báo', icon: Bell, roles: ['admin', 'manager', 'technician', 'customer'] },
+  item('/', 'nav.dashboard', LayoutDashboard, ['admin', 'manager']),
+  item('/tickets', 'nav.all_tickets', Ticket, ['admin', 'manager']),
+  item('/my-tickets', 'nav.my_tickets', UserCheck, ['technician', 'customer']),
+  item('/notifications', 'nav.notifications', Bell, ['admin', 'manager', 'technician', 'customer']),
 ];
 
 export const navFor = (role: string | null | undefined): NavItem[] =>
@@ -27,13 +37,13 @@ export const homeFor = (role: string | null | undefined): string =>
 
 // Tiêu đề trang (document.title) theo đường dẫn
 export function pageTitle(pathname: string): string {
-  if (pathname === '/') return 'Tổng quan';
-  if (pathname === '/tickets') return 'Tất cả ticket';
-  if (pathname === '/my-tickets') return 'Ticket của tôi';
-  if (pathname === '/tickets/new') return 'Tạo ticket';
-  if (pathname.startsWith('/tickets/')) return 'Chi tiết ticket';
-  if (pathname === '/notifications') return 'Thông báo';
-  return 'Không tìm thấy trang';
+  if (pathname === '/') return t('nav.dashboard');
+  if (pathname === '/tickets') return t('nav.all_tickets');
+  if (pathname === '/my-tickets') return t('nav.my_tickets');
+  if (pathname === '/tickets/new') return t('nav.new_ticket');
+  if (pathname.startsWith('/tickets/')) return t('nav.ticket_detail');
+  if (pathname === '/notifications') return t('nav.notifications');
+  return t('nav.not_found');
 }
 
 // '/' chỉ khớp chính xác; các mục khác khớp cả route con (/tickets/123)

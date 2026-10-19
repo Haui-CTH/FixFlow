@@ -12,6 +12,7 @@ import { toastApi } from '../../lib/toast';
 import { Button } from '../ui/Button';
 import { ConfirmDialog } from '../ui/ConfirmDialog';
 import styles from './TicketDetail.module.css';
+import { t } from '../../lib/i18n';
 
 export function StatusActions({
   ticket,
@@ -51,11 +52,11 @@ export function StatusActions({
     },
     onError: (_e, _a, ctx) => {
       if (ctx?.prev) qc.setQueryData(key, ctx.prev);
-      toastApi.error('Không đổi được trạng thái. Có thể bạn không có quyền hoặc ticket đã thay đổi.');
+      toastApi.error(t('status_actions.khong_doi_duoc_trang_thai_co_the_b'));
     },
     onSuccess: (updated) => {
       qc.setQueryData(key, updated);
-      toastApi.success(`Đã chuyển sang "${statusMeta(updated.status).label}"`);
+      toastApi.success(t('status_actions.moved_to', { status: statusMeta(updated.status).label }));
     },
     onSettled: () => {
       setPending(null);
@@ -69,14 +70,14 @@ export function StatusActions({
 
   const click = (a: TicketAction) => {
     if (a.assign) return onAssign();
-    if (a.takeSelf && !me?.technician_id) return toastApi.error('Tài khoản của bạn chưa có hồ sơ kỹ thuật viên.');
+    if (a.takeSelf && !me?.technician_id) return toastApi.error(t('status_actions.tai_khoan_cua_ban_chua_co_ho_so_ky'));
     if (a.confirm) return setPending(a);
     run.mutate(a);
   };
 
   return (
     <>
-      <div className={styles.actions} role="group" aria-label="Hành động">
+      <div className={styles.actions} role="group" aria-label={t('status_actions.hanh_dong')}>
         {actions.map((a) => (
           <Button
             key={a.key}
