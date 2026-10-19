@@ -1,4 +1,5 @@
-// DX-FSM Dashboard – Outbox worker health panel
+// DX-FSM Dashboard – Outbox worker health panel (B6.8)
+import { AlertTriangle, CheckCircle2, Clock } from 'lucide-react';
 import styles from '../../pages/Dashboard.module.css';
 import type { OutboxHealth } from '../../lib/api';
 
@@ -14,10 +15,31 @@ function formatAge(seconds: number | null): string {
   return `${Math.round(seconds / 86400)}d`;
 }
 
+// lỗi > đang chờ > khoẻ
+export function outboxStatus(o: OutboxHealth): 'bad' | 'wait' | 'ok' {
+  if (o.failed > 0) return 'bad';
+  if (o.pending > 0 || o.sending > 0) return 'wait';
+  return 'ok';
+}
+
+const BADGE = {
+  bad: { text: 'Có lỗi', cls: styles.badgeBad, icon: AlertTriangle },
+  wait: { text: 'Đang chờ', cls: styles.badgeWait, icon: Clock },
+  ok: { text: 'Khoẻ', cls: styles.badgeOk, icon: CheckCircle2 },
+};
+
 export function OutboxPanel({ outbox }: OutboxPanelProps) {
+  const b = BADGE[outboxStatus(outbox)];
+  const Icon = b.icon;
   return (
     <div className={styles.section}>
-      <h2 className={styles.sectionTitle}>Outbox Worker</h2>
+      <div className={styles.outboxHead}>
+        <h2 className={styles.sectionTitle}>Outbox Worker</h2>
+        <span className={`${styles.badge} ${b.cls}`}>
+          <Icon size={14} aria-hidden="true" />
+          {b.text}
+        </span>
+      </div>
 
       <div className={styles.outboxGrid}>
         <div className={`${styles.outboxTile} ${styles.outboxTilePending}`}>
