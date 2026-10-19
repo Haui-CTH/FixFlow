@@ -12,7 +12,7 @@ describe('ticket-meta', () => {
     expect(statusMeta('weird')).toEqual({ label: 'weird', tone: 'muted' });
     expect(priorityMeta(null).label).toBe('-');
   });
-  it('treats legacy "critical" as urgent', () => {
+  it('treats urgent as alias of critical', () => {
     expect(priorityMeta('critical')).toEqual(priorityMeta('urgent'));
   });
 });

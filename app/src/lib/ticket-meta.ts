@@ -35,14 +35,14 @@ export const STATUS_META: Record<string, Meta> = {
   sla_breached: { label: 'Quá SLA', tone: 'danger', icon: AlarmClock },
 };
 
-// Chuẩn hoá theo BE: 'urgent'. Dữ liệu seed cũ còn 'critical' -> cùng nhãn với urgent.
+// BE/DB dùng 'critical' (enum ticket_priority); 'urgent' chỉ là bí danh (metrics/Dashboard cũ).
 const URGENT: Meta = { label: 'Khẩn cấp', tone: 'danger', icon: Flame };
 export const PRIORITY_META: Record<string, Meta> = {
   low: { label: 'Thấp', tone: 'success', icon: ArrowDown },
   medium: { label: 'Trung bình', tone: 'info', icon: Minus },
   high: { label: 'Cao', tone: 'warning', icon: ArrowUp },
-  urgent: URGENT,
   critical: URGENT,
+  urgent: URGENT,
 };
 
 export const CATEGORY_META: Record<string, Meta> = {
@@ -63,3 +63,10 @@ const lookup =
 export const statusMeta = lookup(STATUS_META);
 export const priorityMeta = lookup(PRIORITY_META);
 export const categoryMeta = lookup(CATEGORY_META);
+
+// Giá trị BE chấp nhận (enum DB) — dùng cho bộ lọc/form
+export const STATUS_VALUES = ['new', 'assigned', 'in_progress', 'pending', 'resolved', 'closed', 'cancelled'];
+export const PRIORITY_VALUES = ['low', 'medium', 'high', 'critical'];
+export const CATEGORY_VALUES = ['hardware', 'software', 'network', 'electrical', 'other'];
+// Ticket đã kết thúc: không còn đếm SLA
+export const FINAL_STATUSES = ['resolved', 'closed', 'cancelled'];

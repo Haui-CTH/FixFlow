@@ -36,7 +36,15 @@ function App() {
                 </RoleGuard>
               }
             />
-            <Route path="tickets" element={<Tickets />} />
+            <Route
+              path="tickets"
+              element={
+                <RoleGuard roles={['admin', 'manager']}>
+                  <Tickets />
+                </RoleGuard>
+              }
+            />
+            <Route path="my-tickets" element={<Tickets mine />} />
             <Route path="tickets/:id" element={<TicketDetail />} />
             <Route path="notifications" element={<Notifications />} />
             <Route path="*" element={<NotFound />} />

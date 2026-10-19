@@ -12,7 +12,7 @@ const setup = () =>
     <MemoryRouter initialEntries={['/']}>
       <Routes>
         <Route path="/" element={<RoleGuard roles={['manager']}><div>dash</div></RoleGuard>} />
-        <Route path="/tickets" element={<div>tickets</div>} />
+        <Route path="/my-tickets" element={<div>mine</div>} />
       </Routes>
     </MemoryRouter>,
   );
@@ -21,7 +21,7 @@ describe('RoleGuard', () => {
   it('redirects when role lacks access', () => {
     role = 'customer';
     setup();
-    expect(screen.getByText('tickets')).toBeInTheDocument();
+    expect(screen.getByText('mine')).toBeInTheDocument();
   });
   it('renders children when allowed', () => {
     role = 'manager';

@@ -272,9 +272,26 @@ async def list_tickets(
         pattern = f"%{q}%"
         count_q = count_q.where(Ticket.title.ilike(pattern))
         query = query.where(Ticket.title.ilike(pattern))
-    if mine:
-        # customer_id từ JWT header → trong demo dùng query param tạm
-        pass
+    if mine and user.role in ("technician", "customer"):
+        # "Của tôi": technician -> ticket được giao, customer -> ticket do mình tạo
+        from app.services.user_resolver import resolve_or_create_user
+
+        me = await resolve_or_create_user(db, user)
+        col = Ticket.customer_id
+        if user.role == "technician":
+            # tickets.technician_id trỏ tới technicians.id (không phải users.id)
+            from app.models.user import Technician
+
+            col = Ticket.technician_id
+            me = (
+                await db.execute(select(Technician.id).where(Technician.user_id == me))
+            ).scalar_one_or_none() if me else None
+        if me is None:
+            count_q = count_q.where(col.is_(None), col.isnot(None))  # không có user -> rỗng
+            query = query.where(col.is_(None), col.isnot(None))
+        else:
+            count_q = count_q.where(col == me)
+            query = query.where(col == me)
 
     # Sort
     sort_col = {"created_at": Ticket.created_at, "priority": Ticket.priority,
