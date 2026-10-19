@@ -6,6 +6,7 @@ import { Outlet, useLocation } from 'react-router-dom';
 import { logout } from '../lib/auth';
 import { useAuthStore } from '../lib/store';
 import { ErrorBoundary } from './ErrorBoundary';
+import { NotificationBell } from './NotificationBell';
 import { Sidebar } from './Sidebar';
 import { TopBar } from './TopBar';
 import styles from './Layout.module.css';
@@ -80,7 +81,13 @@ export default function Layout() {
           onToggleCollapse={toggleCollapse}
         />
         <div className={styles.content}>
-          <TopBar menuOpen={sidebarOpen} onOpenMenu={() => setSidebarOpen(true)} user={user} onLogout={handleLogout} />
+          <TopBar
+            menuOpen={sidebarOpen}
+            onOpenMenu={() => setSidebarOpen(true)}
+            user={user}
+            onLogout={handleLogout}
+            slot={<NotificationBell />}
+          />
           <main id="main" ref={mainRef} tabIndex={-1} className={styles.main}>
             <ErrorBoundary key={pathname}>
               <Outlet />

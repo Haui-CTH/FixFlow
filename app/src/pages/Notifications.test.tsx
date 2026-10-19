@@ -31,22 +31,22 @@ describe('Notifications page', () => {
   it('renders page title', async () => {
     setup();
     await waitFor(() => {
-      expect(screen.getByText('Notifications')).toBeInTheDocument();
+      expect(screen.getByText('Thông báo')).toBeInTheDocument();
     });
   });
 
   it('shows filter tabs', async () => {
     setup();
     await waitFor(() => {
-      expect(screen.getByRole('tab', { name: /All/ })).toBeInTheDocument();
-      expect(screen.getByRole('tab', { name: /Unread/ })).toBeInTheDocument();
+      expect(screen.getByRole('tab', { name: /Tất cả/ })).toBeInTheDocument();
+      expect(screen.getByRole('tab', { name: /Chưa đọc/ })).toBeInTheDocument();
     });
   });
 
   it('displays unread count badge', async () => {
     setup();
     await waitFor(() => {
-      const badge = screen.getByLabelText(/\d+ unread/);
+      const badge = screen.getByLabelText(/\d+ chưa đọc/);
       expect(badge).toBeInTheDocument();
     });
   });
@@ -57,7 +57,7 @@ describe('Notifications page', () => {
       // Mock has 6 items
       const buttons = screen.getAllByRole('button');
       // Filter only items (not tab/header buttons)
-      const itemButtons = buttons.filter((b) => b.getAttribute('aria-label')?.includes('notification') || b.getAttribute('aria-label')?.includes('Unread:'));
+      const itemButtons = buttons.filter((b) => b.getAttribute('aria-label')?.includes('Chưa đọc:'));
       expect(itemButtons.length).toBeGreaterThan(0);
     });
   });
@@ -65,15 +65,15 @@ describe('Notifications page', () => {
   it('renders Mark all as read button', async () => {
     setup();
     await waitFor(() => {
-      expect(screen.getByText('Mark all as read')).toBeInTheDocument();
+      expect(screen.getByText('Đánh dấu tất cả đã đọc')).toBeInTheDocument();
     });
   });
 
   it('switches to Unread filter', async () => {
     setup();
-    await waitFor(() => screen.getByText('Notifications'));
+    await waitFor(() => screen.getByText('Thông báo'));
 
-    const unreadTab = screen.getByRole('tab', { name: /Unread/ });
+    const unreadTab = screen.getByRole('tab', { name: /Chưa đọc/ });
     fireEvent.click(unreadTab);
 
     // After switching, tab should be active

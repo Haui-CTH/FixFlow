@@ -477,6 +477,14 @@ async def create_ticket(
     )
     db.add(history)
 
+    # Thông báo cho manager/admin: có ticket mới
+    from app.services.notifier import notify_users, staff_ids
+
+    await notify_users(
+        db, await staff_ids(db), f"Ticket mới {ticket_number}", ticket_data.title,
+        ticket_id=ticket.id, type="info", exclude=customer_id if user.role == "manager" else None,
+    )
+
     # 6. Enqueue n8n event (cùng transaction — atomic với ticket)
     await _dispatch_n8n_webhook(db, ticket.id, ticket.ticket_number)
 
@@ -599,6 +607,30 @@ async def update_ticket(
             new_value=update_data.status,
         )
         db.add(history)
+
+    # Thông báo trong app: phân công mới / đổi trạng thái
+    from app.services.notifier import notify_users, technician_user_id
+    from app.services.user_resolver import resolve_or_create_user
+
+    actor = await resolve_or_create_user(db, user)
+    new_status = update_data.status if update_data.status and update_data.status != old_status else None
+    tech_changed = update_data.technician_id is not None
+    tech_user = await technician_user_id(db, ticket.technician_id) if (tech_changed or new_status) else None
+    if tech_changed:
+        await notify_users(
+            db, [tech_user], f"Bạn được phân công {ticket.ticket_number}", ticket.title,
+            ticket_id=ticket.id, type="info", exclude=actor,
+        )
+    if new_status:
+        kind = {"resolved": "success", "closed": "success", "cancelled": "warning"}.get(new_status, "info")
+        # KTV vừa được phân công đã nhận thông báo "được phân công" -> không báo trùng
+        from app.services.notifier import STATUS_VI
+
+        await notify_users(
+            db, [ticket.customer_id] + ([] if tech_changed else [tech_user]),
+            f"{ticket.ticket_number}: {STATUS_VI.get(new_status, new_status)}", ticket.title,
+            ticket_id=ticket.id, type=kind, exclude=actor,
+        )
 
     await db.commit()
     await db.refresh(ticket)

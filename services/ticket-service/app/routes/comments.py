@@ -110,6 +110,18 @@ async def create_comment(
     )
     db.add(history)
 
+    # Bình luận công khai -> báo cho phía còn lại (khách hàng <-> KTV được giao)
+    if not payload.is_internal:
+        from app.models.ticket import Ticket as _T
+        from app.services.notifier import notify_users, technician_user_id
+
+        t = (await db.execute(select(_T).where(_T.id == ticket_id))).scalar_one()
+        await notify_users(
+            db, [t.customer_id, await technician_user_id(db, t.technician_id)],
+            f"Bình luận mới trên {t.ticket_number}", payload.content[:200],
+            ticket_id=ticket_id, type="info", exclude=actor_id,
+        )
+
     await db.commit()
     await db.refresh(comment)
 

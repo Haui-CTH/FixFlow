@@ -1,93 +1,62 @@
 // SPDX-License-Identifier: Apache-2.0
-// DX-FSM NotificationItem – single notification row
-// F5.2: Click to mark read + navigate to ticket if available.
+// DX-FSM NotificationItem – một thông báo (N7.4, N7.5)
+// Bấm: đánh dấu đã đọc + chuyển tới ticket liên quan. Chưa đọc = chấm + chữ "Mới" (không chỉ màu).
 
+import { AlertTriangle, CheckCircle2, Info, XCircle, type LucideIcon } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import {
-  type Notification,
-  formatRelativeTime,
-  getTypeIcon,
-  getTypeColor,
-} from '../../lib/notifications';
+import { formatRelative } from '../../lib/format';
+import type { Notification, NotificationType } from '../../lib/notifications';
 import styles from '../../pages/Notifications.module.css';
 
 interface NotificationItemProps {
   notification: Notification;
   onMarkRead: (id: string) => void;
+  onNavigate?: () => void; // ví dụ: đóng dropdown của chuông
 }
 
-export function NotificationItem({ notification, onMarkRead }: NotificationItemProps) {
+const ICON: Record<NotificationType, { Icon: LucideIcon; label: string; cls: string }> = {
+  info: { Icon: Info, label: 'Thông tin', cls: styles.typeInfo },
+  success: { Icon: CheckCircle2, label: 'Thành công', cls: styles.typeSuccess },
+  warning: { Icon: AlertTriangle, label: 'Cảnh báo', cls: styles.typeWarning },
+  error: { Icon: XCircle, label: 'Lỗi', cls: styles.typeError },
+};
+
+export function NotificationItem({ notification, onMarkRead, onNavigate }: NotificationItemProps) {
   const navigate = useNavigate();
   const isUnread = !notification.is_read;
+  const { Icon, label, cls } = ICON[notification.type] ?? ICON.info;
 
-  const handleClick = () => {
-    if (isUnread) {
-      onMarkRead(notification.id);
-    }
-    if (notification.ticket_id) {
-      navigate(`/tickets/${notification.ticket_id}`);
-    }
+  const open = () => {
+    if (isUnread) onMarkRead(notification.id);
+    if (notification.ticket_id) navigate(`/tickets/${notification.ticket_id}`);
+    onNavigate?.();
   };
-
-  const handleTicketRefClick = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    if (notification.ticket_id) {
-      if (isUnread) {
-        onMarkRead(notification.id);
-      }
-      navigate(`/tickets/${notification.ticket_id}`);
-    }
-  };
-
-  const iconBg = getTypeColor(notification.type);
 
   return (
     <button
       type="button"
       className={`${styles.item} ${isUnread ? styles.itemUnread : ''}`}
-      onClick={handleClick}
-      aria-label={isUnread ? `Unread: ${notification.title}` : notification.title}
+      onClick={open}
+      aria-label={isUnread ? `Chưa đọc: ${notification.title}` : notification.title}
     >
-      {/* Unread dot */}
-      <div
-        className={`${styles.unreadDot} ${isUnread ? '' : styles.unreadDotRead}`}
-        aria-hidden="true"
-      />
-
-      {/* Type icon */}
-      <div
-        className={styles.icon}
-        style={{ background: iconBg }}
-        aria-hidden="true"
-      >
-        {getTypeIcon(notification.type)}
-      </div>
-
-      {/* Content */}
-      <div className={styles.content}>
-        <div className={styles.contentHeader}>
-          <h3 className={styles.contentTitle}>{notification.title}</h3>
+      <span className={`${styles.icon} ${cls}`} title={label}>
+        <Icon size={18} aria-hidden="true" />
+      </span>
+      <span className={styles.content}>
+        <span className={styles.contentHeader}>
+          <span className={styles.contentTitle}>{notification.title}</span>
+          {isUnread && <span className={styles.newBadge}>Mới</span>}
+        </span>
+        <span className={styles.contentMessage}>{notification.message}</span>
+        <span className={styles.contentFoot}>
+          {notification.ticket_id && (
+            <span className={styles.ticketRef}>{notification.ticket_number || notification.ticket_id.slice(0, 8)}</span>
+          )}
           <time className={styles.contentTime} dateTime={notification.created_at}>
-            {formatRelativeTime(notification.created_at)}
+            {formatRelative(notification.created_at)}
           </time>
-        </div>
-        <p className={styles.contentMessage}>{notification.message}</p>
-        {notification.ticket_id && (
-          <span
-            className={styles.ticketRef}
-            onClick={handleTicketRefClick}
-            role="link"
-            tabIndex={0}
-            onKeyDown={(e) => {
-              if (e.key === 'Enter' || e.key === ' ') {
-                handleTicketRefClick(e as unknown as React.MouseEvent);
-              }
-            }}
-          >
-            {notification.ticket_number || notification.ticket_id.slice(0, 8)}
-          </span>
-        )}
-      </div>
+        </span>
+      </span>
     </button>
   );
 }
