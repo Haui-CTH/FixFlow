@@ -37,7 +37,7 @@ export function NotesPanel({ ticketId }: NotesPanelProps) {
     enabled: isStaff, // customer → skip query entirely
     staleTime: 30_000,
     refetchOnWindowFocus: false,
-    retry: (failureCount, err: any) => {
+    retry: (failureCount, err: { response?: { status?: number } }) => {
       // Don't retry on 403 (customer role)
       if (err?.response?.status === 403) return false;
       return failureCount < 3;
@@ -70,7 +70,7 @@ export function NotesPanel({ ticketId }: NotesPanelProps) {
 
       return { previous };
     },
-    onError: (err: any, _body, context) => {
+    onError: (err: { response?: { data?: { detail?: string } }; message?: string }, _body, context) => {
       if (context?.previous) {
         queryClient.setQueryData(['notes', ticketId], context.previous);
       }

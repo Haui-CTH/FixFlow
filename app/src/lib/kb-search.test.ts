@@ -15,7 +15,7 @@ describe('kb-search.ts (A5.2)', () => {
 
     it('handles empty input', () => {
       expect(tokenize('')).toEqual([]);
-      expect(tokenize(null as any)).toEqual([]);
+      expect(tokenize(null as unknown as string)).toEqual([]);
     });
 
     it('strips punctuation', () => {

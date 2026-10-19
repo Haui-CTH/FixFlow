@@ -43,7 +43,7 @@ interface ToastContextValue {
 const STORAGE_KEY = '__dxfsm_toast_store__';
 type Listener = (toasts: Toast[]) => void;
 let _toasts: Toast[] = [];
-let _listeners: Set<Listener> = new Set();
+const _listeners: Set<Listener> = new Set();
 
 function getStore(): Toast[] {
   return _toasts;
@@ -53,7 +53,7 @@ function setStore(next: Toast[]): void {
   _toasts = next;
   // persist for HMR
   if (typeof window !== 'undefined') {
-    (window as any)[STORAGE_KEY] = next;
+    (window as unknown as Record<string, Toast[]>)[STORAGE_KEY] = next;
   }
   _listeners.forEach((l) => l(next));
 }
@@ -108,8 +108,8 @@ function clearAllToasts(): void {
 }
 
 // Restore from HMR cache
-if (typeof window !== 'undefined' && (window as any)[STORAGE_KEY]) {
-  _toasts = (window as any)[STORAGE_KEY];
+if (typeof window !== 'undefined' && (window as unknown as Record<string, Toast[]>)[STORAGE_KEY]) {
+  _toasts = (window as unknown as Record<string, Toast[]>)[STORAGE_KEY];
 }
 
 // ─── Public API (used outside React too) ─────────────────

@@ -128,7 +128,7 @@ const MOCK_NOTIFICATIONS: Notification[] = [
   },
 ];
 
-let mockStore: Notification[] = [...MOCK_NOTIFICATIONS];
+const mockStore: Notification[] = [...MOCK_NOTIFICATIONS];
 
 function mockListNotifications(
   params?: { is_read?: boolean; limit?: number; offset?: number }
