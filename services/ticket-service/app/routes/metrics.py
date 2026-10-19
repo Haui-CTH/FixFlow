@@ -16,11 +16,8 @@ from app.db.database import get_db
 from app.models.outbox import OutboxEvent
 from app.models.ticket import (
     Ticket,
-    TicketCategoryEnum,
-    TicketPriorityEnum,
     TicketStatusEnum,
 )
-from app.services.user_resolver import resolve_or_create_user
 
 router = APIRouter(prefix="/admin/metrics", tags=["Metrics"])
 
@@ -133,7 +130,6 @@ async def get_dashboard_metrics(
         window_days = 365
 
     now = datetime.now(timezone.utc)
-    window_start = now - timedelta(days=window_days)
     last_24h = now - timedelta(hours=24)
 
     # ─── 2. Total tickets ─────────────────────────────────

@@ -10,7 +10,7 @@ from datetime import datetime, timezone
 from typing import Optional
 
 import httpx
-from sqlalchemy import select, update
+from sqlalchemy import select
 
 from app.db.database import AsyncSessionLocal
 from app.models.outbox import OutboxEvent

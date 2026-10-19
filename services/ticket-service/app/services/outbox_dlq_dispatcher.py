@@ -7,13 +7,12 @@ Admin có thể list/retry/discard qua API.
 
 import logging
 import uuid
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from typing import Optional
 
-from sqlalchemy import select, update, delete
+from sqlalchemy import select, delete
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.db.database import AsyncSessionLocal
 from app.models.outbox import OutboxEvent
 from app.models.outbox_dlq import OutboxDLQ
 
@@ -132,11 +131,12 @@ async def discard_dlq_entry(
 
 async def cleanup_old_dlq(db: AsyncSession, days: int = 30) -> int:
     """Xóa DLQ entries đã resolved > N ngày. Returns count deleted."""
-    cutoff = datetime.now(timezone.utc).timestamp() - (days * 86400)
+    cutoff = datetime.now(timezone.utc) - timedelta(days=days)
     stmt = (
         delete(OutboxDLQ)
         .where(OutboxDLQ.resolved.in_(["retried", "discarded"]))
         .where(OutboxDLQ.resolved_at.isnot(None))
+        .where(OutboxDLQ.resolved_at < cutoff)  # trước đây thiếu điều kiện tuổi -> xoá cả mục mới xử lý
     )
     result = await db.execute(stmt)
     return result.rowcount

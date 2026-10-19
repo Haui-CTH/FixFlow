@@ -2,7 +2,7 @@
 # DX-FSM AI Service – Ticket Classification (A5.1)
 # Hybrid: cache → Ollama LLM → rule-based fallback
 
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter
 from pydantic import BaseModel, Field
 from typing import Optional
 

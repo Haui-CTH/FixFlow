@@ -11,7 +11,7 @@ from sqlalchemy import select, text
 # ─── Happy path: full lifecycle ────────────────────────────────────────
 
 
-@pytest.mark.asyncio
+@pytest.mark.asyncio(loop_scope="session")
 async def test_ticket_full_lifecycle(
     e2e_client: AsyncClient,
     db_engine,
@@ -143,7 +143,7 @@ async def test_ticket_full_lifecycle(
 # ─── Error cases ───────────────────────────────────────────────────────
 
 
-@pytest.mark.asyncio
+@pytest.mark.asyncio(loop_scope="session")
 async def test_create_ticket_validation_error(
     e2e_client: AsyncClient,
     auth_header_customer: dict,
@@ -157,7 +157,7 @@ async def test_create_ticket_validation_error(
     assert resp.status_code == 422
 
 
-@pytest.mark.asyncio
+@pytest.mark.asyncio(loop_scope="session")
 async def test_invalid_status_transition(
     e2e_client: AsyncClient,
     db_engine,
@@ -186,7 +186,7 @@ async def test_invalid_status_transition(
     assert resp.status_code in (200, 400, 422)
 
 
-@pytest.mark.asyncio
+@pytest.mark.asyncio(loop_scope="session")
 async def test_get_nonexistent_ticket_404(
     e2e_client: AsyncClient,
     auth_header_customer: dict,
@@ -202,7 +202,7 @@ async def test_get_nonexistent_ticket_404(
 # ─── Concurrency / data integrity ─────────────────────────────────────
 
 
-@pytest.mark.asyncio
+@pytest.mark.asyncio(loop_scope="session")
 async def test_create_multiple_tickets_unique_ids(
     e2e_client: AsyncClient,
     ticket_payload: dict,

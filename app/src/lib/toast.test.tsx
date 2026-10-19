@@ -22,6 +22,20 @@ describe('toastApi (module-level)', () => {
     });
   });
 
+  it('does not stack identical toasts (e.g. same 504 from a call and its retry)', async () => {
+    render(
+      <ToastProvider>
+        <div />
+      </ToastProvider>
+    );
+    const id1 = toastApi.error('Lỗi 504');
+    const id2 = toastApi.error('Lỗi 504');
+    expect(id2).toBe(id1);
+    await waitFor(() => expect(screen.getAllByText('Lỗi 504')).toHaveLength(1));
+    toastApi.error('Lỗi khác');
+    await waitFor(() => expect(screen.getByText('Lỗi khác')).toBeInTheDocument());
+  });
+
   it('error adds a toast with red icon variant', async () => {
     render(
       <ToastProvider>

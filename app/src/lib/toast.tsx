@@ -82,6 +82,9 @@ interface AddToastInput {
 }
 
 function addToast(input: AddToastInput): string {
+  // Cùng loại + cùng nội dung đang hiện (vd lỗi 504 của lần gọi và lần retry): không hiện thêm toast trùng
+  const dup = _toasts.find((t) => t.type === input.type && t.message === input.message && t.title === input.title);
+  if (dup) return dup.id;
   const id = genId();
   const durationMs = input.durationMs ?? DEFAULT_DURATIONS[input.type];
   const toast: Toast = {

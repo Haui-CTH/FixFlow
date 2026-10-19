@@ -30,6 +30,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Upload treo khi MinIO tắt (kiểm tra kết nối 1 giây trước khi thử, rồi lưu cục bộ).
 - Đổi ngôn ngữ thất bại khi `localStorage` bị chặn.
 
+### Fixed (CI, seed và tồn đọng)
+
+- `core/postgres/init.sql`: seed `ticket_history` vi phạm khoá ngoại (dùng `technicians.id` làm `users.id`) làm khởi tạo DB trống thất bại.
+- Migration `002_outbox_alerting.sql`: dòng chú thích dùng `#` thay vì `--` gây lỗi cú pháp; CI giờ áp dụng migration sau `init.sql`.
+- `cleanup_old_dlq` xoá cả mục DLQ vừa xử lý vì thiếu điều kiện tuổi (`resolved_at < cutoff`).
+- AI service: TF-IDF dùng IDF `log(N/(1+df))` cho giá trị âm trên KB nhỏ (tìm kiếm không ra kết quả) → IDF làm mượt; recommender truyền nhầm danh sách đã tách từ vào `build_idf`; yêu cầu cấp phát không có tín hiệu khẩn cấp mặc định ưu tiên thấp.
+- Circuit breaker của outbox: chạm ngưỡng thất bại giờ tự mở (trước đó chỉ mở khi ai đó gọi `open_circuit`).
+- Upload file chậm ~4 giây khi MinIO tắt (DNS thất bại): nhớ kết quả kiểm tra 60 giây.
+- Gateway/app nginx: `proxy_connect_timeout 5s`; axios timeout 30 giây — service ngừng thì báo lỗi sau vài giây thay vì quay vô hạn; toast không hiện trùng.
+- Workflow n8n `ticket-routing`: thêm `webhookId` để webhook đăng ký đúng đường dẫn `/webhook/ticket-created` (workflow vẫn cần các endpoint/biến môi trường tương ứng mới chạy trọn vẹn).
+- Test backend cũ: cập nhật cho khớp API hiện tại (envelope danh sách, `call_n8n` trả 3 giá trị, `/recommend`); `ruff.toml` cố định bộ luật; e2e đổi tên fixture thành `conftest.py` kèm chốt an toàn (chỉ chạy trên DB `*_e2e`) và tạm loại khỏi CI vì chưa được xác nhận.
+
 ### Backend (phục vụ frontend)
 
 - `GET /users/me`, `GET /users/technicians` (trước đây là hàm giả trả rỗng).

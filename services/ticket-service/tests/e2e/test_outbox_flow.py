@@ -7,7 +7,7 @@ from httpx import AsyncClient
 from sqlalchemy import text
 
 
-@pytest.mark.asyncio
+@pytest.mark.asyncio(loop_scope="session")
 async def test_ticket_creation_emits_outbox_event(
     e2e_client: AsyncClient,
     db_engine,
@@ -40,7 +40,7 @@ async def test_ticket_creation_emits_outbox_event(
     assert payload["ticket_id"] == ticket_id
 
 
-@pytest.mark.asyncio
+@pytest.mark.asyncio(loop_scope="session")
 async def test_status_change_emits_outbox_event(
     e2e_client: AsyncClient,
     db_engine,
@@ -84,7 +84,7 @@ async def test_status_change_emits_outbox_event(
     assert new_count > initial_count
 
 
-@pytest.mark.asyncio
+@pytest.mark.asyncio(loop_scope="session")
 async def test_outbox_event_payload_contains_required_fields(
     e2e_client: AsyncClient,
     db_engine,

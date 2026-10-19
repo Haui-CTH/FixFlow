@@ -44,8 +44,21 @@ async def test_classify_network():
 async def test_recommend():
     transport = ASGITransport(app=app)
     async with AsyncClient(transport=transport, base_url="http://test") as client:
-        response = await client.get("/recommend?ticket_id=abc&category=hardware&priority=high")
+        response = await client.get(
+            "/recommend?ticket_id=abc&title=May%20in%20loi&category=hardware&priority=high"
+        )
         assert response.status_code == 200
         data = response.json()
-        assert "technician_id" in data
-        assert data["score"] > 0
+        # Response hiện tại: {ticket_id, recommendations[], total_technicians}
+        assert data["ticket_id"] == "abc"
+        assert isinstance(data["recommendations"], list)
+        assert data["total_technicians"] >= len(data["recommendations"])
+
+
+
+@pytest.mark.asyncio
+async def test_recommend_requires_title():
+    transport = ASGITransport(app=app)
+    async with AsyncClient(transport=transport, base_url="http://test") as client:
+        response = await client.get("/recommend?ticket_id=abc")
+        assert response.status_code == 422

@@ -7,10 +7,8 @@ from __future__ import annotations
 
 import json
 import logging
-import math
 import threading
 import time
-from collections import Counter
 from dataclasses import dataclass, field, asdict
 from pathlib import Path
 from typing import Optional
@@ -23,7 +21,6 @@ from .recommender_models import (
 )
 from .recommender_scorer import score_technician
 from .text_vectorizer import (
-    tokenize,
     build_idf,
     vectorize,
     cosine_similarity,
@@ -163,9 +160,8 @@ class RecommenderV2:
             text = f"{r.title} {r.title} {r.description} {r.category} {r.priority}"
             self._history_texts.append(text)
         if self._history_texts:
-            self._history_idf, self._history_tokenized = build_idf(
-                [tokenize(t) for t in self._history_texts]
-            )
+            # build_idf tự tokenize chuỗi; không truyền danh sách đã tách từ
+            self._history_idf, self._history_tokenized = build_idf(self._history_texts)
         else:
             self._history_idf = {}
             self._history_tokenized = []

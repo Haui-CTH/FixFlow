@@ -7,8 +7,10 @@ import { t } from './i18n';
 
 const API_BASE = import.meta.env.VITE_API_BASE_URL || '/api/v1';
 
+// timeout: không để giao diện quay vô hạn khi backend không trả lời (upload ghi đè bằng timeout riêng)
 export const api = axios.create({
   baseURL: API_BASE,
+  timeout: 30_000,
   headers: {
     'Content-Type': 'application/json',
   },
@@ -176,7 +178,7 @@ export const attachmentApi = {
     form.append('file', file);
     // instance mặc định gửi JSON; phải ghi đè để axios gửi multipart (kèm boundary)
     return api
-      .post<Attachment>(`/tickets/${ticketId}/attachments`, form, { headers: { 'Content-Type': 'multipart/form-data' } })
+      .post<Attachment>(`/tickets/${ticketId}/attachments`, form, { headers: { 'Content-Type': 'multipart/form-data' }, timeout: 120_000 })
       .then((r) => r.data);
   },
   remove: (ticketId: string, attId: string) =>

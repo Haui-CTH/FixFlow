@@ -30,7 +30,9 @@ async def test_list_tickets_requires_auth(client):
     try:
         response = await client.get("/tickets")
         assert response.status_code == 200
-        assert isinstance(response.json(), list)
+        body = response.json()
+        assert isinstance(body["items"], list)  # envelope {items, total, page_limit, page_offset}
+        assert body["total"] >= len(body["items"])
     except RuntimeError as e:
         if "different loop" in str(e):
             pytest.skip(
@@ -57,9 +59,7 @@ async def test_create_ticket_as_customer_403():
                 "description": "Test description",
                 "category": "hardware",
                 "priority": "medium",
-                "customer_id": "c33d073f-2de3-4594-8ba6-b624a911ad04",
-                "customer_name": "Test User",
-                "customer_email": "test@example.com",
+                # customer_* bỏ trống: backend lấy từ JWT (người dùng test sẽ được tự tạo)
             }
             try:
                 response = await client.post("/tickets", json=payload)

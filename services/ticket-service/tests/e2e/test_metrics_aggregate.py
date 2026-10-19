@@ -7,7 +7,7 @@ import pytest
 from httpx import AsyncClient
 
 
-@pytest.mark.asyncio
+@pytest.mark.asyncio(loop_scope="session")
 async def test_metrics_counts_match_tickets(
     e2e_client: AsyncClient,
     ticket_payload: dict,
@@ -47,7 +47,7 @@ async def test_metrics_counts_match_tickets(
     assert by_priority.get("high", 0) == 1
 
 
-@pytest.mark.asyncio
+@pytest.mark.asyncio(loop_scope="session")
 async def test_metrics_by_category(
     e2e_client: AsyncClient,
     ticket_payload: dict,
@@ -73,7 +73,7 @@ async def test_metrics_by_category(
     assert by_category.get("software", 0) == 1
 
 
-@pytest.mark.asyncio
+@pytest.mark.asyncio(loop_scope="session")
 async def test_metrics_activity_window(
     e2e_client: AsyncClient,
     ticket_payload: dict,
@@ -96,7 +96,7 @@ async def test_metrics_activity_window(
     assert metrics["activity"]["last_24h_created"] >= 3
 
 
-@pytest.mark.asyncio
+@pytest.mark.asyncio(loop_scope="session")
 async def test_metrics_outbox_health(
     e2e_client: AsyncClient,
     auth_header_admin: dict,
@@ -115,7 +115,7 @@ async def test_metrics_outbox_health(
     assert "failed" in outbox
 
 
-@pytest.mark.asyncio
+@pytest.mark.asyncio(loop_scope="session")
 async def test_metrics_requires_admin(
     e2e_client: AsyncClient,
     auth_header_customer: dict,

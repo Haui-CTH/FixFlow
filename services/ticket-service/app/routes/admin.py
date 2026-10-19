@@ -14,7 +14,6 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.core.security import get_current_user, TokenUser
 from app.db.database import get_db
 from app.models.outbox import OutboxEvent
-from app.models.outbox_dlq import OutboxDLQ
 from app.services.sla_monitor import run_sla_check_once
 from app.services.outbox_dispatcher import run_outbox_worker_once
 from app.services.alert_dispatcher import trigger_alert_scan_now

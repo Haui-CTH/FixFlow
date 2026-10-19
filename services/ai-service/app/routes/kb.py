@@ -6,9 +6,7 @@ from pydantic import BaseModel, Field
 from typing import Optional
 
 from app.services.kb_search import (
-    KBSearchIndex,
     KBArticle,
-    SearchResult,
     get_index,
     reset_index,
 )
@@ -160,7 +158,6 @@ async def reset_and_seed():
     Reset index và seed với default KB articles.
     Useful cho dev/testing.
     """
-    import json
     from pathlib import Path
 
     reset_index()

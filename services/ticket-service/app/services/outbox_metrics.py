@@ -9,7 +9,6 @@ import time
 import logging
 import threading
 from collections import deque
-from typing import Optional
 
 logger = logging.getLogger(__name__)
 
@@ -67,11 +66,16 @@ class OutboxMetrics:
         with self._lock:
             if self._consecutive_failures < threshold:
                 return False
-            if time.time() < self._circuit_open_until:
+            now = time.time()
+            if self._circuit_open_until == 0.0:
+                # Chạm ngưỡng mà chưa ai gọi open_circuit(): mở ngay, đóng sau cooldown_sec
+                self._circuit_open_until = now + cooldown_sec
+            if now < self._circuit_open_until:
                 return True
             # Cooldown đã qua — reset và close
             logger.info("Circuit breaker: closing after cooldown")
             self._consecutive_failures = 0
+            self._circuit_open_until = 0.0
             return False
 
     def open_circuit(self, cooldown_sec: int = 60) -> None:

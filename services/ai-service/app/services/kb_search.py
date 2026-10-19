@@ -15,7 +15,6 @@ from .text_vectorizer import (
     build_idf,
     vectorize,
     cosine_similarity,
-    tokenize,
 )
 
 logger = logging.getLogger(__name__)
