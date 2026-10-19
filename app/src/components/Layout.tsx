@@ -1,31 +1,55 @@
 // SPDX-License-Identifier: Apache-2.0
-// DX-FSM App Layout (F5.5: responsive with mobile drawer)
+// DX-FSM App Layout (GĐ 02): Sidebar + TopBar + main (skip link, focus khi đổi route, ErrorBoundary theo route)
 
-import { useState, useEffect } from 'react';
-import { Outlet, Link, useLocation } from 'react-router-dom';
-import { X } from 'lucide-react';
+import { useEffect, useRef, useState } from 'react';
+import { Outlet, useLocation } from 'react-router-dom';
 import { logout } from '../lib/auth';
 import { useAuthStore } from '../lib/store';
+import { ErrorBoundary } from './ErrorBoundary';
+import { Sidebar } from './Sidebar';
+import { TopBar } from './TopBar';
 import styles from './Layout.module.css';
 
+const COLLAPSE_KEY = 'dxfsm-sidebar-collapsed';
+
+function readCollapsed(): boolean {
+  try {
+    return localStorage.getItem(COLLAPSE_KEY) === '1';
+  } catch {
+    return false;
+  }
+}
+
 export default function Layout() {
-  const location = useLocation();
+  const { pathname } = useLocation();
   const { user, logout: doLogout } = useAuthStore();
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [collapsed, setCollapsed] = useState(readCollapsed);
+  const mainRef = useRef<HTMLElement>(null);
+  const firstRender = useRef(true);
 
   const handleLogout = () => {
     doLogout();
     logout();
   };
 
-  const closeSidebar = () => setSidebarOpen(false);
+  const toggleCollapse = () =>
+    setCollapsed((c) => {
+      try {
+        localStorage.setItem(COLLAPSE_KEY, c ? '0' : '1');
+      } catch {
+        /* storage bị chặn */
+      }
+      return !c;
+    });
 
-  // Close sidebar on route change (mobile UX)
+  // Đổi route: đóng drawer, chuyển focus vào main (không ở lần render đầu)
   useEffect(() => {
     setSidebarOpen(false);
-  }, [location.pathname]);
+    if (firstRender.current) firstRender.current = false;
+    else mainRef.current?.focus();
+  }, [pathname]);
 
-  // Close on Esc
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if (e.key === 'Escape') setSidebarOpen(false);
@@ -34,94 +58,35 @@ export default function Layout() {
     return () => window.removeEventListener('keydown', onKey);
   }, []);
 
-  // Lock body scroll when drawer open
   useEffect(() => {
-    if (sidebarOpen) {
-      document.body.style.overflow = 'hidden';
-    } else {
+    document.body.style.overflow = sidebarOpen ? 'hidden' : '';
+    return () => {
       document.body.style.overflow = '';
-    }
-    return () => { document.body.style.overflow = ''; };
+    };
   }, [sidebarOpen]);
-
-  const navItems = [
-    { path: '/', label: 'Dashboard' },
-    { path: '/tickets', label: 'Tickets' },
-    { path: '/notifications', label: 'Notifications' },
-  ];
 
   return (
     <>
-      {/* Mobile top bar (only shown <768px) */}
-      <div className={styles.mobileBar}>
-        <span className={styles.mobileBrand}>DX-FSM</span>
-        <button
-          className={styles.hamburger}
-          onClick={() => setSidebarOpen(true)}
-          aria-label="Mở menu"
-          aria-expanded={sidebarOpen}
-        >
-          <span className={styles.hamburgerIcon} aria-hidden="true">
-            <span />
-          </span>
-          Menu
-        </button>
-      </div>
-
+      <a href="#main" className="skip-link">
+        Bỏ qua tới nội dung chính
+      </a>
       <div className={styles.shell}>
-        {/* Backdrop (mobile) */}
-        {sidebarOpen && (
-          <div
-            className={styles.backdrop}
-            onClick={closeSidebar}
-            aria-hidden="true"
-          />
-        )}
-
-        {/* Sidebar */}
-        <aside
-          className={`${styles.sidebar} ${sidebarOpen ? styles.sidebarOpen : ''}`}
-          aria-label="Sidebar navigation"
-        >
-          <div className={styles.brand}>
-            DX-FSM
-            <button
-              className={styles.closeBtn}
-              onClick={closeSidebar}
-              aria-label="Đóng menu"
-            >
-              <X size={20} aria-hidden="true" />
-            </button>
-          </div>
-          <nav className={styles.nav}>
-            {navItems.map((item) => (
-              <Link
-                key={item.path}
-                to={item.path}
-                className={`${styles.navLink} ${
-                  location.pathname === item.path ? styles.navLinkActive : ''
-                }`}
-              >
-                {item.label}
-              </Link>
-            ))}
-          </nav>
-          <div className={styles.userBlock}>
-            <div className={styles.username}>{user?.username}</div>
-            <div className={styles.role}>{user?.role}</div>
-            <button
-              onClick={handleLogout}
-              className={styles.logoutBtn}
-            >
-              Đăng xuất
-            </button>
-          </div>
-        </aside>
-
-        {/* Main */}
-        <main className={styles.main}>
-          <Outlet />
-        </main>
+        {sidebarOpen && <div className={styles.backdrop} onClick={() => setSidebarOpen(false)} aria-hidden="true" />}
+        <Sidebar
+          open={sidebarOpen}
+          collapsed={collapsed}
+          user={user}
+          onClose={() => setSidebarOpen(false)}
+          onToggleCollapse={toggleCollapse}
+        />
+        <div className={styles.content}>
+          <TopBar menuOpen={sidebarOpen} onOpenMenu={() => setSidebarOpen(true)} user={user} onLogout={handleLogout} />
+          <main id="main" ref={mainRef} tabIndex={-1} className={styles.main}>
+            <ErrorBoundary key={pathname}>
+              <Outlet />
+            </ErrorBoundary>
+          </main>
+        </div>
       </div>
     </>
   );

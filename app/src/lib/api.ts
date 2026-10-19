@@ -3,7 +3,7 @@ import axios from 'axios';
 import { toastApi } from './toast';
 import keycloak from './auth';
 
-const API_BASE = import.meta.env.VITE_API_BASE_URL || 'http://localhost:9180/api/v1';
+const API_BASE = import.meta.env.VITE_API_BASE_URL || '/api/v1';
 
 export const api = axios.create({
   baseURL: API_BASE,
@@ -31,7 +31,7 @@ api.interceptors.response.use(
       // Avoid toast loop on login page
       if (!window.location.pathname.startsWith('/login')) {
         toastApi.warning('Phiên đăng nhập hết hạn', 'Vui lòng đăng nhập lại');
-        window.location.href = '/login';
+        keycloak.login({ redirectUri: window.location.href });
       }
     } else if (error.response?.status === 403) {
       toastApi.error('Bạn không có quyền thực hiện thao tác này', '403 Forbidden');

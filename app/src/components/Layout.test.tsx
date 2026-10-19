@@ -32,22 +32,31 @@ describe('Layout', () => {
     expect(screen.getAllByText('DX-FSM').length).toBeGreaterThan(0);
   });
 
-  it('renders all nav items', () => {
+  it('renders nav items for the role (technician: no dashboard)', () => {
     setup();
-    expect(screen.getByText('Dashboard')).toBeInTheDocument();
-    expect(screen.getByText('Tickets')).toBeInTheDocument();
-    expect(screen.getByText('Notifications')).toBeInTheDocument();
+    expect(screen.queryByRole('link', { name: 'Tổng quan' })).not.toBeInTheDocument();
+    expect(screen.getByRole('link', { name: 'Ticket' })).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: 'Thông báo' })).toBeInTheDocument();
   });
 
-  it('shows username and role', () => {
+  it('marks the active nav item for child routes', () => {
+    setup('/tickets/123');
+    expect(screen.getByRole('link', { name: 'Ticket' })).toHaveAttribute('aria-current', 'page');
+  });
+
+  it('has a skip link and a focusable main', () => {
     setup();
-    expect(screen.getByText('alice')).toBeInTheDocument();
+    expect(screen.getByText('Bỏ qua tới nội dung chính')).toHaveAttribute('href', '#main');
+    expect(document.getElementById('main')).toHaveAttribute('tabindex', '-1');
+  });
+
+  it('user menu shows username, role and logout; Esc closes it', () => {
+    setup();
+    fireEvent.click(screen.getByRole('button', { name: /Tài khoản alice/ }));
     expect(screen.getByText('technician')).toBeInTheDocument();
-  });
-
-  it('renders logout button', () => {
-    setup();
     expect(screen.getByText(/Đăng xuất/)).toBeInTheDocument();
+    fireEvent.keyDown(document, { key: 'Escape' });
+    expect(screen.queryByText(/Đăng xuất/)).not.toBeInTheDocument();
   });
 
   it('mobile bar contains hamburger', () => {
