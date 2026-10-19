@@ -1,0 +1,35 @@
+/* SPDX-License-Identifier: Apache-2.0
+ * TicketCreate (GĐ 04): một cột ≤720px, fieldset theo nhóm, thanh hành động dính đáy trên mobile.
+ */
+
+.page { max-width: 720px; margin-inline: auto; }
+.form { display: grid; gap: var(--space-5); }
+.group {
+  display: grid;
+  gap: var(--space-4);
+  padding: var(--space-5);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+}
+.group legend { padding: 0 var(--space-2); font-weight: 700; }
+.legendLike { font-weight: 600; font-size: 0.875rem; }
+.err { color: var(--danger); font-size: 0.8125rem; }
+.hint { color: var(--text-muted); font-size: 0.8125rem; }
+.actions { display: flex; justify-content: flex-end; align-items: center; gap: var(--space-3); flex-wrap: wrap; }
+
+@media (max-width: 767px) {
+  .group { padding: var(--space-4); }
+  .page { padding-bottom: 88px; }
+  .actions {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: var(--z-nav);
+    padding: var(--space-3) var(--space-4);
+    background: var(--surface);
+    border-top: 1px solid var(--border);
+  }
+  .actions button { flex: 1; }
+}

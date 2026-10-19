@@ -6,12 +6,14 @@ import { RoleGuard } from './RoleGuard';
 
 let role: string | null = 'customer';
 vi.mock('../hooks/useRole', () => ({ useRole: () => role }));
+const warning = vi.fn();
+vi.mock('../lib/toast', () => ({ toastApi: { warning: (m: string) => warning(m) } }));
 
 const setup = () =>
   render(
     <MemoryRouter initialEntries={['/']}>
       <Routes>
-        <Route path="/" element={<RoleGuard roles={['manager']}><div>dash</div></RoleGuard>} />
+        <Route path="/" element={<RoleGuard roles={['manager']} deniedMessage="không có quyền"><div>dash</div></RoleGuard>} />
         <Route path="/my-tickets" element={<div>mine</div>} />
       </Routes>
     </MemoryRouter>,
@@ -27,5 +29,11 @@ describe('RoleGuard', () => {
     role = 'manager';
     setup();
     expect(screen.getByText('dash')).toBeInTheDocument();
+  });
+  it('shows the denied message once when redirecting', () => {
+    role = 'customer';
+    warning.mockClear();
+    setup();
+    expect(warning).toHaveBeenCalledWith('không có quyền');
   });
 });

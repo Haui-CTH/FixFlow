@@ -34,24 +34,29 @@ SLA_HOURS = {"critical": 4, "high": 24, "medium": 72, "low": 168}
 class TicketCreate(BaseModel):
     title: str = Field(..., min_length=5, max_length=500)
     description: Optional[str] = None  # min_length chỉ khi có giá trị
-    category: str = Field(default="other")
-    priority: str = Field(default="medium")
+    # category/priority để trống -> AI quyết định; người dùng chọn thì giữ nguyên lựa chọn đó
+    category: Optional[str] = None
+    priority: Optional[str] = None
     customer_location: Optional[str] = None
-    # customer_id/name/email lấy từ JWT — trong demo dùng body
-    customer_id: UUID
-    customer_name: str
-    customer_email: str
+    # customer_*: bỏ trống -> lấy từ JWT (customer tạo ticket cho chính mình)
+    customer_id: Optional[UUID] = None
+    customer_name: Optional[str] = None
+    customer_email: Optional[str] = None
 
     @field_validator("category")
     @classmethod
-    def validate_category(cls, v: str) -> str:
+    def validate_category(cls, v: Optional[str]) -> Optional[str]:
+        if v is None:
+            return v
         if v.lower() not in VALID_CATEGORIES:
             raise ValueError(f"category must be one of {VALID_CATEGORIES}")
         return v.lower()
 
     @field_validator("priority")
     @classmethod
-    def validate_priority(cls, v: str) -> str:
+    def validate_priority(cls, v: Optional[str]) -> Optional[str]:
+        if v is None:
+            return v
         if v.lower() not in VALID_PRIORITIES:
             raise ValueError(f"priority must be one of {VALID_PRIORITIES}")
         return v.lower()
@@ -414,12 +419,6 @@ async def create_ticket(
         seq = 1
     ticket_number = f"TKT-{year}-{seq:06d}"
 
-    # 2. SLA deadline
-    sla_hours = SLA_HOURS.get(ticket_data.priority, 168)
-    sla_deadline = datetime.now(timezone.utc).replace(microsecond=0)
-    from datetime import timedelta
-    sla_deadline = sla_deadline + timedelta(hours=sla_hours)
-
     # 3. AI classify (parallel, không block ticket creation)
     ai_result = await _call_ai_classify(ticket_data.title, ticket_data.description or "")
     ai_category = ai_result.category
@@ -427,17 +426,38 @@ async def create_ticket(
     ai_confidence = ai_result.confidence
     ai_recommendation = ai_result.recommendation
 
+    # Lựa chọn của người dùng thắng AI; thiếu thì dùng AI, cuối cùng mới là mặc định
+    category = ticket_data.category or ai_category or "other"
+    priority = ticket_data.priority or ai_priority or "medium"
+
+    # customer lấy từ JWT khi body không gửi
+    customer_id = ticket_data.customer_id
+    if customer_id is None:
+        from app.services.user_resolver import resolve_or_create_user
+
+        customer_id = await resolve_or_create_user(db, user)
+        if customer_id is None:
+            raise HTTPException(status_code=400, detail="customer_id is required")
+    customer_name = ticket_data.customer_name or user.full_name or user.preferred_username
+    customer_email = ticket_data.customer_email or user.email or ""
+
+    # 2. SLA deadline (theo priority cuối cùng)
+    from datetime import timedelta
+    sla_deadline = datetime.now(timezone.utc).replace(microsecond=0) + timedelta(
+        hours=SLA_HOURS.get(priority, 168)
+    )
+
     # 4. Insert ticket
     ticket = Ticket(
         ticket_number=ticket_number,
         title=ticket_data.title,
         description=ticket_data.description,
-        category=ai_category or ticket_data.category,
-        priority=ai_priority or ticket_data.priority,
+        category=category,
+        priority=priority,
         status="new",
-        customer_id=ticket_data.customer_id,
-        customer_name=ticket_data.customer_name,
-        customer_email=ticket_data.customer_email,
+        customer_id=customer_id,
+        customer_name=customer_name,
+        customer_email=customer_email,
         customer_location=ticket_data.customer_location,
         sla_deadline=sla_deadline,
         ai_category=ai_category,
@@ -451,7 +471,7 @@ async def create_ticket(
     # 5. Write history
     history = TicketHistory(
         ticket_id=ticket.id,
-        user_id=ticket_data.customer_id,
+        user_id=customer_id,
         action="created",
         new_value=f"Ticket {ticket_number} created",
     )
