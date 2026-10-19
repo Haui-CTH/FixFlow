@@ -7,20 +7,39 @@ const keycloak = new Keycloak({
   clientId: import.meta.env.VITE_KEYCLOAK_CLIENT_ID || 'dx-fsm-frontend',
 });
 
-export const initKeycloak = async () => {
-  const authenticated = await keycloak.init({
+// keycloak-js allows init() only once; share the promise between Login and AuthGuard
+let initPromise: Promise<boolean> | null = null;
+
+export const initKeycloak = () => {
+  initPromise ??= keycloak.init({
     onLoad: 'check-sso',
     silentCheckSsoRedirectUri: window.location.origin + '/silent-check-sso.html',
     checkLoginIframe: false,
+    pkceMethod: 'S256',
   });
-  return authenticated;
+  return initPromise;
 };
 
-export const login = () => keycloak.login();
+// Always return to '/' so AuthGuard (not the Login page) processes the callback
+export const login = () => keycloak.login({ redirectUri: window.location.origin + '/' });
 
 export const logout = () => keycloak.logout();
 
 export const getToken = () => keycloak.token;
+
+const ROLES = ['admin', 'manager', 'technician', 'customer'];
+
+export const getCurrentUser = () => {
+  const t = keycloak.tokenParsed as
+    | { preferred_username?: string; email?: string; realm_access?: { roles?: string[] } }
+    | undefined;
+  const roles = t?.realm_access?.roles ?? [];
+  return {
+    username: t?.preferred_username ?? '',
+    email: t?.email ?? '',
+    role: ROLES.find((r) => roles.includes(r)) ?? 'customer',
+  };
+};
 
 export const getUserInfo = () => keycloak.loadUserInfo();
 

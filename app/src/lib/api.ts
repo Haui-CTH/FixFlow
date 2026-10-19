@@ -1,6 +1,7 @@
 // DX-FSM API Client
 import axios from 'axios';
 import { toastApi } from './toast';
+import keycloak from './auth';
 
 const API_BASE = import.meta.env.VITE_API_BASE_URL || 'http://localhost:9180/api/v1';
 
@@ -12,10 +13,12 @@ export const api = axios.create({
 });
 
 // Request interceptor for auth
-api.interceptors.request.use((config) => {
-  const token = localStorage.getItem('access_token');
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
+api.interceptors.request.use(async (config) => {
+  if (keycloak.authenticated) {
+    await keycloak.updateToken(30).catch(() => undefined);
+  }
+  if (keycloak.token) {
+    config.headers.Authorization = `Bearer ${keycloak.token}`;
   }
   return config;
 });
@@ -25,7 +28,6 @@ api.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response?.status === 401) {
-      localStorage.removeItem('access_token');
       // Avoid toast loop on login page
       if (!window.location.pathname.startsWith('/login')) {
         toastApi.warning('Phiên đăng nhập hết hạn', 'Vui lòng đăng nhập lại');
@@ -64,8 +66,11 @@ export interface Ticket {
 }
 
 export const ticketApi = {
+  // Backend returns { items, total, ... }; callers only need the array for now
   list: (params?: { status?: string; priority?: string; category?: string }) =>
-    api.get<Ticket[]>('/tickets', { params }),
+    api
+      .get<{ items: Ticket[]; total: number }>('/tickets', { params })
+      .then((r) => ({ ...r, data: r.data.items })),
 
   get: (id: string) =>
     api.get<Ticket>(`/tickets/${id}`),

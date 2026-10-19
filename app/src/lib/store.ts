@@ -9,18 +9,11 @@ interface AuthState {
   logout: () => void;
 }
 
+// Token lives in keycloak-js memory; the store only mirrors it for the UI.
 export const useAuthStore = create<AuthState>((set) => ({
-  isAuthenticated: !!localStorage.getItem('access_token'),
-  user: JSON.parse(localStorage.getItem('user') || 'null'),
-  token: localStorage.getItem('access_token'),
-  setAuth: (token, user) => {
-    localStorage.setItem('access_token', token);
-    localStorage.setItem('user', JSON.stringify(user));
-    set({ isAuthenticated: true, user, token });
-  },
-  logout: () => {
-    localStorage.removeItem('access_token');
-    localStorage.removeItem('user');
-    set({ isAuthenticated: false, user: null, token: null });
-  },
+  isAuthenticated: false,
+  user: null,
+  token: null,
+  setAuth: (token, user) => set({ isAuthenticated: true, user, token }),
+  logout: () => set({ isAuthenticated: false, user: null, token: null }),
 }));

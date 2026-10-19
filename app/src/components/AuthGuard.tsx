@@ -1,7 +1,7 @@
 // DX-FSM Auth Guard
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { initKeycloak } from '../lib/auth';
+import keycloak, { initKeycloak, getCurrentUser } from '../lib/auth';
 import { useAuthStore } from '../lib/store';
 
 export function AuthGuard({ children }: { children: React.ReactNode }) {
@@ -13,11 +13,7 @@ export function AuthGuard({ children }: { children: React.ReactNode }) {
     initKeycloak()
       .then((authenticated) => {
         if (authenticated) {
-          const token = localStorage.getItem('access_token');
-          const userInfo = localStorage.getItem('user');
-          if (token) {
-            setAuth(token, userInfo ? JSON.parse(userInfo) : null);
-          }
+          setAuth(keycloak.token ?? '', getCurrentUser());
         } else {
           navigate('/login');
         }
