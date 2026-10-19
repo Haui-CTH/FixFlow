@@ -86,6 +86,23 @@ export interface TicketListResponse {
   page_offset: number;
 }
 
+export interface TicketCreateInput {
+  title: string;
+  description: string;
+  category: string;
+  priority: string;
+  customer_location?: string;
+}
+
+export interface AiClassifyResult {
+  category: string;
+  priority: string;
+  confidence: number;
+  method: string;
+  recommendation?: string | null;
+  reasoning?: string | null;
+}
+
 export const ticketApi = {
   list: (params?: TicketListParams) =>
     api.get<TicketListResponse>('/tickets', { params }).then((r) => r.data),
@@ -93,8 +110,26 @@ export const ticketApi = {
   get: (id: string) =>
     api.get<Ticket>(`/tickets/${id}`),
 
-  create: (data: Partial<Ticket>) =>
-    api.post<Ticket>('/tickets', data),
+  // customer_id/name/email để trống: BE lấy từ JWT
+  create: (data: TicketCreateInput) =>
+    api.post<Ticket>('/tickets', data).then((r) => r.data),
+};
+
+export const attachmentApi = {
+  upload: (ticketId: string, file: File) => {
+    const form = new FormData();
+    form.append('file', file);
+    return api.post(`/tickets/${ticketId}/attachments`, form).then((r) => r.data);
+  },
+};
+
+export const aiApi = {
+  // AI service trả confidence theo thang 0–100 (hoặc 0–1); chuẩn hoá về 0–1
+  classify: (title: string, description: string) =>
+    api.post<AiClassifyResult>('/classify', { title, description }).then((r) => ({
+      ...r.data,
+      confidence: r.data.confidence > 1 ? r.data.confidence / 100 : r.data.confidence,
+    })),
 };
 
 // ─── Metrics API (F5.1) ───────────────────────────────────

@@ -4,6 +4,7 @@ import Layout from './components/Layout';
 import Login from './pages/Login';
 import Tickets from './pages/Tickets';
 import Notifications from './pages/Notifications';
+import TicketCreate from './pages/TicketCreate';
 import NotFound from './pages/NotFound';
 import { AuthGuard } from './components/AuthGuard';
 import { RoleGuard } from './components/RoleGuard';
@@ -45,6 +46,14 @@ function App() {
               }
             />
             <Route path="my-tickets" element={<Tickets mine />} />
+            <Route
+              path="tickets/new"
+              element={
+                <RoleGuard roles={['customer', 'manager', 'admin']} deniedMessage="Bạn không có quyền tạo ticket">
+                  <TicketCreate />
+                </RoleGuard>
+              }
+            />
             <Route path="tickets/:id" element={<TicketDetail />} />
             <Route path="notifications" element={<Notifications />} />
             <Route path="*" element={<NotFound />} />

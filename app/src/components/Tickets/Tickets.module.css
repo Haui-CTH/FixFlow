@@ -165,3 +165,39 @@
   .desktopOnly { display: none; }
   .cardList { display: grid; }
 }
+
+/* ─── PrioritySelector ─── */
+.prioGroup { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: var(--space-2); margin-top: var(--space-2); }
+.prioCard {
+  position: relative;
+  display: grid;
+  gap: var(--space-1);
+  min-height: 64px;
+  padding: var(--space-3);
+  background: var(--surface);
+  border: 2px solid var(--border);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+}
+.prioCard:hover { border-color: var(--border-strong); }
+.prioCard:has(input:focus-visible) { outline: 3px solid var(--ring); outline-offset: 2px; }
+.prioOn { border-width: 2px; }
+.prio-success.prioOn { border-color: var(--success); background: var(--success-bg); }
+.prio-info.prioOn { border-color: var(--info); background: var(--info-bg); }
+.prio-warning.prioOn { border-color: var(--warning); background: var(--warning-bg); }
+.prio-danger.prioOn { border-color: var(--danger); background: var(--danger-bg); }
+.prioTitle { display: inline-flex; align-items: center; gap: var(--space-2); font-weight: 700; }
+.prioHint { color: var(--text-muted); font-size: 0.8125rem; }
+
+/* ─── AiSuggestion ─── */
+.ai {
+  display: flex;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  background: var(--info-bg);
+  color: var(--text);
+  border: 1px solid var(--info);
+  border-radius: var(--radius-md);
+}
+.ai > svg { flex-shrink: 0; color: var(--info); margin-top: 2px; }
+.aiBody { display: grid; gap: var(--space-2); justify-items: start; }
