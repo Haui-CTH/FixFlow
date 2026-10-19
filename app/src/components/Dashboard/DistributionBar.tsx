@@ -1,4 +1,4 @@
-// DX-FSM Dashboard – Distribution bar row (priority / category)
+// DX-FSM Dashboard – Distribution bar row (B6.5): nhãn + giá trị + phần trăm luôn hiển thị
 import styles from '../../pages/Dashboard.module.css';
 
 type FillColor = 'blue' | 'yellow' | 'orange' | 'red' | 'green' | 'gray' | 'purple';
@@ -27,19 +27,25 @@ interface DistributionBarProps {
 export function DistributionBar({ label, count, total, color = 'blue' }: DistributionBarProps) {
   const pct = total > 0 ? Math.min(100, (count / total) * 100) : 0;
   return (
-    <div className={styles.distRow}>
+    <div className={styles.distRow} title={`${label}: ${count} (${Math.round(pct)}%)`}>
       <div className={styles.distLabel}>{label}</div>
       <div className={styles.distBarTrack}>
         <div
           className={`${styles.distBarFill} ${fillMap[color]}`}
           style={{ width: `${pct}%` }}
           role="progressbar"
+          aria-label={`${label}: ${count} trên ${total}`}
           aria-valuenow={count}
           aria-valuemin={0}
           aria-valuemax={total}
         />
       </div>
-      <div className={styles.distCount}>{count}</div>
+      <div className={styles.distTail}>
+        <span className={styles.distCount}>{count}</span>
+        <span className={styles.distPct} aria-hidden="true">
+          {Math.round(pct)}%
+        </span>
+      </div>
     </div>
   );
 }
