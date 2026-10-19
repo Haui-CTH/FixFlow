@@ -4,23 +4,9 @@
 import { useQuery } from '@tanstack/react-query';
 import { Link } from 'react-router-dom';
 import { ticketApi } from '../lib/api';
+import { PriorityBadge, StatusBadge } from '../components/ui/Badge';
+import { formatDate } from '../lib/format';
 import styles from './Tickets.module.css';
-
-const STATUS_LABELS: Record<string, { label: string; color: string }> = {
-  new: { label: 'Mới', color: '#3b82f6' },
-  assigned: { label: 'Đã giao', color: '#8b5cf6' },
-  in_progress: { label: 'Đang xử lý', color: '#f59e0b' },
-  pending: { label: 'Chờ', color: '#6b7280' },
-  resolved: { label: 'Đã giải quyết', color: '#10b981' },
-  closed: { label: 'Đã đóng', color: '#374151' },
-};
-
-const PRIORITY_COLORS: Record<string, string> = {
-  low: '#10b981',
-  medium: '#3b82f6',
-  high: '#f59e0b',
-  critical: '#ef4444',
-};
 
 export default function Tickets() {
   const { data: tickets = [], isLoading } = useQuery({
@@ -57,7 +43,6 @@ export default function Tickets() {
               </thead>
               <tbody>
                 {tickets.map((ticket) => {
-                  const status = STATUS_LABELS[ticket.status] || { label: ticket.status, color: '#6b7280' };
                   return (
                     <tr key={ticket.id}>
                       <td>
@@ -67,23 +52,13 @@ export default function Tickets() {
                       </td>
                       <td className={styles.titleCell}>{ticket.title}</td>
                       <td>
-                        <span
-                          className={styles.statusBadge}
-                          style={{ background: status.color + '20', color: status.color }}
-                        >
-                          {status.label}
-                        </span>
+                        <StatusBadge status={ticket.status} />
                       </td>
                       <td>
-                        <span
-                          className={styles.priorityText}
-                          style={{ color: PRIORITY_COLORS[ticket.priority] || '#6b7280' }}
-                        >
-                          {ticket.priority}
-                        </span>
+                        <PriorityBadge priority={ticket.priority} />
                       </td>
                       <td className={styles.dateText}>
-                        {ticket.created_at ? new Date(ticket.created_at).toLocaleDateString('vi-VN') : '-'}
+                        {formatDate(ticket.created_at)}
                       </td>
                     </tr>
                   );
@@ -95,7 +70,6 @@ export default function Tickets() {
           {/* Mobile card list (<=768px) */}
           <div className={styles.cardList}>
             {tickets.map((ticket) => {
-              const status = STATUS_LABELS[ticket.status] || { label: ticket.status, color: '#6b7280' };
               return (
                 <Link
                   to={`/tickets/${ticket.id}`}
@@ -104,23 +78,13 @@ export default function Tickets() {
                 >
                   <div className={styles.cardTop}>
                     <span className={styles.cardCode}>{ticket.ticket_number}</span>
-                    <span
-                      className={styles.statusBadge}
-                      style={{ background: status.color + '20', color: status.color }}
-                    >
-                      {status.label}
-                    </span>
+                    <StatusBadge status={ticket.status} />
                   </div>
                   <p className={styles.cardTitle}>{ticket.title}</p>
                   <div className={styles.cardBottom}>
-                    <span
-                      className={styles.priorityText}
-                      style={{ color: PRIORITY_COLORS[ticket.priority] || '#6b7280' }}
-                    >
-                      Ưu tiên: {ticket.priority}
-                    </span>
+                    <PriorityBadge priority={ticket.priority} />
                     <span>
-                      {ticket.created_at ? new Date(ticket.created_at).toLocaleDateString('vi-VN') : '-'}
+                      {formatDate(ticket.created_at)}
                     </span>
                   </div>
                 </Link>

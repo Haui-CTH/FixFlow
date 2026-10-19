@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { metricsApi, type StatusCount } from '../lib/api';
+import { priorityMeta, statusMeta } from '../lib/ticket-meta';
 import styles from './Dashboard.module.css';
 import { MetricCard } from '../components/Dashboard/MetricCard';
 import { DistributionBar } from '../components/Dashboard/DistributionBar';
@@ -154,7 +155,7 @@ export default function Dashboard() {
                 data.by_status.map((s: StatusCount) => (
                   <DistributionBar
                     key={s.status}
-                    label={s.status.replace('_', ' ')}
+                    label={statusMeta(s.status).label}
                     count={s.count}
                     total={data.total_tickets}
                     color={STATUS_COLOR[s.status] || 'gray'}
@@ -171,7 +172,7 @@ export default function Dashboard() {
                 data.by_priority.map((p) => (
                   <DistributionBar
                     key={p.priority}
-                    label={p.priority}
+                    label={priorityMeta(p.priority).label}
                     count={p.count}
                     total={data.total_tickets}
                     color={PRIORITY_COLOR[p.priority] || 'gray'}

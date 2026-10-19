@@ -3,6 +3,7 @@
 
 import { useState, useEffect } from 'react';
 import { Outlet, Link, useLocation } from 'react-router-dom';
+import { X } from 'lucide-react';
 import { logout } from '../lib/auth';
 import { useAuthStore } from '../lib/store';
 import styles from './Layout.module.css';
@@ -89,7 +90,7 @@ export default function Layout() {
               onClick={closeSidebar}
               aria-label="Đóng menu"
             >
-              ×
+              <X size={20} aria-hidden="true" />
             </button>
           </div>
           <nav className={styles.nav}>

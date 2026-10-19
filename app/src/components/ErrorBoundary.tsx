@@ -105,13 +105,13 @@ const containerStyle: React.CSSProperties = {
 };
 
 const cardStyle: React.CSSProperties = {
-  background: 'white',
+  background: 'var(--surface)',
   padding: '2rem',
   borderRadius: '0.5rem',
   border: '1px solid var(--border)',
   maxWidth: '32rem',
   width: '100%',
-  boxShadow: '0 4px 12px rgba(0, 0, 0, 0.05)',
+  boxShadow: 'var(--shadow-2)',
 };
 
 const titleStyle: React.CSSProperties = {
@@ -147,8 +147,8 @@ const preStyle: React.CSSProperties = {
 
 const primaryBtnStyle: React.CSSProperties = {
   padding: '0.5rem 1rem',
-  background: 'var(--primary)',
-  color: 'white',
+  background: 'var(--accent)',
+  color: 'var(--on-accent)',
   border: 'none',
   borderRadius: '0.375rem',
   cursor: 'pointer',
@@ -157,8 +157,8 @@ const primaryBtnStyle: React.CSSProperties = {
 
 const secondaryBtnStyle: React.CSSProperties = {
   padding: '0.5rem 1rem',
-  background: 'white',
-  color: 'var(--text-primary)',
+  background: 'var(--surface)',
+  color: 'var(--text)',
   border: '1px solid var(--border)',
   borderRadius: '0.375rem',
   cursor: 'pointer',
