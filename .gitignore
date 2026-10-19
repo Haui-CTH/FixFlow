@@ -50,3 +50,6 @@ logs/
 
 # Local attachments (ticket-service storage fallback)
 /data/attachments/
+
+# Local UI planning docs
+docs/frontend-ui-plan/
