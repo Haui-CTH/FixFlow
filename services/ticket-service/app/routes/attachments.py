@@ -306,7 +306,9 @@ async def download_attachment(
     if path.startswith("/"):
         # chỉ phục vụ file nằm trong thư mục lưu trữ (chặn path traversal)
         p = Path(path).resolve()
-        if Path("/data/attachments").resolve() not in p.parents or not p.is_file():
+        from app.services.storage_service import STORAGE_DIR
+
+        if STORAGE_DIR.resolve() not in p.parents or not p.is_file():
             raise HTTPException(status_code=404, detail="File not found")
         return FileResponse(p, media_type=media, filename=att.file_name)
 

@@ -2,6 +2,7 @@
 # DX-FSM Ticket Service – Storage Service
 # Hỗ trợ 2 backend: MinIO (production) và local filesystem (khi MinIO disabled).
 
+import os
 import uuid
 from io import BytesIO
 from pathlib import Path
@@ -79,14 +80,15 @@ def _minio_upload(data: bytes, object_name: str, content_type: str) -> str:
 
 # ─── Local filesystem fallback ─────────────────────────────────
 
-STORAGE_DIR = Path("/data/attachments")
-STORAGE_DIR.mkdir(parents=True, exist_ok=True)
+# Không tạo thư mục lúc import: người dùng không phải root (vd runner CI) không ghi được /data
+STORAGE_DIR = Path(os.environ.get("ATTACHMENTS_DIR", "/data/attachments"))
 
 
 def _local_upload(data: bytes, file_name: str) -> str:
     """Upload vào filesystem local (khi MinIO disabled)."""
     ext = Path(file_name).suffix
     safe_name = f"{uuid.uuid4().hex}{ext}"
+    STORAGE_DIR.mkdir(parents=True, exist_ok=True)
     file_path = STORAGE_DIR / safe_name
     file_path.write_bytes(data)
     return str(file_path)
