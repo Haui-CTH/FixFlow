@@ -4,6 +4,7 @@
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { Button } from './Button';
 import styles from './ui.module.css';
+import { t } from '../../lib/i18n';
 
 const SIZES = [10, 20, 50];
 
@@ -32,14 +33,14 @@ export function Pagination({ page, size, total, onPage, onSize }: Props) {
   const from = total === 0 ? 0 : (page - 1) * size + 1;
   const to = Math.min(page * size, total);
   return (
-    <nav className={styles.pagination} aria-label="Phân trang">
+    <nav className={styles.pagination} aria-label={t('pagination.phan_trang')}>
       <span className={styles.pageInfo} aria-live="polite">
-        Hiển thị {from}–{to} / {total}
+        {t('pagination.showing', { from, to, total })}
       </span>
       <div className={styles.pageBtns}>
-        <Button variant="secondary" size="sm" disabled={page <= 1} onClick={() => onPage(page - 1)} aria-label="Trang trước">
+        <Button variant="secondary" size="sm" disabled={page <= 1} onClick={() => onPage(page - 1)} aria-label={t('pagination.trang_truoc')}>
           <ChevronLeft size={16} aria-hidden="true" />
-          Trước
+          {t('pagination.truoc')}
         </Button>
         {pageList(page, pages).map((n, i) =>
           n === '…' ? (
@@ -51,7 +52,7 @@ export function Pagination({ page, size, total, onPage, onSize }: Props) {
               key={n}
               variant={n === page ? 'primary' : 'ghost'}
               size="sm"
-              aria-label={`Trang ${n}`}
+              aria-label={t('pagination.page_n', { n })}
               aria-current={n === page ? 'page' : undefined}
               onClick={() => onPage(n)}
             >
@@ -59,13 +60,13 @@ export function Pagination({ page, size, total, onPage, onSize }: Props) {
             </Button>
           ),
         )}
-        <Button variant="secondary" size="sm" disabled={page >= pages} onClick={() => onPage(page + 1)} aria-label="Trang sau">
-          Sau
+        <Button variant="secondary" size="sm" disabled={page >= pages} onClick={() => onPage(page + 1)} aria-label={t('pagination.trang_sau')}>
+          {t('pagination.sau')}
           <ChevronRight size={16} aria-hidden="true" />
         </Button>
       </div>
       <label className={styles.pageSize}>
-        Mỗi trang
+        {t('pagination.moi_trang')}
         <select value={size} onChange={(e) => onSize(Number(e.target.value))}>
           {SIZES.map((s) => (
             <option key={s} value={s}>

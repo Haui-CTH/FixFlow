@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: Apache-2.0
 // DX-FSM Dashboard – Distribution bar row (B6.5): nhãn + giá trị + phần trăm luôn hiển thị
 import styles from '../../pages/Dashboard.module.css';
+import { t } from '../../lib/i18n';
 
 type FillColor = 'blue' | 'yellow' | 'orange' | 'red' | 'green' | 'gray' | 'purple';
 
@@ -35,7 +36,7 @@ export function DistributionBar({ label, count, total, color = 'blue' }: Distrib
           className={`${styles.distBarFill} ${fillMap[color]}`}
           style={{ width: `${pct}%` }}
           role="progressbar"
-          aria-label={`${label}: ${count} trên ${total}`}
+          aria-label={t('distribution_bar.aria', { label, count, total })}
           aria-valuenow={count}
           aria-valuemin={0}
           aria-valuemax={total}

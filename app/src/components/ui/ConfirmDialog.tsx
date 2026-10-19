@@ -4,12 +4,13 @@
 import { Button } from './Button';
 import { Modal } from './Modal';
 import styles from './ui.module.css';
+import { t } from '../../lib/i18n';
 
 export function ConfirmDialog({
   open,
   title,
   message,
-  confirmLabel = 'Xác nhận',
+  confirmLabel = t('confirm_dialog.xac_nhan'),
   danger = false,
   loading = false,
   onConfirm,
@@ -29,7 +30,7 @@ export function ConfirmDialog({
       <p className={styles.confirmText}>{message}</p>
       <div className={styles.confirmActions}>
         <Button variant="secondary" onClick={onClose} disabled={loading}>
-          Huỷ bỏ
+          {t('confirm_dialog.huy_bo')}
         </Button>
         <Button variant={danger ? 'danger' : 'primary'} onClick={onConfirm} loading={loading}>
           {confirmLabel}

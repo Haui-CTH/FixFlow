@@ -20,6 +20,7 @@ import { EmptyState, ErrorState } from '../components/ui/States';
 import { Tabs, tabPanelProps, type TabDef } from '../components/ui/Tabs';
 import { useRole } from '../hooks/useRole';
 import { attachmentApi, commentApi, ticketApi } from '../lib/api';
+import { t } from '../lib/i18n';
 
 export default function TicketDetail() {
   const { id } = useParams<{ id: string }>();
@@ -48,7 +49,7 @@ export default function TicketDetail() {
 
   if (isLoading) {
     return (
-      <div className={styles.page} role="status" aria-label="Đang tải ticket">
+      <div className={styles.page} role="status" aria-label={t('ticket_detail.dang_tai_ticket')}>
         <SkeletonBlock height={140} />
         <div className={styles.spacer} />
         <SkeletonBlock height={320} />
@@ -61,21 +62,21 @@ export default function TicketDetail() {
       <EmptyState
         icon={SearchX}
         headingLevel={1}
-        title="Không tìm thấy ticket"
-        description="Ticket không tồn tại hoặc bạn không có quyền xem."
-        action={<Link to={backTo}>Về danh sách ticket</Link>}
+        title={t('ticket_detail.khong_tim_thay_ticket')}
+        description={t('ticket_detail.ticket_khong_ton_tai_hoac_ban_khon')}
+        action={<Link to={backTo}>{t('ticket_detail.ve_danh_sach_ticket')}</Link>}
       />
     ) : (
-      <ErrorState headingLevel={1} title="Không tải được ticket" onRetry={() => refetch()} />
+      <ErrorState headingLevel={1} title={t('ticket_detail.khong_tai_duoc_ticket')} onRetry={() => refetch()} />
     );
   }
 
   const tabs: TabDef[] = [
-    { id: 'overview', label: 'Tổng quan' },
-    { id: 'comments', label: 'Bình luận', count: comments?.length },
-    ...(role === 'customer' ? [] : [{ id: 'notes', label: 'Ghi chú nội bộ' }]),
-    { id: 'attachments', label: 'Đính kèm', count: attachments?.length },
-    { id: 'history', label: 'Lịch sử' },
+    { id: 'overview', label: t('ticket_detail.tong_quan') },
+    { id: 'comments', label: t('ticket_detail.binh_luan'), count: comments?.length },
+    ...(role === 'customer' ? [] : [{ id: 'notes', label: t('ticket_detail.ghi_chu_noi_bo') }]),
+    { id: 'attachments', label: t('ticket_detail.dinh_kem'), count: attachments?.length },
+    { id: 'history', label: t('ticket_detail.lich_su') },
   ];
   const requested = params.get('tab') ?? 'overview';
   const active = tabs.some((t) => t.id === requested) ? requested : 'overview';
@@ -108,7 +109,7 @@ export default function TicketDetail() {
             {active === 'history' && <HistoryTimeline ticketId={ticket.id} />}
           </div>
         </div>
-        <aside className={styles.side} aria-label="Thông tin phụ">
+        <aside className={styles.side} aria-label={t('ticket_detail.thong_tin_phu')}>
           <AiInsightsCard ticket={ticket} canSuggest={canAssign} onSuggest={() => setAssignOpen(true)} />
         </aside>
       </div>

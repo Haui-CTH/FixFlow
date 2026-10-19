@@ -7,6 +7,7 @@ import { categoryMeta, priorityMeta } from '../../lib/ticket-meta';
 import { Button } from '../ui/Button';
 import { Card } from '../ui/Card';
 import styles from './TicketDetail.module.css';
+import { t } from '../../lib/i18n';
 
 export function AiInsightsCard({ ticket, canSuggest, onSuggest }: { ticket: Ticket; canSuggest: boolean; onSuggest: () => void }) {
   const has = ticket.ai_category || ticket.ai_priority;
@@ -21,14 +22,14 @@ export function AiInsightsCard({ ticket, canSuggest, onSuggest }: { ticket: Tick
       {has ? (
         <>
           <p>
-            Danh mục: <strong>{ticket.ai_category ? categoryMeta(ticket.ai_category).label : '-'}</strong>
+            {t('ai_insights_card.category')}: <strong>{ticket.ai_category ? categoryMeta(ticket.ai_category).label : '-'}</strong>
           </p>
           <p>
-            Ưu tiên: <strong>{ticket.ai_priority ? priorityMeta(ticket.ai_priority).label : '-'}</strong>
+            {t('ai_insights_card.priority')}: <strong>{ticket.ai_priority ? priorityMeta(ticket.ai_priority).label : '-'}</strong>
           </p>
           <div className={styles.confRow}>
-            <span>Độ tin cậy</span>
-            <div role="progressbar" aria-label="Độ tin cậy AI" aria-valuemin={0} aria-valuemax={100} aria-valuenow={pct} className={styles.slaTrack}>
+            <span>{t('ai_insights_card.do_tin_cay')}</span>
+            <div role="progressbar" aria-label={t('ai_insights_card.do_tin_cay_ai')} aria-valuemin={0} aria-valuemax={100} aria-valuenow={pct} className={styles.slaTrack}>
               <div className={`${styles.slaBar} ${styles['bar-ok']}`} style={{ width: `${Math.min(pct, 100)}%` }} />
             </div>
             <span className="tabular">{pct}%</span>
@@ -36,11 +37,11 @@ export function AiInsightsCard({ ticket, canSuggest, onSuggest }: { ticket: Tick
           {ticket.ai_recommendation && <p className={styles.muted}>{ticket.ai_recommendation}</p>}
         </>
       ) : (
-        <p className={styles.muted}>Chưa có phân tích AI cho ticket này. Bạn vẫn xử lý bình thường.</p>
+        <p className={styles.muted}>{t('ai_insights_card.chua_co_phan_tich_ai_cho_ticket_na')}</p>
       )}
       {canSuggest && (
         <Button variant="secondary" size="sm" onClick={onSuggest}>
-          Gợi ý kỹ thuật viên
+          {t('ai_insights_card.goi_y_ky_thuat_vien')}
         </Button>
       )}
     </Card>

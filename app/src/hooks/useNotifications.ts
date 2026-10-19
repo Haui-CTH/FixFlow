@@ -5,6 +5,7 @@ import { useMutation, useQuery, useQueryClient, type QueryClient } from '@tansta
 import { useEffect, useRef } from 'react';
 import { notificationsApi, type Notification, type NotificationsListResponse } from '../lib/notifications';
 import { toastApi } from '../lib/toast';
+import { t } from '../lib/i18n';
 
 export const POLL_MS = 60_000;
 
@@ -71,8 +72,8 @@ export function useNotificationBell() {
     }
     const fresh = items.filter((n) => !n.is_read && !seen.current!.has(n.id));
     items.forEach((n) => seen.current!.add(n.id));
-    if (fresh.length === 1) toastApi.info(fresh[0].title, 'Thông báo mới');
-    else if (fresh.length > 1) toastApi.info(`Có ${fresh.length} thông báo mới`);
+    if (fresh.length === 1) toastApi.info(fresh[0].title, t('use_notifications.thong_bao_moi'));
+    else if (fresh.length > 1) toastApi.info(t('notification_bell.n_new', { count: fresh.length }));
   }, [query.data]);
 
   return { ...query, items: query.data?.items ?? [], unread: query.data?.unread_count ?? 0 };

@@ -3,6 +3,7 @@
 // BE Sprint 4: GET/POST /tickets/{id}/notes (staff only).
 
 import { api } from './api';
+import { locale, t } from './i18n';
 
 // ─── Types (mirror BE NoteResponse) ─────────────────────
 
@@ -69,12 +70,12 @@ export function validateNoteBody(body: string): ValidationError[] {
   const trimmed = body.trim();
 
   if (trimmed.length === 0) {
-    errors.push({ field: 'body', message: 'Nội dung note không được để trống' });
+    errors.push({ field: 'body', message: t('notes.empty') });
   }
   if (body.length > MAX_BODY) {
     errors.push({
       field: 'body',
-      message: `Nội dung note tối đa ${MAX_BODY} ký tự (hiện tại: ${body.length})`,
+      message: t('notes.too_long', { max: MAX_BODY, current: body.length }),
     });
   }
   return errors;
@@ -97,9 +98,9 @@ export function formatNoteTime(iso: string): string {
   const now = Date.now();
   const diffSec = Math.floor((now - then) / 1000);
 
-  if (diffSec < 60) return `${diffSec}s trước`;
-  if (diffSec < 3600) return `${Math.floor(diffSec / 60)}m trước`;
-  if (diffSec < 86400) return `${Math.floor(diffSec / 3600)}h trước`;
-  if (diffSec < 7 * 86400) return `${Math.floor(diffSec / 86400)}d trước`;
-  return new Date(iso).toLocaleDateString('vi-VN');
+  if (diffSec < 60) return t('time.s_ago', { n: diffSec });
+  if (diffSec < 3600) return t('time.m_ago', { n: Math.floor(diffSec / 60) });
+  if (diffSec < 86400) return t('time.h_ago', { n: Math.floor(diffSec / 3600) });
+  if (diffSec < 7 * 86400) return t('time.d_ago', { n: Math.floor(diffSec / 86400) });
+  return new Date(iso).toLocaleDateString(locale());
 }

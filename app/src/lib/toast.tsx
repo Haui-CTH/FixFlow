@@ -13,6 +13,7 @@ import {
 } from 'react';
 import { AlertCircle, CheckCircle2, Info, TriangleAlert, X, type LucideIcon } from 'lucide-react';
 import styles from './toast.module.css';
+import { t as tr } from './i18n';
 
 // ─── Types ───────────────────────────────────────────────
 
@@ -207,7 +208,7 @@ function ToastViewport() {
     <div
       className={styles.viewport}
       role="region"
-      aria-label="Notifications"
+      aria-label={tr('toast.region')}
       aria-live="polite"
     >
       {toasts.map((t) => (
@@ -227,7 +228,7 @@ function ToastViewport() {
           <button
             className={styles.close}
             onClick={() => dismiss(t.id)}
-            aria-label="Đóng thông báo"
+            aria-label={tr('toast.dong_thong_bao')}
           >
             <X size={16} aria-hidden="true" />
           </button>

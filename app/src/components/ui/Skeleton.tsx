@@ -2,6 +2,7 @@
 // DX-FSM Skeleton (D1.9) — giữ chiều cao cố định để tránh nhảy layout; shimmer tắt khi reduced-motion (CSS).
 
 import styles from './ui.module.css';
+import { t } from '../../lib/i18n';
 
 type Dim = number | string;
 
@@ -14,7 +15,7 @@ export const SkeletonBlock = ({ height = 120 }: { height?: Dim }) => <Skeleton h
 
 export function SkeletonRows({ rows = 5 }: { rows?: number }) {
   return (
-    <div role="status" aria-label="Đang tải" className={styles.skeletonRows}>
+    <div role="status" aria-label={t('skeleton.dang_tai')} className={styles.skeletonRows}>
       {Array.from({ length: rows }, (_, i) => (
         <Skeleton key={i} height={44} />
       ))}

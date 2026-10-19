@@ -16,6 +16,7 @@ import { Textarea } from '../ui/Field';
 import { SkeletonRows } from '../ui/Skeleton';
 import { EmptyState, ErrorState } from '../ui/States';
 import styles from './TicketDetail.module.css';
+import { t } from '../../lib/i18n';
 
 export function CommentsPanel({ ticketId, role }: { ticketId: string; role: Role | null }) {
   const qc = useQueryClient();
@@ -39,7 +40,7 @@ export function CommentsPanel({ ticketId, role }: { ticketId: string; role: Role
       qc.invalidateQueries({ queryKey: key });
       qc.invalidateQueries({ queryKey: ['history', ticketId] });
     },
-    onError: () => toastApi.error('Không gửi được bình luận. Vui lòng thử lại.'),
+    onError: () => toastApi.error(t('comments_panel.khong_gui_duoc_binh_luan_vui_long')),
   });
 
   const remove = useMutation({
@@ -47,9 +48,9 @@ export function CommentsPanel({ ticketId, role }: { ticketId: string; role: Role
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: key });
       qc.invalidateQueries({ queryKey: ['history', ticketId] });
-      toastApi.success('Đã xoá bình luận');
+      toastApi.success(t('comments_panel.da_xoa_binh_luan'));
     },
-    onError: () => toastApi.error('Không xoá được bình luận.'),
+    onError: () => toastApi.error(t('comments_panel.khong_xoa_duoc_binh_luan')),
     onSettled: () => setToDelete(null),
   });
 
@@ -57,13 +58,13 @@ export function CommentsPanel({ ticketId, role }: { ticketId: string; role: Role
 
   return (
     <Card>
-      <h2 className={styles.h2}>Bình luận</h2>
+      <h2 className={styles.h2}>{t('comments_panel.binh_luan')}</h2>
       {isLoading ? (
         <SkeletonRows rows={3} />
       ) : isError ? (
-        <ErrorState title="Không tải được bình luận" onRetry={() => refetch()} />
+        <ErrorState title={t('comments_panel.khong_tai_duoc_binh_luan')} onRetry={() => refetch()} />
       ) : comments.length === 0 ? (
-        <EmptyState icon={MessageSquare} title="Chưa có bình luận" description="Hãy là người đầu tiên bình luận." />
+        <EmptyState icon={MessageSquare} title={t('comments_panel.chua_co_binh_luan')} description={t('comments_panel.hay_la_nguoi_dau_tien_binh_luan')} />
       ) : (
         <ul className={styles.comments}>
           {comments.map((c) => (
@@ -73,8 +74,8 @@ export function CommentsPanel({ ticketId, role }: { ticketId: string; role: Role
               </span>
               <div className={styles.commentBody}>
                 <div className={styles.commentHead}>
-                  <strong>{c.user_name || 'Ẩn danh'}</strong>
-                  {c.is_internal && <span className={styles.internal}>Nội bộ</span>}
+                  <strong>{c.user_name || t('comments_panel.an_danh')}</strong>
+                  {c.is_internal && <span className={styles.internal}>{t('comments_panel.noi_bo')}</span>}
                   <time className={styles.muted} dateTime={c.created_at ?? undefined}>
                     {formatRelative(c.created_at)}
                   </time>
@@ -82,7 +83,7 @@ export function CommentsPanel({ ticketId, role }: { ticketId: string; role: Role
                 <p className={styles.commentText}>{c.content}</p>
               </div>
               {canDelete(c) && (
-                <Button variant="ghost" iconOnly aria-label="Xoá bình luận" onClick={() => setToDelete(c)}>
+                <Button variant="ghost" iconOnly aria-label={t('comments_panel.xoa_binh_luan')} onClick={() => setToDelete(c)}>
                   <Trash2 size={18} aria-hidden="true" />
                 </Button>
               )}
@@ -98,25 +99,25 @@ export function CommentsPanel({ ticketId, role }: { ticketId: string; role: Role
           if (text.trim()) post.mutate();
         }}
       >
-        <Textarea label="Viết bình luận" value={text} onChange={(e) => setText(e.target.value)} maxLength={5000} />
+        <Textarea label={t('comments_panel.viet_binh_luan')} value={text} onChange={(e) => setText(e.target.value)} maxLength={5000} />
         <div className={styles.formRow}>
           {isStaff && (
             <label className={styles.check}>
               <input type="checkbox" checked={internal} onChange={(e) => setInternal(e.target.checked)} />
-              Nội bộ (khách hàng không thấy)
+              {t('comments_panel.noi_bo_khach_hang_khong_thay')}
             </label>
           )}
           <Button type="submit" loading={post.isPending} disabled={!text.trim()}>
-            Gửi
+            {t('comments_panel.gui')}
           </Button>
         </div>
       </form>
 
       <ConfirmDialog
         open={!!toDelete}
-        title="Xoá bình luận"
-        message="Xoá bình luận này? Thao tác không thể hoàn tác."
-        confirmLabel="Xoá"
+        title={t('comments_panel.xoa_binh_luan')}
+        message={t('comments_panel.xoa_binh_luan_nay_thao_tac_khong_t')}
+        confirmLabel={t('comments_panel.xoa')}
         danger
         loading={remove.isPending}
         onConfirm={() => toDelete && remove.mutate(toDelete)}

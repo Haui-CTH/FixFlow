@@ -5,6 +5,7 @@
 import { useState } from 'react';
 import { validateNoteBody, normalizeNoteBody } from '../../lib/notes';
 import styles from './NotesPanel.module.css';
+import { t } from '../../lib/i18n';
 
 const MAX_BODY = 5000;
 
@@ -60,7 +61,7 @@ export function NoteComposer({ onSubmit, isSubmitting = false }: NoteComposerPro
     <form className={styles.composer} onSubmit={handleSubmit}>
       <textarea
         className={`${styles.textarea} ${showError && isEmpty ? styles.textareaError : ''}`}
-        placeholder="Viết note nội bộ... (Cmd/Ctrl+Enter để gửi)"
+        placeholder={t('note_composer.viet_note_noi_bo_cmd_ctrl_enter_de')}
         value={body}
         onChange={(e) => {
           setBody(e.target.value);
@@ -68,7 +69,7 @@ export function NoteComposer({ onSubmit, isSubmitting = false }: NoteComposerPro
         }}
         onKeyDown={handleKeyDown}
         disabled={isSubmitting}
-        aria-label="Nội dung note"
+        aria-label={t('note_composer.noi_dung_note')}
         maxLength={MAX_BODY + 100} // allow slight over for visual feedback
       />
 
@@ -95,14 +96,14 @@ export function NoteComposer({ onSubmit, isSubmitting = false }: NoteComposerPro
             }}
             disabled={isSubmitting || (!body && !showError)}
           >
-            Xóa
+            {t('note_composer.xoa')}
           </button>
           <button
             type="submit"
             className={styles.submitBtn}
             disabled={isDisabled}
           >
-            {isSubmitting ? 'Đang gửi…' : 'Gửi note'}
+            {isSubmitting ? t('note_composer.dang_gui') : t('note_composer.gui_note')}
           </button>
         </div>
       </div>

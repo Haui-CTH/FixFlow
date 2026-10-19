@@ -17,6 +17,7 @@ import { Modal } from '../ui/Modal';
 import { SkeletonRows } from '../ui/Skeleton';
 import { EmptyState, ErrorState } from '../ui/States';
 import styles from './TicketDetail.module.css';
+import { t } from '../../lib/i18n';
 
 const kb = (n?: number | null) => (!n ? '' : n >= 1048576 ? `${(n / 1048576).toFixed(1)} MB` : `${Math.max(1, Math.round(n / 1024))} KB`);
 const isImage = (a: Attachment) => !!a.mime_type?.startsWith('image/');
@@ -82,8 +83,8 @@ export function AttachmentsPanel({ ticketId, role }: { ticketId: string; role: R
       setFiles([]);
       qc.invalidateQueries({ queryKey: key });
       qc.invalidateQueries({ queryKey: ['history', ticketId] });
-      if (failed) toastApi.warning(`${failed} file chưa tải lên được.`);
-      else toastApi.success('Đã tải lên');
+      if (failed) toastApi.warning(t('attachments_panel.upload_failed', { count: failed }));
+      else toastApi.success(t('attachments_panel.da_tai_len'));
     },
   });
 
@@ -92,9 +93,9 @@ export function AttachmentsPanel({ ticketId, role }: { ticketId: string; role: R
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: key });
       qc.invalidateQueries({ queryKey: ['history', ticketId] });
-      toastApi.success('Đã xoá file');
+      toastApi.success(t('attachments_panel.da_xoa_file'));
     },
-    onError: () => toastApi.error('Không xoá được file.'),
+    onError: () => toastApi.error(t('attachments_panel.khong_xoa_duoc_file')),
     onSettled: () => setToDelete(null),
   });
 
@@ -108,7 +109,7 @@ export function AttachmentsPanel({ ticketId, role }: { ticketId: string; role: R
       link.click();
       URL.revokeObjectURL(href);
     } catch {
-      toastApi.error('Không tải được file.');
+      toastApi.error(t('attachments_panel.khong_tai_duoc_file'));
     }
   };
 
@@ -116,13 +117,13 @@ export function AttachmentsPanel({ ticketId, role }: { ticketId: string; role: R
 
   return (
     <Card>
-      <h2 className={styles.h2}>Đính kèm</h2>
+      <h2 className={styles.h2}>{t('attachments_panel.dinh_kem')}</h2>
       {isLoading ? (
         <SkeletonRows rows={2} />
       ) : isError ? (
-        <ErrorState title="Không tải được đính kèm" onRetry={() => refetch()} />
+        <ErrorState title={t('attachments_panel.khong_tai_duoc_dinh_kem')} onRetry={() => refetch()} />
       ) : items.length === 0 ? (
-        <EmptyState icon={Paperclip} title="Chưa có file đính kèm" />
+        <EmptyState icon={Paperclip} title={t('attachments_panel.chua_co_file_dinh_kem')} />
       ) : (
         <ul className={styles.files}>
           {items.map((a) => (
@@ -131,7 +132,7 @@ export function AttachmentsPanel({ ticketId, role }: { ticketId: string; role: R
               <div className={styles.fileInfo}>
                 <strong className={styles.fileName}>{a.file_name}</strong>
                 <span className={styles.muted}>
-                  {kb(a.file_size)} · {a.user_name || 'Ẩn danh'} · {formatDate(a.created_at)}
+                  {kb(a.file_size)} · {a.user_name || t('attachments_panel.an_danh')} · {formatDate(a.created_at)}
                 </span>
               </div>
               <div className={styles.fileBtns}>
@@ -140,11 +141,11 @@ export function AttachmentsPanel({ ticketId, role }: { ticketId: string; role: R
                     <Eye size={18} aria-hidden="true" />
                   </Button>
                 )}
-                <Button variant="ghost" iconOnly aria-label={`Tải ${a.file_name}`} onClick={() => download(a)}>
+                <Button variant="ghost" iconOnly aria-label={t('attachments_panel.download', { name: a.file_name })} onClick={() => download(a)}>
                   <Download size={18} aria-hidden="true" />
                 </Button>
                 {canDelete(a) && (
-                  <Button variant="ghost" iconOnly aria-label={`Xoá ${a.file_name}`} onClick={() => setToDelete(a)}>
+                  <Button variant="ghost" iconOnly aria-label={t('attachments_panel.remove', { name: a.file_name })} onClick={() => setToDelete(a)}>
                     <Trash2 size={18} aria-hidden="true" />
                   </Button>
                 )}
@@ -154,12 +155,12 @@ export function AttachmentsPanel({ ticketId, role }: { ticketId: string; role: R
         </ul>
       )}
 
-      <h3 className={styles.h3}>Thêm file</h3>
+      <h3 className={styles.h3}>{t('attachments_panel.them_file')}</h3>
       <FileDropzone files={files} onChange={setFiles} />
       {files.length > 0 && (
         <div className={styles.formRow}>
           <Button onClick={() => upload.mutate()} loading={upload.isPending}>
-            Tải lên {files.length} file
+            {t('attachments_panel.upload_n', { count: files.length })}
           </Button>
         </div>
       )}
@@ -169,9 +170,9 @@ export function AttachmentsPanel({ ticketId, role }: { ticketId: string; role: R
       </Modal>
       <ConfirmDialog
         open={!!toDelete}
-        title="Xoá file"
-        message={`Xoá "${toDelete?.file_name}"?`}
-        confirmLabel="Xoá"
+        title={t('attachments_panel.xoa_file')}
+        message={t('attachments_panel.delete_msg', { name: toDelete?.file_name })}
+        confirmLabel={t('attachments_panel.xoa')}
         danger
         loading={remove.isPending}
         onConfirm={() => toDelete && remove.mutate(toDelete)}

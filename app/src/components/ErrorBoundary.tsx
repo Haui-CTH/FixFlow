@@ -4,6 +4,7 @@
 
 import { Component, type ErrorInfo, type ReactNode } from 'react';
 import styles from './ErrorBoundary.module.css';
+import { t } from '../lib/i18n';
 
 interface Props {
   children: ReactNode;
@@ -65,13 +66,13 @@ function DefaultFallback({
   return (
     <div className={styles.container}>
       <div className={styles.card}>
-        <h1 className={styles.title}>Đã xảy ra lỗi</h1>
+        <h1 className={styles.title}>{t('error_boundary.da_xay_ra_loi')}</h1>
         <p className={styles.desc}>
-          Ứng dụng gặp lỗi không mong muốn. Bạn có thể thử lại hoặc quay về trang chủ.
+          {t('error_boundary.ung_dung_gap_loi_khong_mong_muon_b')}
         </p>
         <details className={styles.details}>
           <summary className={styles.summary}>
-            Chi tiết lỗi (developer)
+            {t('error_boundary.chi_tiet_loi_developer')}
           </summary>
           <pre className={styles.pre}>
             <strong>{error.name}: {error.message}</strong>
@@ -82,13 +83,13 @@ function DefaultFallback({
         </details>
         <div className={styles.actions}>
           <button onClick={onReset} className={styles.primary}>
-            Thử lại
+            {t('error_boundary.thu_lai')}
           </button>
           <button
             onClick={() => { window.location.href = '/'; }}
             className={styles.secondary}
           >
-            Về trang chủ
+            {t('error_boundary.ve_trang_chu')}
           </button>
         </div>
       </div>

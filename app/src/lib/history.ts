@@ -3,6 +3,7 @@
 // BE Sprint 4: GET /tickets/{id}/history (audit log).
 
 import { api } from './api';
+import { locale, t } from './i18n';
 
 // ─── Types (mirror BE HistoryResponse) ────────────────────
 
@@ -120,60 +121,61 @@ export function getActionIcon(action: string): string {
  *         "SLA breached (5m overdue)"
  */
 export function describeEvent(event: HistoryEvent): string {
-  const actorName = event.actor?.full_name || event.actor?.username || 'Hệ thống';
+  const actor = event.actor?.full_name || event.actor?.username || t('history.system');
   const action = event.action;
   const oldV = event.old_value;
   const newV = event.new_value;
+  const change = { actor, from: oldV || '?', to: newV || '?' };
 
   switch (action) {
     case 'created':
-      return `${actorName} tạo ticket`;
+      return t('history.created', { actor });
     case 'status_changed':
-      return `${actorName} đổi trạng thái: ${oldV || '?'} → ${newV || '?'}`;
+      return t('history.status_changed', change);
     case 'assigned':
-      return `${actorName} gán cho ${newV || 'KTV'}`;
+      return t('history.assigned', { actor, to: newV || 'KTV' });
     case 'unassigned':
-      return `${actorName} bỏ gán`;
+      return t('history.unassigned', { actor });
     case 'priority_changed':
-      return `${actorName} đổi ưu tiên: ${oldV || '?'} → ${newV || '?'}`;
+      return t('history.priority_changed', change);
     case 'category_changed':
-      return `${actorName} đổi danh mục: ${oldV || '?'} → ${newV || '?'}`;
+      return t('history.category_changed', change);
     case 'sla_breached': {
       const minutes = (event.metadata?.overdue_minutes as number) || 0;
-      return `SLA breach — quá deadline ${minutes}m`;
+      return t('history.sla_breached', { minutes });
     }
     case 'sla_met':
-      return `${actorName} hoàn thành trong SLA`;
+      return t('history.sla_met', { actor });
     case 'note_added':
-      return `${actorName} thêm note nội bộ`;
+      return t('history.note_added', { actor });
     case 'comment_added':
-      return `${actorName} thêm bình luận`;
+      return t('history.comment_added', { actor });
     case 'resolved':
-      return `${actorName} đánh dấu resolved`;
+      return t('history.resolved', { actor });
     case 'closed':
-      return `${actorName} đóng ticket`;
+      return t('history.closed', { actor });
     case 'reopened':
-      return `${actorName} mở lại ticket`;
+      return t('history.reopened', { actor });
     case 'updated':
-      return `${actorName} cập nhật ticket`;
+      return t('history.updated', { actor });
     default:
-      return `${actorName} ${action}${oldV ? `: ${oldV} → ${newV}` : ''}`;
+      return `${actor} ${action}${oldV ? `: ${oldV} → ${newV}` : ''}`;
   }
 }
 
 /**
- * Format relative time in Vietnamese. Same style as notes/notifications.
+ * Format relative time theo ngôn ngữ hiện hành. Same style as notes/notifications.
  */
 export function formatHistoryTime(iso: string): string {
   const then = new Date(iso).getTime();
   const now = Date.now();
   const diffSec = Math.floor((now - then) / 1000);
 
-  if (diffSec < 60) return 'vừa xong';
-  if (diffSec < 3600) return `${Math.floor(diffSec / 60)}m trước`;
-  if (diffSec < 86400) return `${Math.floor(diffSec / 3600)}h trước`;
-  if (diffSec < 7 * 86400) return `${Math.floor(diffSec / 86400)}d trước`;
-  return new Date(iso).toLocaleDateString('vi-VN');
+  if (diffSec < 60) return t('time.just_now');
+  if (diffSec < 3600) return t('time.m_ago', { n: Math.floor(diffSec / 60) });
+  if (diffSec < 86400) return t('time.h_ago', { n: Math.floor(diffSec / 3600) });
+  if (diffSec < 7 * 86400) return t('time.d_ago', { n: Math.floor(diffSec / 86400) });
+  return new Date(iso).toLocaleDateString(locale());
 }
 
 /**
@@ -181,7 +183,7 @@ export function formatHistoryTime(iso: string): string {
  */
 export function formatHistoryFullTime(iso: string): string {
   const d = new Date(iso);
-  return d.toLocaleString('vi-VN', {
+  return d.toLocaleString(locale(), {
     year: 'numeric',
     month: '2-digit',
     day: '2-digit',

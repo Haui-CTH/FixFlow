@@ -1,0 +1,18 @@
+/* SPDX-License-Identifier: Apache-2.0 */
+.group { display: inline-flex; border: 1px solid var(--border-strong); border-radius: var(--radius-md); overflow: hidden; background: var(--surface); }
+.btn {
+  min-width: 44px;
+  min-height: 44px;
+  padding: 0 var(--space-2);
+  background: transparent;
+  color: var(--text-muted);
+  border: none;
+  font: inherit;
+  font-weight: 700;
+  font-size: 0.8125rem;
+  cursor: pointer;
+}
+.btn + .btn { border-left: 1px solid var(--border); }
+.btn:hover { background: var(--surface-2); }
+.on { background: var(--accent); color: var(--on-accent); }
+.on:hover { background: var(--accent-hover); }

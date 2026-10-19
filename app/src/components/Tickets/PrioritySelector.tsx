@@ -3,14 +3,15 @@
 
 import { PRIORITY_META, PRIORITY_VALUES } from '../../lib/ticket-meta';
 import styles from './Tickets.module.css';
+import { t } from '../../lib/i18n';
 
 // Khớp SLA_HOURS ở BE (routes/tickets.py)
-const SLA_HINT: Record<string, string> = {
-  low: 'Xử lý trong 7 ngày',
-  medium: 'Xử lý trong 3 ngày',
-  high: 'Xử lý trong 24 giờ',
-  critical: 'Xử lý trong 4 giờ',
-};
+const slaHint = (): Record<string, string> => ({
+  low: t('priority_selector.xu_ly_trong_7_ngay'),
+  medium: t('priority_selector.xu_ly_trong_3_ngay'),
+  high: t('priority_selector.xu_ly_trong_24_gio'),
+  critical: t('priority_selector.xu_ly_trong_4_gio'),
+});
 
 interface Props {
   value: string;
@@ -21,7 +22,7 @@ interface Props {
 
 export function PrioritySelector({ value, onChange, name = 'priority', error }: Props) {
   return (
-    <div role="radiogroup" aria-label="Mức ưu tiên" aria-invalid={error ? true : undefined} className={styles.prioGroup}>
+    <div role="radiogroup" aria-label={t('priority_selector.muc_uu_tien')} aria-invalid={error ? true : undefined} className={styles.prioGroup}>
       {PRIORITY_VALUES.map((p) => {
         const m = PRIORITY_META[p];
         const Icon = m.icon!;
@@ -32,7 +33,7 @@ export function PrioritySelector({ value, onChange, name = 'priority', error }: 
               <Icon size={18} aria-hidden="true" />
               {m.label}
             </span>
-            <span className={styles.prioHint}>{SLA_HINT[p]}</span>
+            <span className={styles.prioHint}>{slaHint()[p]}</span>
           </label>
         );
       })}

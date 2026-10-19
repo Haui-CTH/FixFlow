@@ -17,6 +17,7 @@ import styles from '../components/Tickets/Tickets.module.css';
 import { useDebounce } from '../hooks/useDebounce';
 import { useRole } from '../hooks/useRole';
 import { ticketApi } from '../lib/api';
+import { t } from '../lib/i18n';
 
 const DEFAULT_SORT = 'created_at:desc';
 const FILTER_KEYS = ['q', 'status', 'priority', 'category'] as const;
@@ -99,32 +100,32 @@ export default function Tickets({ mine = false }: { mine?: boolean }) {
   const createBtn = canCreate && (
     <Link to="/tickets/new" className={styles.createLink}>
       <Plus size={18} aria-hidden="true" />
-      Tạo ticket
+      {t('tickets.tao_ticket')}
     </Link>
   );
 
   let body;
   if (isError && !data) {
-    body = <ErrorState title="Không tải được danh sách ticket" message="Kiểm tra kết nối rồi thử lại." onRetry={() => refetch()} />;
+    body = <ErrorState title={t('tickets.khong_tai_duoc_danh_sach_ticket')} message={t('tickets.kiem_tra_ket_noi_roi_thu_lai')} onRetry={() => refetch()} />;
   } else if (isLoading) {
     body = <SkeletonRows rows={8} />;
   } else if (tickets.length === 0) {
     body = hasFilters ? (
       <EmptyState
         icon={SearchX}
-        title="Không có ticket khớp bộ lọc"
-        description="Thử đổi từ khoá hoặc bỏ bớt bộ lọc."
+        title={t('tickets.khong_co_ticket_khop_bo_loc')}
+        description={t('tickets.thu_doi_tu_khoa_hoac_bo_bot_bo_loc')}
         action={
           <Button variant="secondary" onClick={clearAll}>
-            Xoá lọc
+            {t('tickets.xoa_loc')}
           </Button>
         }
       />
     ) : (
       <EmptyState
         icon={TicketIcon}
-        title="Chưa có ticket nào"
-        description={canCreate ? 'Hãy tạo ticket đầu tiên.' : undefined}
+        title={t('tickets.chua_co_ticket_nao')}
+        description={canCreate ? t('tickets.hay_tao_ticket_dau_tien') : undefined}
         action={canCreate ? createBtn : undefined}
       />
     );
@@ -152,7 +153,7 @@ export default function Tickets({ mine = false }: { mine?: boolean }) {
 
   return (
     <div>
-      <PageHeader title={`${mine ? 'Ticket của tôi' : 'Tất cả ticket'}${data ? ` (${total})` : ''}`} actions={createBtn || undefined} />
+      <PageHeader title={`${mine ? t('tickets.ticket_cua_toi') : t('tickets.tat_ca_ticket')}${data ? ` (${total})` : ''}`} actions={createBtn || undefined} />
       <TicketFilters
         filters={{ ...filters, q: qInput }}
         sort={sortRaw}

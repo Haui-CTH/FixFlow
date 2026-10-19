@@ -11,6 +11,7 @@ import { NotificationBell } from './NotificationBell';
 import { Sidebar } from './Sidebar';
 import { TopBar } from './TopBar';
 import styles from './Layout.module.css';
+import { t } from '../lib/i18n';
 
 const COLLAPSE_KEY = 'dxfsm-sidebar-collapsed';
 
@@ -71,7 +72,7 @@ export default function Layout() {
   return (
     <>
       <a href="#main" className="skip-link">
-        Bỏ qua tới nội dung chính
+        {t('layout.bo_qua_toi_noi_dung_chinh')}
       </a>
       <div className={styles.shell}>
         {sidebarOpen && <div className={styles.backdrop} onClick={() => setSidebarOpen(false)} aria-hidden="true" />}

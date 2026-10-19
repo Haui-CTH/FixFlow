@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: Apache-2.0
-// DX-FSM format helpers (D1.13) — Intl only, không dùng date-fns.
+// DX-FSM format helpers (D1.13, I9.5) — Intl only, theo ngôn ngữ hiện hành; không dùng date-fns.
 
-const LOCALE = 'vi-VN';
+import { locale, currentLang, t } from './i18n';
 
 type DateInput = string | number | Date | null | undefined;
 
@@ -15,7 +15,7 @@ export function formatDate(v: DateInput, withTime = false): string {
   const d = toDate(v);
   if (!d) return '-';
   return d.toLocaleString(
-    LOCALE,
+    locale(),
     withTime ? { dateStyle: 'short', timeStyle: 'short' } : { dateStyle: 'short' },
   );
 }
@@ -27,17 +27,17 @@ const UNITS: [Intl.RelativeTimeFormatUnit, number][] = [
   ['hour', 3600],
   ['minute', 60],
 ];
-const rtf = new Intl.RelativeTimeFormat('vi', { numeric: 'auto' });
 
 export function formatRelative(v: DateInput, now: number = Date.now()): string {
   const d = toDate(v);
   if (!d) return '-';
   const diff = Math.round((d.getTime() - now) / 1000);
+  const rtf = new Intl.RelativeTimeFormat(currentLang(), { numeric: 'auto' });
   for (const [unit, sec] of UNITS) {
     if (Math.abs(diff) >= sec) return rtf.format(Math.round(diff / sec), unit);
   }
-  return 'vừa xong';
+  return t('time.just_now');
 }
 
 export const formatNumber = (n: number | null | undefined): string =>
-  n == null ? '-' : n.toLocaleString(LOCALE);
+  n == null ? '-' : n.toLocaleString(locale());

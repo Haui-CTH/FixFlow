@@ -4,6 +4,7 @@ import { ArrowDown, ArrowUp, ChevronsUpDown } from 'lucide-react';
 import { useState } from 'react';
 import styles from '../../pages/Dashboard.module.css';
 import type { TopAssignee } from '../../lib/api';
+import { t } from '../../lib/i18n';
 
 interface AssigneeTableProps {
   assignees: TopAssignee[];
@@ -13,10 +14,10 @@ type Key = 'active' | 'resolved' | 'total';
 const value = (a: TopAssignee, k: Key) =>
   k === 'active' ? a.active_tickets : k === 'resolved' ? a.resolved_tickets : a.active_tickets + a.resolved_tickets;
 
-const COLS: { key: Key; label: string }[] = [
-  { key: 'active', label: 'Đang xử lý' },
-  { key: 'resolved', label: 'Đã giải quyết' },
-  { key: 'total', label: 'Tổng' },
+const cols = (): { key: Key; label: string }[] => [
+  { key: 'active', label: t('assignee_table.dang_xu_ly') },
+  { key: 'resolved', label: t('assignee_table.da_giai_quyet') },
+  { key: 'total', label: t('assignee_table.tong') },
 ];
 
 export function AssigneeTable({ assignees }: AssigneeTableProps) {
@@ -25,8 +26,8 @@ export function AssigneeTable({ assignees }: AssigneeTableProps) {
   if (assignees.length === 0) {
     return (
       <div className={styles.section}>
-        <h2 className={styles.sectionTitle}>Kỹ thuật viên nổi bật</h2>
-        <div className={styles.empty}>Chưa có kỹ thuật viên</div>
+        <h2 className={styles.sectionTitle}>{t('assignee_table.ky_thuat_vien_noi_bat')}</h2>
+        <div className={styles.empty}>{t('assignee_table.chua_co_ky_thuat_vien')}</div>
       </div>
     );
   }
@@ -40,12 +41,12 @@ export function AssigneeTable({ assignees }: AssigneeTableProps) {
 
   return (
     <div className={styles.section}>
-      <h2 className={styles.sectionTitle}>Kỹ thuật viên nổi bật ({assignees.length} người)</h2>
+      <h2 className={styles.sectionTitle}>{t('assignee_table.top_title', { count: assignees.length })}</h2>
       <table className={styles.assigneeTable}>
         <thead>
           <tr>
-            <th scope="col">Kỹ thuật viên</th>
-            {COLS.map((c) => {
+            <th scope="col">{t('assignee_table.ky_thuat_vien')}</th>
+            {cols().map((c) => {
               const active = sort?.key === c.key;
               const Icon = !active ? ChevronsUpDown : sort!.dir === 'asc' ? ArrowUp : ArrowDown;
               return (
@@ -84,13 +85,13 @@ export function AssigneeTable({ assignees }: AssigneeTableProps) {
                     </div>
                   </div>
                 </td>
-                <td className={styles.assigneeCount} data-label="Đang xử lý">
+                <td className={styles.assigneeCount} data-label={t('assignee_table.dang_xu_ly')}>
                   <span className={a.active_tickets > 0 ? styles.numActive : styles.numZero}>{a.active_tickets}</span>
                 </td>
-                <td className={styles.assigneeCount} data-label="Đã giải quyết">
+                <td className={styles.assigneeCount} data-label={t('assignee_table.da_giai_quyet')}>
                   <span className={a.resolved_tickets > 0 ? styles.numResolved : styles.numZero}>{a.resolved_tickets}</span>
                 </td>
-                <td className={styles.assigneeCount} data-label="Tổng">
+                <td className={styles.assigneeCount} data-label={t('assignee_table.tong')}>
                   {total}
                 </td>
               </tr>

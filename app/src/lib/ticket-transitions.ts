@@ -1,7 +1,9 @@
 // SPDX-License-Identifier: Apache-2.0
 // Ma trận hành động theo role × status (P5.5). Khớp STATUS_TRANSITIONS + role guard ở BE (routes/tickets.py).
+// Nhãn được dịch tại thời điểm gọi (không giữ hằng số) để đổi ngôn ngữ có hiệu lực ngay.
 
 import type { Role } from './auth';
+import { t } from './i18n';
 
 export interface TicketAction {
   key: string;
@@ -20,44 +22,38 @@ interface Ctx {
   isOwner?: boolean; // customer: ticket do mình tạo
 }
 
-const CANCEL: TicketAction = {
+const cancel = (): TicketAction => ({
   key: 'cancel',
-  label: 'Huỷ ticket',
+  label: t('action.cancel'),
   to: 'cancelled',
-  confirm: 'Huỷ ticket này? Không thể hoàn tác.',
-};
+  confirm: t('action.cancel_confirm'),
+});
 
 const STAFF = (status: string): TicketAction[] => {
   switch (status) {
     case 'new':
-      return [{ key: 'assign', label: 'Phân công', assign: true, primary: true }, CANCEL];
+      return [{ key: 'assign', label: t('action.assign'), assign: true, primary: true }, cancel()];
     case 'assigned':
       return [
-        { key: 'start', label: 'Bắt đầu xử lý', to: 'in_progress', primary: true },
-        { key: 'reassign', label: 'Phân công lại', assign: true },
-        CANCEL,
+        { key: 'start', label: t('action.start'), to: 'in_progress', primary: true },
+        { key: 'reassign', label: t('action.reassign'), assign: true },
+        cancel(),
       ];
     case 'in_progress':
       return [
-        { key: 'resolve', label: 'Đã giải quyết', to: 'resolved', primary: true },
-        { key: 'pause', label: 'Tạm dừng', to: 'pending' },
+        { key: 'resolve', label: t('action.resolve'), to: 'resolved', primary: true },
+        { key: 'pause', label: t('action.pause'), to: 'pending' },
       ];
     case 'pending':
       return [
-        { key: 'resume', label: 'Tiếp tục xử lý', to: 'in_progress', primary: true },
-        { key: 'resolve', label: 'Đã giải quyết', to: 'resolved' },
-        CANCEL,
+        { key: 'resume', label: t('action.resume'), to: 'in_progress', primary: true },
+        { key: 'resolve', label: t('action.resolve'), to: 'resolved' },
+        cancel(),
       ];
     case 'resolved':
       return [
-        {
-          key: 'close',
-          label: 'Đóng ticket',
-          to: 'closed',
-          primary: true,
-          confirm: 'Đóng ticket? Sau khi đóng sẽ không thể mở lại.',
-        },
-        { key: 'reopen', label: 'Mở lại', to: 'in_progress' },
+        { key: 'close', label: t('action.close'), to: 'closed', primary: true, confirm: t('action.close_confirm') },
+        { key: 'reopen', label: t('action.reopen'), to: 'in_progress' },
       ];
     default:
       return []; // closed / cancelled: trạng thái cuối
@@ -67,21 +63,15 @@ const STAFF = (status: string): TicketAction[] => {
 export function actionsFor({ role, status, isMine = false, isOwner = false }: Ctx): TicketAction[] {
   if (role === 'manager' || role === 'admin') return STAFF(status);
   if (role === 'technician') {
-    if (status === 'new') return [{ key: 'take', label: 'Nhận ticket', takeSelf: true, primary: true }];
+    if (status === 'new') return [{ key: 'take', label: t('action.take'), takeSelf: true, primary: true }];
     if (!isMine) return [];
     // KTV không huỷ / đóng / phân công lại / mở lại
     return STAFF(status).filter((a) => !a.assign && a.to !== 'cancelled' && a.to !== 'closed' && a.key !== 'reopen');
   }
   if (role === 'customer' && isOwner && status === 'resolved') {
     return [
-      {
-        key: 'close',
-        label: 'Xác nhận & đóng ticket',
-        to: 'closed',
-        primary: true,
-        confirm: 'Xác nhận sự cố đã được xử lý và đóng ticket?',
-      },
-      { key: 'reopen', label: 'Chưa xong, mở lại', to: 'in_progress' },
+      { key: 'close', label: t('action.customer_close'), to: 'closed', primary: true, confirm: t('action.customer_close_confirm') },
+      { key: 'reopen', label: t('action.customer_reopen'), to: 'in_progress' },
     ];
   }
   return [];

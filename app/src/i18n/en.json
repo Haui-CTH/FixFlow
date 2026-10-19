@@ -1,0 +1,511 @@
+{
+  "action": {
+    "assign": "Assign",
+    "cancel": "Cancel ticket",
+    "cancel_confirm": "Cancel this ticket? This cannot be undone.",
+    "close": "Close ticket",
+    "close_confirm": "Close the ticket? It cannot be reopened afterwards.",
+    "customer_close": "Confirm & close ticket",
+    "customer_close_confirm": "Confirm the issue is fixed and close the ticket?",
+    "customer_reopen": "Not fixed, reopen",
+    "pause": "Put on hold",
+    "reassign": "Reassign",
+    "reopen": "Reopen",
+    "resolve": "Mark resolved",
+    "resume": "Resume work",
+    "start": "Start work",
+    "take": "Take ticket"
+  },
+  "activity_panel": {
+    "da_giai_quyet": "Resolved",
+    "hoat_dong_24_gio_qua": "Last 24 hours",
+    "tao_moi": "Created",
+    "vi_pham_sla": "SLA breaches"
+  },
+  "ai_insights_card": {
+    "category": "Category",
+    "chua_co_phan_tich_ai_cho_ticket_na": "No AI analysis for this ticket yet. You can still work on it as usual.",
+    "do_tin_cay": "Confidence",
+    "do_tin_cay_ai": "AI confidence",
+    "goi_y_ky_thuat_vien": "Suggest technician",
+    "priority": "Priority"
+  },
+  "ai_suggestion": {
+    "ap_dung_goi_y": "Apply suggestion",
+    "confidence": "Confidence {{pct}}%",
+    "da_tu_dien_vao_form_ban_van_co_the": "Filled in automatically. You can still edit it.",
+    "headline": "AI suggestion: {{category}} · priority {{priority}}"
+  },
+  "api": {
+    "ban_khong_co_quyen_thuc_hien_thao": "You do not have permission to do this",
+    "error_status": "Error {{status}}: {{text}}",
+    "khong_ket_noi_duoc_toi_may_chu": "Cannot reach the server",
+    "loi_mang": "Network error",
+    "loi_may_chu_vui_long_thu_lai_sau": "Server error, please try again later",
+    "phien_dang_nhap_het_han": "Session expired",
+    "vui_long_dang_nhap_lai": "Please sign in again"
+  },
+  "app": {
+    "ban_khong_co_quyen_tao_ticket": "You do not have permission to create tickets"
+  },
+  "assign_modal": {
+    "assigned_to": "Assigned to {{name}}",
+    "chua_co_ky_thuat_vien_nao": "There are no technicians yet.",
+    "chua_khai_bao_chuyen_mon": "No specialty declared",
+    "da_day": " · full",
+    "de_xuat": "Recommended",
+    "huy_bo": "Cancel",
+    "khong_phan_cong_duoc_vui_long_thu": "Could not assign. Please try again.",
+    "khong_san_sang": "Unavailable",
+    "khong_tai_duoc_danh_sach_ktv": "Could not load technicians",
+    "ky_thuat_vien": "technician",
+    "ky_thuat_vien_2": "Technician",
+    "load_aria": "Workload of {{name}}",
+    "phan_cong_ky_thuat_vien": "Assign technician",
+    "xac_nhan_phan_cong": "Confirm assignment"
+  },
+  "assignee_table": {
+    "chua_co_ky_thuat_vien": "No technicians yet",
+    "da_giai_quyet": "Resolved",
+    "dang_xu_ly": "In progress",
+    "ky_thuat_vien": "Technician",
+    "ky_thuat_vien_noi_bat": "Top technicians",
+    "tong": "Total",
+    "top_title": "Top technicians ({{count}})"
+  },
+  "attachments_panel": {
+    "an_danh": "Anonymous",
+    "chua_co_file_dinh_kem": "No attachments yet",
+    "da_tai_len": "Uploaded",
+    "da_xoa_file": "File deleted",
+    "delete_msg": "Delete \"{{name}}\"?",
+    "dinh_kem": "Attachments",
+    "download": "Download {{name}}",
+    "khong_tai_duoc_dinh_kem": "Could not load attachments",
+    "khong_tai_duoc_file": "Could not download the file.",
+    "khong_xoa_duoc_file": "Could not delete the file.",
+    "remove": "Delete {{name}}",
+    "them_file": "Add files",
+    "upload_failed": "{{count}} file(s) could not be uploaded.",
+    "upload_n": "Upload {{count}} file(s)",
+    "xoa": "Delete",
+    "xoa_file": "Delete file"
+  },
+  "auth_guard": {
+    "dang_tai": "Loading",
+    "khong_ket_noi_duoc_may_chu_dang_nh": "Cannot reach the sign-in server",
+    "kiem_tra_mang_hoac_dich_vu_keycloa": "Check your network or the Keycloak service and try again."
+  },
+  "category": {
+    "electrical": "Electrical",
+    "hardware": "Hardware",
+    "hvac": "HVAC",
+    "network": "Network",
+    "other": "Other",
+    "plumbing": "Plumbing",
+    "software": "Software"
+  },
+  "comments_panel": {
+    "an_danh": "Anonymous",
+    "binh_luan": "Comments",
+    "chua_co_binh_luan": "No comments yet",
+    "da_xoa_binh_luan": "Comment deleted",
+    "gui": "Send",
+    "hay_la_nguoi_dau_tien_binh_luan": "Be the first to comment.",
+    "khong_gui_duoc_binh_luan_vui_long": "Could not send the comment. Please try again.",
+    "khong_tai_duoc_binh_luan": "Could not load comments",
+    "khong_xoa_duoc_binh_luan": "Could not delete the comment.",
+    "noi_bo": "Internal",
+    "noi_bo_khach_hang_khong_thay": "Internal (hidden from customers)",
+    "viet_binh_luan": "Write a comment",
+    "xoa": "Delete",
+    "xoa_binh_luan": "Delete comment",
+    "xoa_binh_luan_nay_thao_tac_khong_t": "Delete this comment? This cannot be undone."
+  },
+  "confirm_dialog": {
+    "huy_bo": "Cancel",
+    "xac_nhan": "Confirm"
+  },
+  "dashboard": {
+    "dang_tai_so_lieu": "Loading metrics",
+    "dang_xu_ly": "In progress",
+    "days": "{{count}} days",
+    "empty_title": "No data in the last {{days}} days",
+    "khoang_thoi_gian": "Time range",
+    "khong_tai_duoc_so_lieu": "Could not load metrics",
+    "kiem_tra_ket_noi_roi_thu_lai": "Check your connection and try again.",
+    "lam_moi": "Refresh",
+    "lam_moi_so_lieu": "Refresh metrics",
+    "outbox_loi": "Outbox failures",
+    "outbox_pending": "Pending: {{count}}",
+    "subtitle": "Last 24 hours and a {{days}}-day window",
+    "theo_danh_muc": "By category",
+    "theo_muc_uu_tien": "By priority",
+    "theo_trang_thai": "By status",
+    "thu_chon_khoang_thoi_gian_dai_hon": "Try a longer time range.",
+    "ti_le_vi_pham_sla": "SLA breach rate",
+    "tong_quan_van_hanh": "Operations overview",
+    "tong_ticket": "Total tickets",
+    "updated_at": "updated at {{time}}",
+    "xem_365_ngay": "View 365 days"
+  },
+  "distribution_bar": {
+    "aria": "{{label}}: {{count}} of {{total}}"
+  },
+  "error_boundary": {
+    "chi_tiet_loi_developer": "Error details (developer)",
+    "da_xay_ra_loi": "Something went wrong",
+    "thu_lai": "Try again",
+    "ung_dung_gap_loi_khong_mong_muon_b": "The app hit an unexpected error. You can try again or go back to the home page.",
+    "ve_trang_chu": "Go to home page"
+  },
+  "error_summary": {
+    "count": "{{count}} item(s) need fixing:"
+  },
+  "file_dropzone": {
+    "chon_file": "Choose files",
+    "chon_file_dinh_kem": "Choose attachments",
+    "err_max": "At most {{max}} files",
+    "err_size": "\"{{name}}\": larger than 10 MB",
+    "err_type": "\"{{name}}\": only images (JPG, PNG, GIF, WebP) or PDF are accepted",
+    "file_da_chon": "Selected files",
+    "hint": "Up to {{max}} files, 10 MB each",
+    "keo_tha_anh_pdf_vao_day_hoac": "Drag and drop images/PDF here or",
+    "remove": "Remove {{name}}"
+  },
+  "history": {
+    "assigned": "{{actor}} assigned it to {{to}}",
+    "category_changed": "{{actor}} changed the category: {{from}} → {{to}}",
+    "closed": "{{actor}} closed the ticket",
+    "comment_added": "{{actor}} added a comment",
+    "created": "{{actor}} created the ticket",
+    "note_added": "{{actor}} added an internal note",
+    "priority_changed": "{{actor}} changed the priority: {{from}} → {{to}}",
+    "reopened": "{{actor}} reopened the ticket",
+    "resolved": "{{actor}} marked it resolved",
+    "sla_breached": "SLA breached — overdue by {{minutes}}m",
+    "sla_met": "{{actor}} finished within SLA",
+    "status_changed": "{{actor}} changed the status: {{from}} → {{to}}",
+    "system": "System",
+    "unassigned": "{{actor}} unassigned it",
+    "updated": "{{actor}} updated the ticket"
+  },
+  "history_timeline": {
+    "chua_co_su_kien_nao_tren_ticket_na": "No events on this ticket yet.",
+    "dang_tai_lich_su": "Loading history…",
+    "khong_ro": "Unknown",
+    "lich_su": "History",
+    "lich_su_ticket": "Ticket history",
+    "load_error": "Could not load history: {{error}}",
+    "thu_lai": "Retry"
+  },
+  "lang": {
+    "en": "English",
+    "label": "Language",
+    "vi": "Vietnamese"
+  },
+  "layout": {
+    "bo_qua_toi_noi_dung_chinh": "Skip to main content"
+  },
+  "login": {
+    "ai_goi_y_phan_loai_va_ky_thuat_vie": "AI suggests categories and the right technician",
+    "chua_co_tai_khoan_lien_he_quan_tri": "No account? Contact an administrator.",
+    "dang_nhap": "Sign in",
+    "dang_nhap_dx_fsm": "Sign in — DX-FSM",
+    "dang_nhap_mot_lan_sso_phan_quyen_t": "Single sign-on (SSO) with role-based access",
+    "dang_nhap_voi_sso": "Sign in with SSO",
+    "dev_tai_khoan_demo_admin_manager_t": "Dev: demo accounts admin, manager, technician, customer.",
+    "dung_tai_khoan_cong_ty_cua_ban_de": "Use your company account to continue.",
+    "quan_ly_dich_vu_thuc_dia": "Field service management",
+    "theo_doi_ticket_tu_tiep_nhan_den_h": "Track tickets from intake to completion"
+  },
+  "modal": {
+    "dong": "Close"
+  },
+  "nav": {
+    "all_tickets": "All tickets",
+    "dashboard": "Overview",
+    "my_tickets": "My tickets",
+    "new_ticket": "Create ticket",
+    "not_found": "Page not found",
+    "notifications": "Notifications",
+    "ticket_detail": "Ticket details"
+  },
+  "not_found": {
+    "duong_dan_khong_ton_tai_hoac_da_du": "This page does not exist or has been moved.",
+    "khong_tim_thay_trang": "Page not found",
+    "ve_trang_chu": "Go to home page"
+  },
+  "note_composer": {
+    "dang_gui": "Sending…",
+    "gui_note": "Send note",
+    "noi_dung_note": "Note content",
+    "viet_note_noi_bo_cmd_ctrl_enter_de": "Write an internal note… (Cmd/Ctrl+Enter to send)",
+    "xoa": "Clear"
+  },
+  "notes": {
+    "empty": "The note cannot be empty",
+    "too_long": "The note can be at most {{max}} characters (currently {{current}})"
+  },
+  "notes_panel": {
+    "chi_nhan_vien": "Staff only",
+    "chua_co_note_nao_hay_them_note_noi": "No notes yet. Add the first internal note.",
+    "dang_tai_notes": "Loading notes…",
+    "dong": "Close",
+    "ghi_chu_noi_bo": "Internal notes",
+    "khong_ro": "Unknown",
+    "load_error": "Could not load notes: {{error}}",
+    "loi_khi_tao_note": "Failed to create the note",
+    "send_error": "Could not send the note: {{error}}",
+    "thu_lai": "Retry"
+  },
+  "notification_bell": {
+    "aria": "Notifications, {{count}} unread",
+    "ban_da_xem_het_thong_bao": "You are all caught up.",
+    "danh_dau_tat_ca_da_doc": "Mark all as read",
+    "khong_co_thong_bao_chua_doc": "No unread notifications",
+    "load_error": "Could not load notifications.",
+    "n_new": "{{count}} new notifications",
+    "sr_unread": "{{count}} unread notifications",
+    "thong_bao": "Notifications",
+    "thu_lai": "Retry",
+    "xem_tat_ca": "View all"
+  },
+  "notification_item": {
+    "canh_bao": "Warning",
+    "loi": "Error",
+    "moi": "New",
+    "thanh_cong": "Success",
+    "thong_tin": "Info",
+    "unread_aria": "Unread: {{title}}"
+  },
+  "notifications": {
+    "ban_da_xem_het_thong_bao": "You are all caught up",
+    "cap_nhat_ticket_va_canh_bao_sla_se": "Ticket updates and SLA warnings will show up here.",
+    "chua_co_thong_bao_nao": "No notifications yet",
+    "cu_hon": "Older",
+    "danh_dau_tat_ca_da_doc": "Mark all as read",
+    "hom_nay": "Today",
+    "hom_qua": "Yesterday",
+    "khong_tai_duoc_thong_bao": "Could not load notifications",
+    "loc_thong_bao": "Filter notifications",
+    "tab_all": "All",
+    "tab_unread": "Unread",
+    "tai_them": "Load more",
+    "thong_bao": "Notifications",
+    "unread_aria": "{{count}} unread"
+  },
+  "outbox_panel": {
+    "co_loi": "Has errors",
+    "da_gui": "Sent",
+    "dang_cho": "Pending",
+    "dang_cho_gui": "Waiting to send",
+    "dang_gui": "Sending",
+    "hang_doi_su_kien": "Event outbox",
+    "khoe": "Healthy",
+    "loi": "Failed",
+    "oldest": "Oldest pending: {{age}}"
+  },
+  "overview": {
+    "cap_nhat": "Updated",
+    "chua_giao": "Unassigned",
+    "danh_muc": "Category",
+    "dia_diem": "Location",
+    "khach_hang": "Customer",
+    "khong_co_mo_ta": "No description",
+    "ky_thuat_vien": "Technician",
+    "mo_ta": "Description",
+    "ngay_tao": "Created",
+    "thong_tin": "Details"
+  },
+  "pagination": {
+    "moi_trang": "Per page",
+    "page_n": "Page {{n}}",
+    "phan_trang": "Pagination",
+    "sau": "Next",
+    "showing": "Showing {{from}}–{{to}} of {{total}}",
+    "trang_sau": "Next page",
+    "trang_truoc": "Previous page",
+    "truoc": "Previous"
+  },
+  "priority": {
+    "critical": "Critical",
+    "high": "High",
+    "low": "Low",
+    "medium": "Medium"
+  },
+  "priority_selector": {
+    "muc_uu_tien": "Priority",
+    "xu_ly_trong_24_gio": "Handled within 24 hours",
+    "xu_ly_trong_3_ngay": "Handled within 3 days",
+    "xu_ly_trong_4_gio": "Handled within 4 hours",
+    "xu_ly_trong_7_ngay": "Handled within 7 days"
+  },
+  "s_l_a_panel": {
+    "chu_y": "Warning",
+    "dat_sla_da_giai_quyet_dong": "SLA met (resolved/closed)",
+    "dung_han": "On time",
+    "hieu_suat_sla": "SLA performance",
+    "khong_dat_sla": "SLA not met",
+    "nguy_cap": "Critical",
+    "qua_han_dang_xu_ly": "Overdue (in progress)",
+    "ti_le_vi_pham": "breach rate",
+    "ticket_dang_xu_ly": "Active tickets",
+    "tot": "Good"
+  },
+  "sidebar": {
+    "dieu_huong_chinh": "Main navigation",
+    "dong_menu": "Close menu",
+    "mo_rong_thanh_ben": "Expand sidebar",
+    "thu_gon_thanh_ben": "Collapse sidebar",
+    "aside": "Sidebar"
+  },
+  "skeleton": {
+    "dang_tai": "Loading"
+  },
+  "sla": {
+    "days": "{{count}} d",
+    "hours": "{{count}} h",
+    "left": "{{span}} left",
+    "minutes": "{{count}} min",
+    "overdue": "{{span}} overdue"
+  },
+  "sla_panel": {
+    "gauge_aria": "SLA breach rate {{pct}}%, level {{level}}"
+  },
+  "sla_progress": {
+    "qua_han": "Overdue",
+    "sap_het_han": "Due soon",
+    "tien_do_sla": "SLA progress",
+    "trong_han": "On track"
+  },
+  "states": {
+    "da_xay_ra_loi": "Something went wrong",
+    "thu_lai": "Try again"
+  },
+  "status": {
+    "assigned": "Assigned",
+    "cancelled": "Cancelled",
+    "closed": "Closed",
+    "in_progress": "In progress",
+    "new": "New",
+    "pending": "On hold",
+    "resolved": "Resolved",
+    "sla_breached": "SLA breached"
+  },
+  "status_actions": {
+    "hanh_dong": "Actions",
+    "khong_doi_duoc_trang_thai_co_the_b": "Could not change the status. You may not have permission or the ticket has changed.",
+    "moved_to": "Moved to \"{{status}}\"",
+    "tai_khoan_cua_ban_chua_co_ho_so_ky": "Your account has no technician profile."
+  },
+  "ticket_card": {
+    "chua_giao": "Unassigned"
+  },
+  "ticket_create": {
+    "chon_danh_muc": "Choose a category…",
+    "chua_lay_duoc_goi_y_ai_ban_van_co": "Could not get an AI suggestion. You can still pick the category and priority yourself.",
+    "created": "Ticket {{number}} created",
+    "danh_muc": "Category *",
+    "description_helper": "Describe the device, symptoms and when it happened. ({{count}} characters)",
+    "dia_chi_vi_tri": "Address / location",
+    "dia_diem": "Location",
+    "dinh_kem_tuy_chon": "Attachments (optional)",
+    "gia_tri_khong_hop_le": "Invalid value",
+    "goi_y_bang_ai": "Suggest with AI",
+    "hay_chon_muc_uu_tien": "Please choose a priority",
+    "hay_nhap_mo_ta": "Please enter a description",
+    "hay_nhap_tieu_de": "Please enter a title",
+    "huy": "Cancel",
+    "la_thong_tin_bat_buoc": "* required",
+    "mo_ta": "Description *",
+    "mo_ta_can_it_nhat_10_ky_tu": "Description needs at least 10 characters",
+    "muc_uu_tien": "Priority *",
+    "nhap_tieu_de_va_mo_ta_de_dung_goi": "Enter a title and description to use suggestions.",
+    "phan_loai": "Classification",
+    "pick_category": "Please choose a category",
+    "tao_ticket": "Create ticket",
+    "thong_tin_su_co": "Incident details",
+    "tieu_de": "Title *",
+    "tieu_de_can_it_nhat_5_ky_tu": "Title needs at least 5 characters",
+    "tieu_de_toi_da_200_ky_tu": "Title can be at most 200 characters",
+    "upload_failed": "{{count}} file(s) could not be uploaded. You can add them again on the detail page.",
+    "uploading": "Uploading file {{i}}/{{n}}…"
+  },
+  "ticket_detail": {
+    "binh_luan": "Comments",
+    "dang_tai_ticket": "Loading ticket",
+    "dinh_kem": "Attachments",
+    "ghi_chu_noi_bo": "Internal notes",
+    "khong_tai_duoc_ticket": "Could not load the ticket",
+    "khong_tim_thay_ticket": "Ticket not found",
+    "lich_su": "History",
+    "thong_tin_phu": "Side information",
+    "ticket_khong_ton_tai_hoac_ban_khon": "The ticket does not exist or you do not have access.",
+    "tong_quan": "Overview",
+    "ve_danh_sach_ticket": "Back to tickets"
+  },
+  "ticket_filters": {
+    "all_of": "{{label}}: all",
+    "danh_muc": "Category",
+    "moi_nhat": "Newest",
+    "remove_filter": "Remove filter {{text}}",
+    "sap_xep": "Sort",
+    "search_chip": "Search: {{q}}",
+    "sla_gan_het_han_truoc": "SLA due soonest",
+    "tim_theo_tieu_de": "Search by title",
+    "tim_ticket_theo_tieu_de": "Search tickets by title",
+    "trang_thai": "Status",
+    "tuy_chinh_theo_cot": "Custom (by column)",
+    "uu_tien": "Priority",
+    "uu_tien_cao_truoc": "Highest priority first",
+    "xoa_loc": "Clear filters"
+  },
+  "ticket_header": {
+    "created_by": "Created by {{name}} · {{when}}",
+    "khong_ro": "unknown",
+    "quay_lai_danh_sach": "Back to tickets"
+  },
+  "ticket_table": {
+    "chua_giao": "Unassigned",
+    "ktv": "Technician",
+    "ma": "Code",
+    "ngay_tao": "Created",
+    "tieu_de": "Title",
+    "trang_thai": "Status",
+    "uu_tien": "Priority"
+  },
+  "tickets": {
+    "chua_co_ticket_nao": "No tickets yet",
+    "hay_tao_ticket_dau_tien": "Create the first ticket.",
+    "khong_co_ticket_khop_bo_loc": "No tickets match the filters",
+    "khong_tai_duoc_danh_sach_ticket": "Could not load tickets",
+    "kiem_tra_ket_noi_roi_thu_lai": "Check your connection and try again.",
+    "tao_ticket": "Create ticket",
+    "tat_ca_ticket": "All tickets",
+    "thu_doi_tu_khoa_hoac_bo_bot_bo_loc": "Try another keyword or remove some filters.",
+    "ticket_cua_toi": "My tickets",
+    "xoa_loc": "Clear filters"
+  },
+  "time": {
+    "d_ago": "{{n}}d ago",
+    "h_ago": "{{n}}h ago",
+    "just_now": "just now",
+    "m_ago": "{{n}}m ago",
+    "s_ago": "{{n}}s ago"
+  },
+  "toast": {
+    "dong_thong_bao": "Dismiss notification",
+    "region": "Notifications"
+  },
+  "top_bar": {
+    "account": "Account {{name}}",
+    "chuyen_sang_giao_dien_sang": "Switch to light theme",
+    "chuyen_sang_giao_dien_toi": "Switch to dark theme",
+    "dang_xuat": "Sign out",
+    "mo_menu": "Open menu"
+  },
+  "use_notifications": {
+    "thong_bao_moi": "New notification"
+  }
+}

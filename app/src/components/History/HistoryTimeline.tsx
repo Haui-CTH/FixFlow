@@ -14,6 +14,7 @@ import {
   type HistoryEvent,
 } from '../../lib/history';
 import styles from './HistoryTimeline.module.css';
+import { t } from '../../lib/i18n';
 
 interface HistoryTimelineProps {
   ticketId: string;
@@ -43,11 +44,11 @@ export function HistoryTimeline({ ticketId }: HistoryTimelineProps) {
   );
 
   return (
-    <section className={styles.panel} aria-label="Lịch sử ticket">
+    <section className={styles.panel} aria-label={t('history_timeline.lich_su_ticket')}>
       <header className={styles.header}>
         <h2 className={styles.title}>
           <Clock size={20} aria-hidden="true" />
-          Lịch sử
+          {t('history_timeline.lich_su')}
           <span className={styles.count}>({events.length})</span>
         </h2>
       </header>
@@ -56,22 +57,22 @@ export function HistoryTimeline({ ticketId }: HistoryTimelineProps) {
       {isLoading && (
         <div className={styles.center}>
           <div className={styles.spinner} />
-          <div>Đang tải lịch sử…</div>
+          <div>{t('history_timeline.dang_tai_lich_su')}</div>
         </div>
       )}
 
       {/* Error state */}
       {isError && (
         <div className={styles.errorBox} role="alert">
-          <span>Lỗi tải lịch sử: {(error as Error)?.message || 'Không rõ'}</span>
-          <button onClick={() => refetch()}>Thử lại</button>
+          <span>{t('history_timeline.load_error', { error: (error as Error)?.message || t('history_timeline.khong_ro') })}</span>
+          <button onClick={() => refetch()}>{t('history_timeline.thu_lai')}</button>
         </div>
       )}
 
       {/* Empty state */}
       {!isLoading && !isError && events.length === 0 && (
         <div className={styles.empty}>
-          Chưa có sự kiện nào trên ticket này.
+          {t('history_timeline.chua_co_su_kien_nao_tren_ticket_na')}
         </div>
       )}
 
