@@ -35,7 +35,7 @@ app.add_middleware(
 )
 
 # Routes
-app.include_router(health.router, prefix="/health", tags=["Health"])
+app.include_router(health.router, tags=["Health"])
 app.include_router(notify.router, tags=["Notifications"])
 
 
