@@ -3,8 +3,8 @@
  */
 
 .panel {
-  background: white;
-  border: 1px solid #e5e7eb;
+  background: var(--surface);
+  border: 1px solid var(--border);
   border-radius: 0.5rem;
   padding: 1.25rem;
   margin-top: 1.5rem;
@@ -22,7 +22,7 @@
 .title {
   font-size: 1.125rem;
   font-weight: 600;
-  color: #111827;
+  color: var(--text);
   margin: 0;
   display: flex;
   align-items: center;
@@ -36,8 +36,8 @@
 .staffBadge {
   display: inline-block;
   padding: 0.125rem 0.5rem;
-  background: #fef3c7;
-  color: #92400e;
+  background: var(--warning-bg);
+  color: var(--warning);
   font-size: 0.6875rem;
   font-weight: 600;
   text-transform: uppercase;
@@ -47,7 +47,7 @@
 
 .count {
   font-size: 0.875rem;
-  color: #6b7280;
+  color: var(--text-muted);
   font-weight: normal;
   margin-left: 0.25rem;
 }
@@ -57,8 +57,8 @@
 .composer {
   margin-bottom: 1.25rem;
   padding: 0.875rem;
-  background: #f9fafb;
-  border: 1px solid #e5e7eb;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
   border-radius: 0.375rem;
 }
 
@@ -66,14 +66,14 @@
   width: 100%;
   min-height: 80px;
   padding: 0.625rem 0.75rem;
-  border: 1px solid #d1d5db;
+  border: 1px solid var(--border-strong);
   border-radius: 0.375rem;
   font-family: inherit;
   font-size: 0.875rem;
   line-height: 1.5;
-  color: #111827;
+  color: var(--text);
   resize: vertical;
-  background: white;
+  background: var(--surface);
   box-sizing: border-box;
 }
 
@@ -84,11 +84,11 @@
 }
 
 .textareaError {
-  border-color: #ef4444;
+  border-color: var(--danger);
 }
 
 .textareaError:focus {
-  border-color: #ef4444;
+  border-color: var(--danger);
   box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
 }
 
@@ -102,7 +102,7 @@
 
 .charCount {
   font-size: 0.75rem;
-  color: #9ca3af;
+  color: var(--text-muted);
   font-variant-numeric: tabular-nums;
 }
 
@@ -111,7 +111,7 @@
 }
 
 .charCountError {
-  color: #ef4444;
+  color: var(--danger);
 }
 
 .composerActions {
@@ -122,7 +122,7 @@
 .submitBtn {
   padding: 0.5rem 1rem;
   background: #3b82f6;
-  color: white;
+  color: var(--surface);
   border: none;
   border-radius: 0.375rem;
   font-size: 0.875rem;
@@ -142,16 +142,16 @@
 
 .cancelBtn {
   padding: 0.5rem 1rem;
-  background: white;
-  color: #4b5563;
-  border: 1px solid #d1d5db;
+  background: var(--surface);
+  color: var(--text-muted);
+  border: 1px solid var(--border-strong);
   border-radius: 0.375rem;
   font-size: 0.875rem;
   cursor: pointer;
 }
 
 .cancelBtn:hover:not(:disabled) {
-  background: #f3f4f6;
+  background: var(--surface-2);
 }
 
 .cancelBtn:disabled {
@@ -163,7 +163,7 @@
   font-size: 0.75rem;
   color: #b91c1c;
   margin-top: 0.375rem;
-  background: #fef2f2;
+  background: var(--danger-bg);
   border: 1px solid #fecaca;
   padding: 0.375rem 0.5rem;
   border-radius: 0.25rem;
@@ -180,7 +180,7 @@
 .note {
   padding: 0.875rem;
   background: #fefefe;
-  border: 1px solid #f3f4f6;
+  border: 1px solid var(--surface-2);
   border-radius: 0.375rem;
   border-left: 3px solid #8b5cf6;
 }
@@ -196,7 +196,7 @@
 .noteAuthor {
   font-size: 0.875rem;
   font-weight: 600;
-  color: #111827;
+  color: var(--text);
   display: flex;
   align-items: center;
   gap: 0.375rem;
@@ -207,7 +207,7 @@
   height: 1.5rem;
   border-radius: 50%;
   background: #8b5cf6;
-  color: white;
+  color: var(--surface);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -218,15 +218,15 @@
 
 .noteTime {
   font-size: 0.75rem;
-  color: #9ca3af;
-  white-space: nowrap;
+  color: var(--text-muted);
+  var(--surface)-space: nowrap;
 }
 
 .noteBody {
   font-size: 0.875rem;
   line-height: 1.6;
-  color: #374151;
-  white-space: pre-wrap;
+  color: var(--text);
+  var(--surface)-space: pre-wrap;
   word-wrap: break-word;
   margin: 0;
 }
@@ -236,21 +236,21 @@
 .empty {
   text-align: center;
   padding: 1.5rem 1rem;
-  color: #9ca3af;
+  color: var(--text-muted);
   font-size: 0.875rem;
 }
 
 .center {
   text-align: center;
   padding: 1.5rem 1rem;
-  color: #6b7280;
+  color: var(--text-muted);
 }
 
 .spinner {
   display: inline-block;
   width: 1.5rem;
   height: 1.5rem;
-  border: 2px solid #e5e7eb;
+  border: 2px solid var(--border);
   border-top-color: #3b82f6;
   border-radius: 50%;
   animation: spin 1s linear infinite;
@@ -262,7 +262,7 @@
 }
 
 .errorBox {
-  background: #fef2f2;
+  background: var(--danger-bg);
   border: 1px solid #fecaca;
   color: #b91c1c;
   padding: 0.625rem 0.75rem;
@@ -275,7 +275,7 @@
 }
 
 .errorBox button {
-  background: white;
+  background: var(--surface);
   border: 1px solid #fecaca;
   color: #b91c1c;
   padding: 0.25rem 0.5rem;

@@ -134,6 +134,9 @@ services:
       ALERT_INTERVAL_SEC: ${ALERT_INTERVAL_SEC:-60}
     ports:
       - "8001:8001"
+    volumes:
+      # file đính kèm khi MinIO tắt (storage_service local fallback)
+      - ticket_attachments:/data/attachments
     depends_on:
       postgres:
         condition: service_healthy
@@ -237,6 +240,7 @@ volumes:
   postgres_data:
   minio_data:
   n8n_data:
+  ticket_attachments:
 
 # ─── Network ────────────────────────────────────────────────
 

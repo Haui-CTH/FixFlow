@@ -29,8 +29,22 @@ def get_minio_client() -> Optional[Minio]:
         return None
 
 
+def _minio_reachable(timeout: float = 1.0) -> bool:
+    """Kiểm tra nhanh MinIO có kết nối được không (tránh retry rất lâu của minio-py khi service tắt)."""
+    import socket
+
+    host, _, port = settings.minio_endpoint.partition(":")
+    try:
+        with socket.create_connection((host, int(port or 9000)), timeout=timeout):
+            return True
+    except OSError:
+        return False
+
+
 def _minio_upload(data: bytes, object_name: str, content_type: str) -> str:
     """Upload lên MinIO, raise S3Error nếu fail."""
+    if not _minio_reachable():
+        raise ConnectionError("MinIO unreachable")
     client = get_minio_client()
     if not client:
         raise S3Error("MinIO unavailable")
