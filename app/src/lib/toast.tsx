@@ -11,6 +11,7 @@ import {
   useEffect,
   type ReactNode,
 } from 'react';
+import { AlertCircle, CheckCircle2, Info, TriangleAlert, X, type LucideIcon } from 'lucide-react';
 import styles from './toast.module.css';
 
 // ─── Types ───────────────────────────────────────────────
@@ -191,11 +192,11 @@ export function useToast(): ToastContextValue {
 
 // ─── Viewport (renders all toasts) ───────────────────────
 
-const ICONS: Record<ToastType, string> = {
-  info: 'i',
-  success: '✓',
-  warning: '!',
-  error: '✕',
+const ICONS: Record<ToastType, LucideIcon> = {
+  info: Info,
+  success: CheckCircle2,
+  warning: TriangleAlert,
+  error: AlertCircle,
 };
 
 function ToastViewport() {
@@ -217,7 +218,7 @@ function ToastViewport() {
           aria-atomic="true"
         >
           <div className={styles.icon} aria-hidden="true">
-            {ICONS[t.type]}
+            {(() => { const Icon = ICONS[t.type]; return <Icon size={18} />; })()}
           </div>
           <div className={styles.body}>
             {t.title && <div className={styles.title}>{t.title}</div>}
@@ -228,7 +229,7 @@ function ToastViewport() {
             onClick={() => dismiss(t.id)}
             aria-label="Đóng thông báo"
           >
-            ×
+            <X size={16} aria-hidden="true" />
           </button>
         </div>
       ))}
