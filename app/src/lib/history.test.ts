@@ -13,17 +13,17 @@ import {
 
 describe('getActionColor', () => {
   it('returns blue for created', () => {
-    expect(getActionColor('created')).toBe('#3b82f6');
+    expect(getActionColor('created')).toBe('var(--info)');
   });
   it('returns red for sla_breached', () => {
-    expect(getActionColor('sla_breached')).toBe('#ef4444');
+    expect(getActionColor('sla_breached')).toBe('var(--danger)');
   });
   it('returns green for resolved/sla_met', () => {
-    expect(getActionColor('resolved')).toBe('#10b981');
-    expect(getActionColor('sla_met')).toBe('#10b981');
+    expect(getActionColor('resolved')).toBe('var(--success)');
+    expect(getActionColor('sla_met')).toBe('var(--success)');
   });
   it('returns gray for unknown', () => {
-    expect(getActionColor('mystery_action')).toBe('#6b7280');
+    expect(getActionColor('mystery_action')).toBe('var(--text-muted)');
   });
   it('handles 14+ action types with valid colors', () => {
     const actions = [
@@ -33,7 +33,7 @@ describe('getActionColor', () => {
       'reopened',
     ];
     for (const a of actions) {
-      expect(getActionColor(a)).toMatch(/^#[0-9a-f]{6}$/);
+      expect(getActionColor(a)).toMatch(/^var\(--[a-z-]+\)$/);
     }
   });
 });

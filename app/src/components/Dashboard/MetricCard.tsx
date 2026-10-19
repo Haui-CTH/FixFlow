@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: Apache-2.0
 // DX-FSM Dashboard – Reusable stat card component (B6.3)
 import type { LucideIcon } from 'lucide-react';
 import styles from '../../pages/Dashboard.module.css';

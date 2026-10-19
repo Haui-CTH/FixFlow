@@ -3,6 +3,7 @@
 
 import { Button } from './Button';
 import { Modal } from './Modal';
+import styles from './ui.module.css';
 
 export function ConfirmDialog({
   open,
@@ -25,8 +26,8 @@ export function ConfirmDialog({
 }) {
   return (
     <Modal open={open} title={title} onClose={onClose}>
-      <p style={{ marginBottom: 'var(--space-5)' }}>{message}</p>
-      <div style={{ display: 'flex', gap: 'var(--space-2)', justifyContent: 'flex-end' }}>
+      <p className={styles.confirmText}>{message}</p>
+      <div className={styles.confirmActions}>
         <Button variant="secondary" onClick={onClose} disabled={loading}>
           Huỷ bỏ
         </Button>

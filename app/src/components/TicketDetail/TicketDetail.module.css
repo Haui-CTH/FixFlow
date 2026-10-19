@@ -6,7 +6,7 @@
 
 /* ─── Header ─── */
 .header { display: grid; gap: var(--space-2); margin-bottom: var(--space-5); }
-.back { display: inline-flex; align-items: center; gap: var(--space-1); color: var(--accent); text-decoration: none; min-height: 36px; width: fit-content; }
+.back { display: inline-flex; align-items: center; gap: var(--space-1); color: var(--accent); text-decoration: none; min-height: 44px; width: fit-content; }
 .back:hover { text-decoration: underline; }
 .headTop { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2); }
 .code { font-weight: 700; color: var(--text-muted); }
@@ -124,3 +124,5 @@
   }
   .actions button { flex: 1 1 auto; }
 }
+
+.spacer { height: var(--space-4); }

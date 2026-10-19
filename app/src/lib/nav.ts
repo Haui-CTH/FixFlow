@@ -25,6 +25,17 @@ export const navFor = (role: string | null | undefined): NavItem[] =>
 export const homeFor = (role: string | null | undefined): string =>
   role === 'admin' || role === 'manager' ? '/' : '/my-tickets';
 
+// Tiêu đề trang (document.title) theo đường dẫn
+export function pageTitle(pathname: string): string {
+  if (pathname === '/') return 'Tổng quan';
+  if (pathname === '/tickets') return 'Tất cả ticket';
+  if (pathname === '/my-tickets') return 'Ticket của tôi';
+  if (pathname === '/tickets/new') return 'Tạo ticket';
+  if (pathname.startsWith('/tickets/')) return 'Chi tiết ticket';
+  if (pathname === '/notifications') return 'Thông báo';
+  return 'Không tìm thấy trang';
+}
+
 // '/' chỉ khớp chính xác; các mục khác khớp cả route con (/tickets/123)
 export const isActive = (itemPath: string, pathname: string): boolean =>
   itemPath === '/' ? pathname === '/' : pathname === itemPath || pathname.startsWith(itemPath + '/');

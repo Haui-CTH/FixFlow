@@ -3,6 +3,7 @@
 // React error boundary: catches render errors, hiển thị fallback UI.
 
 import { Component, type ErrorInfo, type ReactNode } from 'react';
+import styles from './ErrorBoundary.module.css';
 
 interface Props {
   children: ReactNode;
@@ -62,30 +63,30 @@ function DefaultFallback({
   onReset: () => void;
 }) {
   return (
-    <div style={containerStyle}>
-      <div style={cardStyle}>
-        <h1 style={titleStyle}>Đã xảy ra lỗi</h1>
-        <p style={descStyle}>
+    <div className={styles.container}>
+      <div className={styles.card}>
+        <h1 className={styles.title}>Đã xảy ra lỗi</h1>
+        <p className={styles.desc}>
           Ứng dụng gặp lỗi không mong muốn. Bạn có thể thử lại hoặc quay về trang chủ.
         </p>
-        <details style={detailsStyle}>
-          <summary style={{ cursor: 'pointer', fontSize: '0.875rem' }}>
+        <details className={styles.details}>
+          <summary className={styles.summary}>
             Chi tiết lỗi (developer)
           </summary>
-          <pre style={preStyle}>
+          <pre className={styles.pre}>
             <strong>{error.name}: {error.message}</strong>
             {'\n\n'}
             {error.stack || '(no stack)'}
             {errorInfo && `\n\nComponent stack:\n${errorInfo.componentStack || ''}`}
           </pre>
         </details>
-        <div style={{ display: 'flex', gap: '0.5rem', marginTop: '1rem' }}>
-          <button onClick={onReset} style={primaryBtnStyle}>
+        <div className={styles.actions}>
+          <button onClick={onReset} className={styles.primary}>
             Thử lại
           </button>
           <button
             onClick={() => { window.location.href = '/'; }}
-            style={secondaryBtnStyle}
+            className={styles.secondary}
           >
             Về trang chủ
           </button>
@@ -94,73 +95,3 @@ function DefaultFallback({
     </div>
   );
 }
-
-const containerStyle: React.CSSProperties = {
-  minHeight: '100vh',
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-  padding: '1rem',
-  background: 'var(--bg)',
-};
-
-const cardStyle: React.CSSProperties = {
-  background: 'var(--surface)',
-  padding: '2rem',
-  borderRadius: '0.5rem',
-  border: '1px solid var(--border)',
-  maxWidth: '32rem',
-  width: '100%',
-  boxShadow: 'var(--shadow-2)',
-};
-
-const titleStyle: React.CSSProperties = {
-  fontSize: '1.5rem',
-  fontWeight: 700,
-  color: 'var(--danger)',
-  marginBottom: '0.5rem',
-};
-
-const descStyle: React.CSSProperties = {
-  color: 'var(--text-secondary)',
-  marginBottom: '1rem',
-  lineHeight: 1.6,
-};
-
-const detailsStyle: React.CSSProperties = {
-  background: 'var(--bg)',
-  padding: '0.75rem',
-  borderRadius: '0.375rem',
-  marginBottom: '0.5rem',
-};
-
-const preStyle: React.CSSProperties = {
-  fontSize: '0.75rem',
-  fontFamily: 'ui-monospace, "SF Mono", monospace',
-  whiteSpace: 'pre-wrap',
-  wordBreak: 'break-word',
-  marginTop: '0.5rem',
-  color: 'var(--text-primary)',
-  maxHeight: '12rem',
-  overflowY: 'auto',
-};
-
-const primaryBtnStyle: React.CSSProperties = {
-  padding: '0.5rem 1rem',
-  background: 'var(--accent)',
-  color: 'var(--on-accent)',
-  border: 'none',
-  borderRadius: '0.375rem',
-  cursor: 'pointer',
-  fontWeight: 500,
-};
-
-const secondaryBtnStyle: React.CSSProperties = {
-  padding: '0.5rem 1rem',
-  background: 'var(--surface)',
-  color: 'var(--text)',
-  border: '1px solid var(--border)',
-  borderRadius: '0.375rem',
-  cursor: 'pointer',
-  fontWeight: 500,
-};

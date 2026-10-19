@@ -2,7 +2,7 @@
  * DX-FSM design tokens (docs/frontend-ui-plan/01-design-system.md)
  * Dùng token ngữ nghĩa: var(--surface), var(--text), var(--accent)... Không viết hex ngoài khối này.
  * Dark mode: đặt data-theme="dark" trên <html>.
- * ponytail: chưa bật theo prefers-color-scheme vì các trang cũ còn hex cứng; bật ở GĐ 08 (Q8.18).
+ * Mặc định theo hệ thống (prefers-color-scheme) trừ khi người dùng chọn qua nút đổi giao diện (lib/theme.ts).
  */
 
 *,
@@ -30,7 +30,7 @@
   --success-bg: #dcfce7;
   --warning: #b45309;
   --warning-bg: #fef3c7;
-  --danger: #dc2626;
+  --danger: #b91c1c;
   --danger-bg: #fee2e2;
   --info: #0369a1;
   --info-bg: #e0f2fe;
@@ -66,13 +66,6 @@
   --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
 
   --font-sans: 'Plus Jakarta Sans Variable', system-ui, -apple-system, 'Segoe UI', sans-serif;
-
-  /* Alias cũ — tạm giữ cho các module chưa migrate, xoá ở GĐ 08 (Q8.20).
-   * --primary cũ (indigo, nút hành động) nay trỏ về --accent trong các module cũ;
-   * ở đây --primary là màu brand navy theo plan, nên module cũ dùng nút sẽ đổi sang navy. */
-  --primary-hover: var(--accent-hover);
-  --text-primary: var(--text);
-  --text-secondary: var(--text-muted);
 
   /* Breakpoints (cho JS) */
   --bp-sm: 480px;
@@ -115,6 +108,9 @@
 
 html {
   scrollbar-gutter: stable;
+  /* thanh dính (top bar 56px, thanh hành động đáy) không che phần tử đang focus */
+  scroll-padding-top: 72px;
+  scroll-padding-bottom: 96px;
 }
 
 body {
@@ -127,6 +123,9 @@ body {
   -moz-osx-font-smoothing: grayscale;
   -webkit-text-size-adjust: 100%;
 }
+
+/* Chuỗi dài (mã, URL, tên file) không làm tràn layout */
+p, h1, h2, h3, li, td, dd { overflow-wrap: anywhere; }
 
 /* Heading scale */
 h1 { font-size: 2rem; line-height: 1.2; }
@@ -156,7 +155,10 @@ h4 { font-size: 1rem; }
   left: var(--space-3);
   top: -100px;
   z-index: var(--z-toast);
-  padding: var(--space-2) var(--space-4);
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 0 var(--space-4);
   background: var(--accent);
   color: var(--on-accent);
   border-radius: var(--radius-md);
@@ -183,7 +185,7 @@ h4 { font-size: 1rem; }
 @media (max-width: 768px) {
   button,
   a {
-    min-height: 2.5rem;
+    min-height: 2.75rem;
   }
   input,
   textarea,

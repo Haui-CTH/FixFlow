@@ -1,0 +1,12 @@
+/* SPDX-License-Identifier: Apache-2.0 */
+.container { min-height: 100dvh; display: flex; align-items: center; justify-content: center; padding: var(--space-4); background: var(--bg); }
+.card { background: var(--surface); padding: var(--space-6); border-radius: var(--radius-md); border: 1px solid var(--border); max-width: 32rem; width: 100%; box-shadow: var(--shadow-2); }
+.title { font-size: 1.5rem; font-weight: 700; color: var(--danger); margin-bottom: var(--space-2); }
+.desc { color: var(--text-muted); margin-bottom: var(--space-4); line-height: 1.6; }
+.details { background: var(--bg); padding: var(--space-3); border-radius: var(--radius-sm); margin-bottom: var(--space-2); }
+.summary { cursor: pointer; font-size: 0.875rem; }
+.pre { font-size: 0.75rem; font-family: ui-monospace, 'SF Mono', monospace; white-space: pre-wrap; word-break: break-word; margin-top: var(--space-2); color: var(--text); max-height: 12rem; overflow-y: auto; }
+.actions { display: flex; gap: var(--space-2); margin-top: var(--space-4); }
+.primary, .secondary { min-height: 44px; padding: 0 var(--space-4); border-radius: var(--radius-sm); cursor: pointer; font: inherit; font-weight: 600; }
+.primary { background: var(--accent); color: var(--on-accent); border: none; }
+.secondary { background: var(--surface); color: var(--text); border: 1px solid var(--border-strong); }

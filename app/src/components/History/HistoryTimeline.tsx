@@ -43,7 +43,7 @@ export function HistoryTimeline({ ticketId }: HistoryTimelineProps) {
   );
 
   return (
-    <section className={styles.panel} aria-label="Ticket history">
+    <section className={styles.panel} aria-label="Lịch sử ticket">
       <header className={styles.header}>
         <h2 className={styles.title}>
           <Clock size={20} aria-hidden="true" />
@@ -63,8 +63,8 @@ export function HistoryTimeline({ ticketId }: HistoryTimelineProps) {
       {/* Error state */}
       {isError && (
         <div className={styles.errorBox} role="alert">
-          <span>Lỗi tải lịch sử: {(error as Error)?.message || 'Unknown'}</span>
-          <button onClick={() => refetch()}>Retry</button>
+          <span>Lỗi tải lịch sử: {(error as Error)?.message || 'Không rõ'}</span>
+          <button onClick={() => refetch()}>Thử lại</button>
         </div>
       )}
 

@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: Apache-2.0
 import { describe, it, expect } from 'vitest';
-import { navFor, isActive, homeFor } from './nav';
+import { navFor, isActive, homeFor, pageTitle } from './nav';
 import { pickRole } from './auth';
 
 describe('nav', () => {
@@ -22,6 +22,15 @@ describe('nav', () => {
     expect(isActive('/tickets', '/tickets/123')).toBe(true);
     expect(isActive('/', '/tickets')).toBe(false);
     expect(isActive('/tickets', '/ticketsX')).toBe(false);
+  });
+});
+
+describe('pageTitle', () => {
+  it('maps routes to titles', () => {
+    expect(pageTitle('/')).toBe('Tổng quan');
+    expect(pageTitle('/tickets/new')).toBe('Tạo ticket');
+    expect(pageTitle('/tickets/abc')).toBe('Chi tiết ticket');
+    expect(pageTitle('/nowhere')).toBe('Không tìm thấy trang');
   });
 });
 

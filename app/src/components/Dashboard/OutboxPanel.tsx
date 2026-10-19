@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: Apache-2.0
 // DX-FSM Dashboard – Outbox worker health panel (B6.8)
 import { AlertTriangle, CheckCircle2, Clock } from 'lucide-react';
 import styles from '../../pages/Dashboard.module.css';
@@ -24,7 +25,7 @@ export function outboxStatus(o: OutboxHealth): 'bad' | 'wait' | 'ok' {
 
 const BADGE = {
   bad: { text: 'Có lỗi', cls: styles.badgeBad, icon: AlertTriangle },
-  wait: { text: 'Đang chờ', cls: styles.badgeWait, icon: Clock },
+  wait: { text: 'Đang chờ gửi', cls: styles.badgeWait, icon: Clock },
   ok: { text: 'Khoẻ', cls: styles.badgeOk, icon: CheckCircle2 },
 };
 
@@ -34,7 +35,7 @@ export function OutboxPanel({ outbox }: OutboxPanelProps) {
   return (
     <div className={styles.section}>
       <div className={styles.outboxHead}>
-        <h2 className={styles.sectionTitle}>Outbox Worker</h2>
+        <h2 className={styles.sectionTitle}>Hàng đợi sự kiện</h2>
         <span className={`${styles.badge} ${b.cls}`}>
           <Icon size={14} aria-hidden="true" />
           {b.text}
@@ -44,24 +45,24 @@ export function OutboxPanel({ outbox }: OutboxPanelProps) {
       <div className={styles.outboxGrid}>
         <div className={`${styles.outboxTile} ${styles.outboxTilePending}`}>
           <div className={styles.outboxTileValue}>{outbox.pending}</div>
-          <div className={styles.outboxTileLabel}>Pending</div>
+          <div className={styles.outboxTileLabel}>Đang chờ</div>
         </div>
         <div className={`${styles.outboxTile} ${styles.outboxTileSending}`}>
           <div className={styles.outboxTileValue}>{outbox.sending}</div>
-          <div className={styles.outboxTileLabel}>Sending</div>
+          <div className={styles.outboxTileLabel}>Đang gửi</div>
         </div>
         <div className={`${styles.outboxTile} ${styles.outboxTileSent}`}>
           <div className={styles.outboxTileValue}>{outbox.sent}</div>
-          <div className={styles.outboxTileLabel}>Sent</div>
+          <div className={styles.outboxTileLabel}>Đã gửi</div>
         </div>
         <div className={`${styles.outboxTile} ${styles.outboxTileFailed}`}>
           <div className={styles.outboxTileValue}>{outbox.failed}</div>
-          <div className={styles.outboxTileLabel}>Failed</div>
+          <div className={styles.outboxTileLabel}>Lỗi</div>
         </div>
       </div>
 
       <div className={styles.outboxOldest}>
-        Oldest pending: {formatAge(outbox.oldest_pending_age_sec)}
+        Chờ lâu nhất: {formatAge(outbox.oldest_pending_age_sec)}
       </div>
     </div>
   );

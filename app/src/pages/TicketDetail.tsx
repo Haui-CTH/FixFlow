@@ -50,7 +50,7 @@ export default function TicketDetail() {
     return (
       <div className={styles.page} role="status" aria-label="Đang tải ticket">
         <SkeletonBlock height={140} />
-        <div style={{ height: 'var(--space-4)' }} />
+        <div className={styles.spacer} />
         <SkeletonBlock height={320} />
       </div>
     );
@@ -60,12 +60,13 @@ export default function TicketDetail() {
     return notFound ? (
       <EmptyState
         icon={SearchX}
+        headingLevel={1}
         title="Không tìm thấy ticket"
         description="Ticket không tồn tại hoặc bạn không có quyền xem."
         action={<Link to={backTo}>Về danh sách ticket</Link>}
       />
     ) : (
-      <ErrorState title="Không tải được ticket" onRetry={() => refetch()} />
+      <ErrorState headingLevel={1} title="Không tải được ticket" onRetry={() => refetch()} />
     );
   }
 

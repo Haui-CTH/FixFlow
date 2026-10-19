@@ -66,20 +66,20 @@ export const historyApi = {
 // ─── Helpers (exported for testing) ───────────────────────
 
 const ACTION_COLOR: Record<string, string> = {
-  created: '#3b82f6',          // blue
-  status_changed: '#8b5cf6',  // purple
-  assigned: '#6366f1',        // indigo
-  unassigned: '#9ca3af',      // gray
-  priority_changed: '#f59e0b', // yellow
-  category_changed: '#06b6d4', // cyan
-  sla_breached: '#ef4444',    // red
-  sla_met: '#10b981',         // green
-  note_added: '#8b5cf6',      // purple
-  comment_added: '#3b82f6',   // blue
-  updated: '#6b7280',         // gray
-  resolved: '#10b981',        // green
-  closed: '#374151',          // dark gray
-  reopened: '#f97316',        // orange
+  created: 'var(--info)',          // blue
+  status_changed: 'var(--status-assigned)',  // purple
+  assigned: 'var(--status-assigned)',        // indigo
+  unassigned: 'var(--text-muted)',      // gray
+  priority_changed: 'var(--warning)', // yellow
+  category_changed: 'var(--info)', // cyan
+  sla_breached: 'var(--danger)',    // red
+  sla_met: 'var(--success)',         // green
+  note_added: 'var(--status-assigned)',      // purple
+  comment_added: 'var(--info)',   // blue
+  updated: 'var(--text-muted)',         // gray
+  resolved: 'var(--success)',        // green
+  closed: 'var(--primary)',          // dark gray
+  reopened: 'var(--warning)',        // orange
 };
 
 const ACTION_ICON: Record<string, string> = {
@@ -100,10 +100,10 @@ const ACTION_ICON: Record<string, string> = {
 };
 
 /**
- * Color (hex) cho action type. Fallback = gray.
+ * Màu (CSS token) cho action type. Fallback = gray.
  */
 export function getActionColor(action: string): string {
-  return ACTION_COLOR[action] || '#6b7280';
+  return ACTION_COLOR[action] || 'var(--text-muted)';
 }
 
 /**

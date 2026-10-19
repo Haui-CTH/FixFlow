@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: Apache-2.0
 // DX-FSM Global Store
 import { create } from 'zustand';
 

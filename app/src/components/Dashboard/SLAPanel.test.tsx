@@ -18,7 +18,7 @@ const baseSla: SLAStats = {
 describe('SLAPanel', () => {
   it('renders section title', () => {
     render(<SLAPanel sla={baseSla} />);
-    expect(screen.getByText('SLA Performance')).toBeInTheDocument();
+    expect(screen.getByText('Hiệu suất SLA')).toBeInTheDocument();
   });
 
   it('displays breach rate as percentage', () => {
@@ -29,11 +29,11 @@ describe('SLAPanel', () => {
 
   it('renders all stats rows', () => {
     render(<SLAPanel sla={baseSla} />);
-    expect(screen.getByText('Active tickets')).toBeInTheDocument();
-    expect(screen.getByText('On time')).toBeInTheDocument();
-    expect(screen.getByText('Breached (active)')).toBeInTheDocument();
-    expect(screen.getByText('SLA met (resolved/closed)')).toBeInTheDocument();
-    expect(screen.getByText('SLA not met')).toBeInTheDocument();
+    expect(screen.getByText('Ticket đang xử lý')).toBeInTheDocument();
+    expect(screen.getByText('Đúng hạn')).toBeInTheDocument();
+    expect(screen.getByText('Quá hạn (đang xử lý)')).toBeInTheDocument();
+    expect(screen.getByText('Đạt SLA (đã giải quyết/đóng)')).toBeInTheDocument();
+    expect(screen.getByText('Không đạt SLA')).toBeInTheDocument();
   });
 
   it('shows numeric values', () => {

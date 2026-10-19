@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: Apache-2.0
 // DX-FSM NoteComposer – form to add note (F5.3)
-// Staff only. Validates body, shows char count, handles submit.
+// Chỉ nhân viên. Validates body, shows char count, handles submit.
 
 import { useState } from 'react';
 import { validateNoteBody, normalizeNoteBody } from '../../lib/notes';

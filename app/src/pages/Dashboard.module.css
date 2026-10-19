@@ -53,7 +53,7 @@
 .distRow { display: grid; grid-template-columns: 110px minmax(0, 1fr) auto; align-items: center; gap: var(--space-3); margin-bottom: var(--space-3); }
 .distLabel { font-size: 0.875rem; overflow-wrap: anywhere; }
 .distBarTrack { height: 12px; background: var(--muted-bg); border-radius: 999px; overflow: hidden; }
-.distBarFill { height: 100%; border-radius: 999px; transition: width var(--dur-base) var(--ease-out); }
+.distBarFill { height: 100%; border-radius: 999px; }
 .distCount { font-weight: 700; min-width: 2ch; text-align: right; font-variant-numeric: tabular-nums; }
 .distPct { color: var(--text-muted); font-size: 0.75rem; min-width: 4ch; text-align: right; font-variant-numeric: tabular-nums; }
 .distTail { display: inline-flex; align-items: baseline; gap: var(--space-2); }
@@ -70,7 +70,6 @@
 .gauge { position: relative; width: 120px; height: 120px; flex-shrink: 0; }
 .gauge svg { transform: rotate(-90deg); }
 .gaugeTrack { stroke: var(--muted-bg); }
-.gaugeArc { transition: stroke-dashoffset var(--dur-base) var(--ease-out); }
 .gaugeGood { stroke: var(--success); }
 .gaugeWarn { stroke: var(--warning); }
 .gaugeBad { stroke: var(--danger); }
@@ -120,7 +119,7 @@
 .avatar { flex-shrink: 0; display: inline-flex; align-items: center; justify-content: center; width: 32px; height: 32px; border-radius: 50%; background: var(--muted-bg); font-weight: 700; text-transform: uppercase; }
 .assigneeName { font-weight: 600; }
 .assigneeUsername { color: var(--text-muted); font-size: 0.8125rem; }
-.sortBtn { display: inline-flex; align-items: center; gap: var(--space-1); min-height: 36px; padding: 0; border: none; background: transparent; color: inherit; font: inherit; font-weight: 600; cursor: pointer; }
+.sortBtn { display: inline-flex; align-items: center; gap: var(--space-1); min-height: 44px; min-width: 44px; padding: 0; border: none; background: transparent; color: inherit; font: inherit; font-weight: 600; cursor: pointer; }
 .loadBar { height: 6px; margin-top: var(--space-1); background: var(--muted-bg); border-radius: 999px; overflow: hidden; }
 .loadFill { height: 100%; background: var(--info); }
 .numActive { color: var(--info); }
@@ -157,6 +156,5 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .distBarFill, .gaugeArc { transition: none; }
   .spinner { animation: none; }
 }

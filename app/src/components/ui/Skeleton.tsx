@@ -14,7 +14,7 @@ export const SkeletonBlock = ({ height = 120 }: { height?: Dim }) => <Skeleton h
 
 export function SkeletonRows({ rows = 5 }: { rows?: number }) {
   return (
-    <div role="status" aria-label="Đang tải" style={{ display: 'grid', gap: 'var(--space-3)' }}>
+    <div role="status" aria-label="Đang tải" className={styles.skeletonRows}>
       {Array.from({ length: rows }, (_, i) => (
         <Skeleton key={i} height={44} />
       ))}

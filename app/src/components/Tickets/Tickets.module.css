@@ -41,6 +41,8 @@
   color: var(--text);
   font: inherit;
   outline: none;
+  align-self: stretch;
+  min-height: 44px;
 }
 .select {
   min-height: 44px;
@@ -76,6 +78,8 @@
   border-radius: 50%;
   cursor: pointer;
 }
+.chip button { position: relative; }
+.chip button::after { content: ''; position: absolute; inset: -8px; } /* vùng chạm 44px, giữ nút nhỏ gọn */
 .chip button:hover { background: color-mix(in srgb, currentColor 15%, transparent); }
 
 /* ─── Table ─── */
@@ -102,7 +106,8 @@
   display: inline-flex;
   align-items: center;
   gap: var(--space-1);
-  min-height: 36px;
+  min-height: 44px;
+  min-width: 44px;
   padding: 0;
   border: none;
   background: transparent;

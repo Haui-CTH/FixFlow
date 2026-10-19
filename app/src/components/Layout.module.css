@@ -126,7 +126,6 @@
   margin-inline: auto;
   padding: var(--space-5);
   min-width: 0;
-  scroll-padding-top: 72px;
 }
 .main:focus { outline: none; }
 
