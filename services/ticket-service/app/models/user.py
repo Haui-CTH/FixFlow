@@ -1,7 +1,6 @@
 # SPDX-License-Identifier: Apache-2.0
 # DX-FSM Ticket Service – User Models
 
-from uuid import UUID
 from sqlalchemy import Column, String, Boolean, DateTime, ARRAY, Integer, ForeignKey
 from sqlalchemy.dialects.postgresql import UUID as PGUUID
 from sqlalchemy.sql import func

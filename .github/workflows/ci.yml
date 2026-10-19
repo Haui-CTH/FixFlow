@@ -108,11 +108,16 @@ jobs:
         run: |
           PGPASSWORD=dxfsm_password psql -h localhost -U dxfsm -d dxfsm \
             -f core/postgres/init.sql || echo "Schema may already exist"
+          # Migration (outbox alerting, DLQ...) — test cần các bảng này
+          for f in core/postgres/migrations/*.sql; do
+            PGPASSWORD=dxfsm_password psql -h localhost -U dxfsm -d dxfsm -v ON_ERROR_STOP=1 -f "$f"
+          done
 
       - name: Run tests
         run: |
           cd services/ticket-service
-          python -m pytest tests/ -v --tb=short --maxfail=10
+          # tests/e2e: bộ e2e chưa được xác nhận (xem tests/e2e/conftest.py), chạy riêng khi có DB *_e2e
+          python -m pytest tests/ -v --tb=short --maxfail=10 --ignore=tests/e2e
 
   # ─── 4. Test ai-service ─────────────────────────────────────────
   test-ai-service:

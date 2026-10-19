@@ -48,7 +48,11 @@ def compute_tf(tokens: list[str]) -> dict[str, float]:
 
 
 def compute_idf(documents: list[list[str]]) -> dict[str, float]:
-    """Inverse document frequency: log(N / (1 + df))."""
+    """Smoothed IDF: log((1 + N) / (1 + df)) + 1.
+
+    Công thức cũ log(N / (1 + df)) cho giá trị âm/0 với từ xuất hiện ở (gần) mọi tài liệu,
+    làm cosine âm và tìm kiếm không ra kết quả trên KB nhỏ. Bản làm mượt luôn >= 1.
+    """
     n = len(documents)
     if n == 0:
         return {}
@@ -56,7 +60,7 @@ def compute_idf(documents: list[list[str]]) -> dict[str, float]:
     for doc in documents:
         for term in set(doc):
             df[term] += 1
-    return {term: math.log(n / (1 + count)) for term, count in df.items()}
+    return {term: math.log((1 + n) / (1 + count)) + 1.0 for term, count in df.items()}
 
 
 def vectorize(

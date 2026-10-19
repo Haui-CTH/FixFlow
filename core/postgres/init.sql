@@ -512,13 +512,13 @@ SELECT
   (SELECT id FROM users WHERE username = 'manager'),
   'assigned',
   NULL,
-  (SELECT full_name FROM users WHERE id = t.technician_id)
+  (SELECT u.full_name FROM technicians te JOIN users u ON u.id = te.user_id WHERE te.id = t.technician_id)
 FROM tickets t WHERE t.ticket_number = 'TKT-2025-000001';
 
 INSERT INTO ticket_history (ticket_id, user_id, action, old_value, new_value)
 SELECT
   t.id,
-  t.technician_id,
+  (SELECT te.user_id FROM technicians te WHERE te.id = t.technician_id), -- tickets.technician_id trỏ tới technicians.id, history.user_id trỏ tới users.id
   'status_changed',
   'assigned',
   'in_progress'
@@ -527,7 +527,7 @@ FROM tickets t WHERE t.ticket_number = 'TKT-2025-000001';
 INSERT INTO ticket_history (ticket_id, user_id, action, old_value, new_value)
 SELECT
   t.id,
-  t.technician_id,
+  (SELECT te.user_id FROM technicians te WHERE te.id = t.technician_id), -- tickets.technician_id trỏ tới technicians.id, history.user_id trỏ tới users.id
   'status_changed',
   'in_progress',
   'resolved'

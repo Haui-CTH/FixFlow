@@ -1,11 +1,8 @@
 # SPDX-License-Identifier: Apache-2.0
 # DX-FSM Ticket Service – Ticket Models
 
-from datetime import datetime
-from uuid import UUID
-from typing import Optional
 import enum
-from sqlalchemy import Column, String, Text, ForeignKey, DateTime, Numeric, Boolean, ARRAY, BigInteger, Enum as SQLAlchemyEnum
+from sqlalchemy import Column, String, Text, ForeignKey, DateTime, Numeric, Boolean, BigInteger, Enum as SQLAlchemyEnum
 from sqlalchemy.dialects.postgresql import UUID as PGUUID, JSONB
 from sqlalchemy.sql import func
 

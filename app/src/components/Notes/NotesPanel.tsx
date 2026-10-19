@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: Apache-2.0
 // DX-FSM NotesPanel – list + composer cho staff (F5.3)
 
+import { StickyNote } from 'lucide-react';
 import { useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import {
@@ -96,7 +97,7 @@ export function NotesPanel({ ticketId }: NotesPanelProps) {
       {/* Header */}
       <header className={styles.header}>
         <h2 className={styles.title}>
-          <span className={styles.titleIcon} aria-hidden="true">📝</span>
+          <StickyNote size={20} aria-hidden="true" />
           {t('notes_panel.ghi_chu_noi_bo')}
           <span className={styles.staffBadge}>{t('notes_panel.chi_nhan_vien')}</span>
           <span className={styles.count}>({notes.length})</span>

@@ -44,6 +44,11 @@ def _is_real_db_available() -> bool:
     # Try connect to postgres host (default port 5432)
     # Parse from DATABASE_URL
     db_url = os.environ.get("DATABASE_URL", "")
+    # Chốt an toàn: fixture bên dưới TRUNCATE mọi bảng và DROP schema khi kết thúc.
+    # Chỉ chạy trên DB dành riêng cho test (tên kết thúc bằng _e2e) hoặc khi CI bật ALLOW_E2E_RESET=1.
+    db_name = db_url.rsplit("/", 1)[-1].split("?")[0]
+    if not (db_name.endswith("_e2e") or os.environ.get("ALLOW_E2E_RESET") == "1"):
+        return False
     if "localhost" in db_url or "127.0.0.1" in db_url:
         # Local DB - check if up
         try:
@@ -55,13 +60,15 @@ def _is_real_db_available() -> bool:
 
 
 HAS_REAL_DB = _is_real_db_available()
-E2E_SKIP_REASON = "Postgres không có sẵn ở localhost:5432"
+E2E_SKIP_REASON = (
+    "E2E cần Postgres ở localhost:5432 với DB tên *_e2e (hoặc đặt ALLOW_E2E_RESET=1 — sẽ XOÁ dữ liệu DB đó)"
+)
 
 
 # ─── Schema fixture ────────────────────────────────────────────────────
 
 
-@pytest_asyncio.fixture(scope="session")
+@pytest_asyncio.fixture(scope="session", loop_scope="session")
 async def db_engine():
     """
     Session-scoped DB engine. Tạo schema nếu DB có sẵn.
@@ -84,7 +91,7 @@ async def db_engine():
 # ─── Reset tables (per-test) ───────────────────────────────────────────
 
 
-@pytest_asyncio.fixture(autouse=True)
+@pytest_asyncio.fixture(autouse=True, loop_scope="session")
 async def reset_tables(db_engine):
     """
     TRUNCATE tất cả tables trước mỗi test để isolation.
@@ -108,7 +115,7 @@ async def reset_tables(db_engine):
 # ─── E2E client (real HTTP) ─────────────────────────────────────────────
 
 
-@pytest_asyncio.fixture
+@pytest_asyncio.fixture(loop_scope="session")
 async def e2e_client(db_engine):
     """
     AsyncClient. Nếu có real DB → dùng ASGI in-process (vẫn chạy real code path,

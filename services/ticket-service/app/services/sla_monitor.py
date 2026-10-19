@@ -4,7 +4,6 @@
 
 import asyncio
 import logging
-from typing import Optional
 
 from sqlalchemy import select, update
 from sqlalchemy.ext.asyncio import AsyncSession

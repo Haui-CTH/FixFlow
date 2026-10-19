@@ -64,9 +64,10 @@ class TestCallN8n:
             mock_client_instance.__aenter__.return_value.post.return_value = mock_response
             MockClient.return_value = mock_client_instance
 
-            ok, error = await call_n8n(_make_fake_event())
+            ok, error, latency_ms = await call_n8n(_make_fake_event())
             assert ok is True
             assert error is None
+            assert latency_ms >= 0
 
     @pytest.mark.asyncio
     async def test_call_n8n_500_returns_error(self):
@@ -80,7 +81,7 @@ class TestCallN8n:
             mock_client_instance.__aenter__.return_value.post.return_value = mock_response
             MockClient.return_value = mock_client_instance
 
-            ok, error = await call_n8n(_make_fake_event())
+            ok, error, latency_ms = await call_n8n(_make_fake_event())
             assert ok is False
             assert "500" in error
 
@@ -92,7 +93,7 @@ class TestCallN8n:
             mock_client_instance.__aenter__.return_value.post.side_effect = Exception("Connection refused")
             MockClient.return_value = mock_client_instance
 
-            ok, error = await call_n8n(_make_fake_event())
+            ok, error, latency_ms = await call_n8n(_make_fake_event())
             assert ok is False
             assert error is not None
 

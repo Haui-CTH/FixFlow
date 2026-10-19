@@ -2,13 +2,11 @@
 """DX-FSM AI Service – Technician Recommendation v2 (A5.3)
 Multi-factor scoring + collaborative filtering."""
 
-from fastapi import APIRouter, HTTPException, Query
+from fastapi import APIRouter, Query
 from pydantic import BaseModel, Field
-from typing import Optional
 from pathlib import Path
 
 from app.services.recommender_v2 import (
-    RecommenderV2,
     TicketRecord,
     get_recommender,
     reset_recommender,

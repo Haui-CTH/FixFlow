@@ -13,7 +13,6 @@ from fastapi import (
     File,
     HTTPException,
     UploadFile,
-    status,
 )
 from pydantic import BaseModel
 from sqlalchemy import select

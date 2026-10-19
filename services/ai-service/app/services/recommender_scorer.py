@@ -5,7 +5,6 @@ Multi-factor scoring: skill match + workload + performance + recency.
 from __future__ import annotations
 
 import math
-from typing import Optional
 
 from .recommender_models import (
     TechnicianProfile,

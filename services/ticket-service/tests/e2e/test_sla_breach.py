@@ -7,7 +7,7 @@ from httpx import AsyncClient
 from sqlalchemy import text
 
 
-@pytest.mark.asyncio
+@pytest.mark.asyncio(loop_scope="session")
 async def test_sla_breach_detection(
     e2e_client: AsyncClient,
     db_engine,
@@ -62,7 +62,7 @@ async def test_sla_breach_detection(
     )
 
 
-@pytest.mark.asyncio
+@pytest.mark.asyncio(loop_scope="session")
 async def test_sla_breach_emits_outbox_event(
     e2e_client: AsyncClient,
     db_engine,
@@ -109,7 +109,7 @@ async def test_sla_breach_emits_outbox_event(
     assert len(events) >= 1
 
 
-@pytest.mark.asyncio
+@pytest.mark.asyncio(loop_scope="session")
 async def test_no_breach_for_future_deadline(
     e2e_client: AsyncClient,
     db_engine,

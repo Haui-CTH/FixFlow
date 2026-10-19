@@ -151,7 +151,6 @@ def rule_based_classify(
     # Priority
     prio_scores = _score(text, PRIORITY_RULES)
     top_prio, top_prio_score = prio_scores[0]
-    second_prio_score = prio_scores[1][1] if len(prio_scores) > 1 else 0
 
     # Negation detection → giảm priority
     has_negation = _detect_negation(text)
@@ -172,7 +171,8 @@ def rule_based_classify(
         category = top_cat
 
     if top_prio_score == 0:
-        priority = "medium"
+        # Không có tín hiệu khẩn cấp: yêu cầu cấp phát/đề nghị thường ưu tiên thấp, còn lại trung bình
+        priority = "low" if category == "service_request" else "medium"
     else:
         priority = top_prio
 

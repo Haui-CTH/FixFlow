@@ -123,3 +123,13 @@ async def db_session():
         finally:
             await session.close()
 
+
+
+@pytest.fixture(autouse=True)
+def _dispose_engine_after_test():
+    """Mỗi test chạy trong event loop riêng: bỏ pool kết nối (không đóng, vì loop cũ đã đóng) để test sau không dùng lại kết nối của loop khác.
+    Fixture đồng bộ nên dùng được cả với e2e (loop dùng chung)."""
+    yield
+    from app.db.database import engine
+
+    engine.sync_engine.dispose(close=False)

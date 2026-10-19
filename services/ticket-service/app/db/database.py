@@ -45,5 +45,5 @@ async def get_db() -> AsyncSession:
 
 
 async def init_db():
-    async with engine.begin() as conn:
+    async with engine.begin():
         pass  # Tables already created via init.sql

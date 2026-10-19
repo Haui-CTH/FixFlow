@@ -28,7 +28,10 @@ class TestOutboxMetrics:
         snap = m.snapshot()
         assert snap["total_failed"] == 2
         assert snap["consecutive_failures"] == 2
-        assert snap["circuit_open"] is True
+        assert snap["circuit_open"] is False  # mới 2/5 lần thất bại liên tiếp
+        for _ in range(3):
+            m.record_failed("HTTP 500")
+        assert m.snapshot()["circuit_open"] is True
 
     def test_record_retried(self):
         m = get_metrics()

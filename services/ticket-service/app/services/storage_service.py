@@ -2,7 +2,6 @@
 # DX-FSM Ticket Service – Storage Service
 # Hỗ trợ 2 backend: MinIO (production) và local filesystem (khi MinIO disabled).
 
-import os
 import uuid
 from io import BytesIO
 from pathlib import Path
@@ -29,16 +28,33 @@ def get_minio_client() -> Optional[Minio]:
         return None
 
 
+_MINIO_CHECK: tuple[float, bool] = (0.0, False)  # (thời điểm kiểm tra, kết quả)
+_MINIO_CHECK_TTL = 60.0
+
+
 def _minio_reachable(timeout: float = 1.0) -> bool:
-    """Kiểm tra nhanh MinIO có kết nối được không (tránh retry rất lâu của minio-py khi service tắt)."""
+    """Kiểm tra nhanh MinIO có kết nối được không (tránh retry rất lâu của minio-py khi service tắt).
+
+    Kết quả được nhớ 60 giây: khi MinIO tắt, phân giải DNS thất bại mất ~4 giây mỗi lần,
+    không nên trả giá đó cho từng lần upload.
+    """
     import socket
+    import time
+
+    global _MINIO_CHECK
+    now = time.monotonic()
+    checked_at, ok = _MINIO_CHECK
+    if checked_at and now - checked_at < _MINIO_CHECK_TTL:
+        return ok
 
     host, _, port = settings.minio_endpoint.partition(":")
     try:
         with socket.create_connection((host, int(port or 9000)), timeout=timeout):
-            return True
+            ok = True
     except OSError:
-        return False
+        ok = False
+    _MINIO_CHECK = (now, ok)
+    return ok
 
 
 def _minio_upload(data: bytes, object_name: str, content_type: str) -> str:

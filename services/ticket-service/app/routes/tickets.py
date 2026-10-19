@@ -1,9 +1,8 @@
 # SPDX-License-Identifier: Apache-2.0
 # DX-FSM Ticket Service – Ticket Routes
 
-import httpx
 from datetime import datetime, timezone
-from fastapi import APIRouter, Depends, HTTPException, BackgroundTasks
+from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select, func, text
 from typing import Optional
@@ -17,7 +16,7 @@ from app.models.user import User
 from app.config import get_settings
 from app.core.security import get_current_user, TokenUser
 from app.services.n8n_dispatcher import dispatch_ticket_created
-from app.services.ai_classifier import classify_ticket, AIClassifyResponse
+from app.services.ai_classifier import classify_ticket
 
 settings = get_settings()
 router = APIRouter()

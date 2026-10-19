@@ -9,6 +9,7 @@
         "options": {}
       },
       "id": "webhook-ticket-created",
+      "webhookId": "ticket-created",
       "name": "Webhook: Ticket Created",
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 1,
