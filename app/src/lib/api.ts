@@ -59,18 +59,36 @@ export interface Ticket {
   status: string;
   priority: string;
   category: string;
+  customer_id?: string;
   customer_name?: string;
-  technician_name?: string;
+  technician_id?: string | null;
+  technician_name?: string | null;
   created_at?: string;
-  sla_deadline?: string;
+  sla_deadline?: string | null;
+}
+
+export interface TicketListParams {
+  status?: string;
+  priority?: string;
+  category?: string;
+  q?: string;
+  mine?: boolean;
+  limit?: number;
+  offset?: number;
+  sort_by?: string;
+  sort_dir?: string;
+}
+
+export interface TicketListResponse {
+  items: Ticket[];
+  total: number;
+  page_limit: number;
+  page_offset: number;
 }
 
 export const ticketApi = {
-  // Backend returns { items, total, ... }; callers only need the array for now
-  list: (params?: { status?: string; priority?: string; category?: string }) =>
-    api
-      .get<{ items: Ticket[]; total: number }>('/tickets', { params })
-      .then((r) => ({ ...r, data: r.data.items })),
+  list: (params?: TicketListParams) =>
+    api.get<TicketListResponse>('/tickets', { params }).then((r) => r.data),
 
   get: (id: string) =>
     api.get<Ticket>(`/tickets/${id}`),

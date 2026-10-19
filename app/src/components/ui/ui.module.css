@@ -145,3 +145,25 @@ textarea.control { min-height: 96px; resize: vertical; }
 }
 .modalHead { display: flex; align-items: center; justify-content: space-between; gap: var(--space-3); margin-bottom: var(--space-4); }
 .modalTitle { font-size: 1.125rem; }
+
+/* ─── Pagination ─── */
+.pagination {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  margin-top: var(--space-4);
+}
+.pageInfo { color: var(--text-muted); font-size: 0.875rem; }
+.pageBtns { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2); }
+.pageSize { display: flex; align-items: center; gap: var(--space-2); font-size: 0.875rem; color: var(--text-muted); }
+.pageSize select {
+  min-height: 36px;
+  padding: 0 var(--space-2);
+  background: var(--surface);
+  color: var(--text);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-md);
+  font: inherit;
+}

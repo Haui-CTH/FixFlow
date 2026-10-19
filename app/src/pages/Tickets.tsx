@@ -1,98 +1,169 @@
 // SPDX-License-Identifier: Apache-2.0
-// DX-FSM Tickets Page (F5.5: responsive table + card list)
+// DX-FSM Tickets Page (GĐ 03): tìm/lọc/sắp xếp/phân trang phía server, trạng thái lưu trên URL.
 
-import { useQuery } from '@tanstack/react-query';
-import { Link } from 'react-router-dom';
+import { keepPreviousData, useQuery } from '@tanstack/react-query';
+import { Plus, SearchX, Ticket as TicketIcon } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { Link, useSearchParams } from 'react-router-dom';
+import { SkeletonRows } from '../components/ui/Skeleton';
+import { Button } from '../components/ui/Button';
+import { PageHeader } from '../components/ui/Card';
+import { Pagination } from '../components/ui/Pagination';
+import { EmptyState, ErrorState } from '../components/ui/States';
+import { TicketCard } from '../components/Tickets/TicketCard';
+import { TicketFilters, type Filters } from '../components/Tickets/TicketFilters';
+import { TicketTable, type Sort } from '../components/Tickets/TicketTable';
+import styles from '../components/Tickets/Tickets.module.css';
+import { useDebounce } from '../hooks/useDebounce';
+import { useRole } from '../hooks/useRole';
 import { ticketApi } from '../lib/api';
-import { PriorityBadge, StatusBadge } from '../components/ui/Badge';
-import { formatDate } from '../lib/format';
-import styles from './Tickets.module.css';
 
-export default function Tickets() {
-  const { data: tickets = [], isLoading } = useQuery({
-    queryKey: ['tickets'],
-    queryFn: () => ticketApi.list().then((r) => r.data),
+const DEFAULT_SORT = 'created_at:desc';
+const FILTER_KEYS = ['q', 'status', 'priority', 'category'] as const;
+
+export default function Tickets({ mine = false }: { mine?: boolean }) {
+  const [params, setParams] = useSearchParams();
+  const role = useRole();
+
+  const filters: Filters = {
+    q: params.get('q') ?? '',
+    status: params.get('status') ?? '',
+    priority: params.get('priority') ?? '',
+    category: params.get('category') ?? '',
+  };
+  const sortRaw = params.get('sort') ?? DEFAULT_SORT;
+  const [sortBy, sortDirRaw] = sortRaw.split(':');
+  const sort: Sort = { by: sortBy, dir: sortDirRaw === 'asc' ? 'asc' : 'desc' };
+  const size = Number(params.get('size')) || 20;
+  const page = Math.max(1, Number(params.get('page')) || 1);
+
+  const update = (patch: Record<string, string>, keepPage = false) =>
+    setParams(
+      (prev) => {
+        const next = new URLSearchParams(prev);
+        for (const [k, v] of Object.entries(patch)) {
+          if (v) next.set(k, v);
+          else next.delete(k);
+        }
+        if (!keepPage) next.delete('page');
+        return next;
+      },
+      { replace: true },
+    );
+
+  // Ô tìm kiếm: gõ cục bộ, đẩy lên URL sau 300ms
+  const [qInput, setQInput] = useState(filters.q);
+  const qDebounced = useDebounce(qInput, 300);
+  useEffect(() => {
+    if (qDebounced !== filters.q) update({ q: qDebounced });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [qDebounced]);
+
+  // Đồng hồ cho SLA, cập nhật mỗi phút
+  const [now, setNow] = useState(() => Date.now());
+  useEffect(() => {
+    const t = setInterval(() => setNow(Date.now()), 60_000);
+    return () => clearInterval(t);
+  }, []);
+
+  const { data, isLoading, isError, refetch } = useQuery({
+    queryKey: ['tickets', mine, filters, sort, page, size],
+    queryFn: () =>
+      ticketApi.list({
+        mine: mine || undefined,
+        q: filters.q || undefined,
+        status: filters.status || undefined,
+        priority: filters.priority || undefined,
+        category: filters.category || undefined,
+        sort_by: sort.by,
+        sort_dir: sort.dir,
+        limit: size,
+        offset: (page - 1) * size,
+      }),
+    placeholderData: keepPreviousData,
+    refetchInterval: 60_000,
+    staleTime: 30_000,
   });
 
+  const tickets = data?.items ?? [];
+  const total = data?.total ?? 0;
+  const hasFilters = FILTER_KEYS.some((k) => filters[k]);
+  const canCreate = role === 'customer' || role === 'manager' || role === 'admin';
+  const clearAll = () => {
+    setQInput('');
+    update({ q: '', status: '', priority: '', category: '' });
+  };
+  const toggleSort = (by: string) =>
+    update({ sort: `${by}:${sort.by === by && sort.dir === 'desc' ? 'asc' : 'desc'}` });
+
+  const createBtn = canCreate && (
+    <Link to="/tickets/new" className={styles.createLink}>
+      <Plus size={18} aria-hidden="true" />
+      Tạo ticket
+    </Link>
+  );
+
+  let body;
+  if (isError && !data) {
+    body = <ErrorState title="Không tải được danh sách ticket" message="Kiểm tra kết nối rồi thử lại." onRetry={() => refetch()} />;
+  } else if (isLoading) {
+    body = <SkeletonRows rows={8} />;
+  } else if (tickets.length === 0) {
+    body = hasFilters ? (
+      <EmptyState
+        icon={SearchX}
+        title="Không có ticket khớp bộ lọc"
+        description="Thử đổi từ khoá hoặc bỏ bớt bộ lọc."
+        action={
+          <Button variant="secondary" onClick={clearAll}>
+            Xoá lọc
+          </Button>
+        }
+      />
+    ) : (
+      <EmptyState
+        icon={TicketIcon}
+        title="Chưa có ticket nào"
+        description={canCreate ? 'Hãy tạo ticket đầu tiên.' : undefined}
+        action={canCreate ? createBtn : undefined}
+      />
+    );
+  } else {
+    body = (
+      <>
+        <div className={styles.desktopOnly}>
+          <TicketTable tickets={tickets} sort={sort} onSort={toggleSort} now={now} />
+        </div>
+        <div className={styles.cardList}>
+          {tickets.map((t) => (
+            <TicketCard key={t.id} ticket={t} now={now} />
+          ))}
+        </div>
+        <Pagination
+          page={page}
+          size={size}
+          total={total}
+          onPage={(p) => update({ page: String(p) }, true)}
+          onSize={(s) => update({ size: s === 20 ? '' : String(s) })}
+        />
+      </>
+    );
+  }
+
   return (
-    <div className={styles.page}>
-      <div className={styles.header}>
-        <h1 className={styles.title}>Tickets</h1>
-        <Link to="/tickets/new" className={styles.createBtn}>
-          + Tạo Ticket
-        </Link>
-      </div>
-
-      {isLoading ? (
-        <div className={styles.loading}>Đang tải…</div>
-      ) : tickets.length === 0 ? (
-        <div className={styles.empty}>Chưa có ticket nào</div>
-      ) : (
-        <>
-          {/* Desktop table (>=769px) */}
-          <div className={styles.tableWrap}>
-            <table className={styles.table}>
-              <thead>
-                <tr>
-                  <th>Mã</th>
-                  <th>Tiêu đề</th>
-                  <th>Trạng thái</th>
-                  <th>Ưu tiên</th>
-                  <th>Ngày tạo</th>
-                </tr>
-              </thead>
-              <tbody>
-                {tickets.map((ticket) => {
-                  return (
-                    <tr key={ticket.id}>
-                      <td>
-                        <Link to={`/tickets/${ticket.id}`} className={styles.code}>
-                          {ticket.ticket_number}
-                        </Link>
-                      </td>
-                      <td className={styles.titleCell}>{ticket.title}</td>
-                      <td>
-                        <StatusBadge status={ticket.status} />
-                      </td>
-                      <td>
-                        <PriorityBadge priority={ticket.priority} />
-                      </td>
-                      <td className={styles.dateText}>
-                        {formatDate(ticket.created_at)}
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
-          </div>
-
-          {/* Mobile card list (<=768px) */}
-          <div className={styles.cardList}>
-            {tickets.map((ticket) => {
-              return (
-                <Link
-                  to={`/tickets/${ticket.id}`}
-                  key={ticket.id}
-                  className={styles.card}
-                >
-                  <div className={styles.cardTop}>
-                    <span className={styles.cardCode}>{ticket.ticket_number}</span>
-                    <StatusBadge status={ticket.status} />
-                  </div>
-                  <p className={styles.cardTitle}>{ticket.title}</p>
-                  <div className={styles.cardBottom}>
-                    <PriorityBadge priority={ticket.priority} />
-                    <span>
-                      {formatDate(ticket.created_at)}
-                    </span>
-                  </div>
-                </Link>
-              );
-            })}
-          </div>
-        </>
-      )}
+    <div>
+      <PageHeader title={`${mine ? 'Ticket của tôi' : 'Tất cả ticket'}${data ? ` (${total})` : ''}`} actions={createBtn || undefined} />
+      <TicketFilters
+        filters={{ ...filters, q: qInput }}
+        sort={sortRaw}
+        onChange={(patch) => {
+          if ('q' in patch) setQInput(patch.q ?? '');
+          else update(patch as Record<string, string>);
+        }}
+        onSort={(v) => update({ sort: v === DEFAULT_SORT ? '' : v })}
+        onClear={clearAll}
+      />
+      {body}
     </div>
   );
 }

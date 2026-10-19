@@ -35,13 +35,13 @@ describe('Layout', () => {
   it('renders nav items for the role (technician: no dashboard)', () => {
     setup();
     expect(screen.queryByRole('link', { name: 'Tổng quan' })).not.toBeInTheDocument();
-    expect(screen.getByRole('link', { name: 'Ticket' })).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: 'Ticket của tôi' })).toBeInTheDocument();
     expect(screen.getByRole('link', { name: 'Thông báo' })).toBeInTheDocument();
   });
 
-  it('marks the active nav item for child routes', () => {
-    setup('/tickets/123');
-    expect(screen.getByRole('link', { name: 'Ticket' })).toHaveAttribute('aria-current', 'page');
+  it('marks the active nav item', () => {
+    setup('/my-tickets');
+    expect(screen.getByRole('link', { name: 'Ticket của tôi' })).toHaveAttribute('aria-current', 'page');
   });
 
   it('has a skip link and a focusable main', () => {
