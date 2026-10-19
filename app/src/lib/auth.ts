@@ -26,8 +26,13 @@ export const login = () => keycloak.login({ redirectUri: window.location.origin 
 export const logout = () => keycloak.logout();
 
 export const getToken = () => keycloak.token;
+export const getAccessToken = getToken;
 
-const ROLES = ['admin', 'manager', 'technician', 'customer'];
+export const ROLES = ['admin', 'manager', 'technician', 'customer'] as const;
+export type Role = (typeof ROLES)[number];
+
+// Vai trò chính = vai trò quyền cao nhất trong realm_access.roles; mặc định customer
+export const pickRole = (roles: string[] = []): Role => ROLES.find((r) => roles.includes(r)) ?? 'customer';
 
 export const getCurrentUser = () => {
   const t = keycloak.tokenParsed as
@@ -37,9 +42,13 @@ export const getCurrentUser = () => {
   return {
     username: t?.preferred_username ?? '',
     email: t?.email ?? '',
-    role: ROLES.find((r) => roles.includes(r)) ?? 'customer',
+    role: pickRole(roles),
   };
 };
+
+export const getRoles = () => pickRole(
+  (keycloak.tokenParsed as { realm_access?: { roles?: string[] } } | undefined)?.realm_access?.roles,
+);
 
 export const getUserInfo = () => keycloak.loadUserInfo();
 

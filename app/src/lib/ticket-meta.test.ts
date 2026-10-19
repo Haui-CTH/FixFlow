@@ -12,8 +12,8 @@ describe('ticket-meta', () => {
     expect(statusMeta('weird')).toEqual({ label: 'weird', tone: 'muted' });
     expect(priorityMeta(null).label).toBe('-');
   });
-  it('has no legacy "critical" priority', () => {
-    expect(priorityMeta('critical').tone).toBe('muted');
+  it('treats legacy "critical" as urgent', () => {
+    expect(priorityMeta('critical')).toEqual(priorityMeta('urgent'));
   });
 });
 

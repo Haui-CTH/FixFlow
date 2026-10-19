@@ -35,12 +35,14 @@ export const STATUS_META: Record<string, Meta> = {
   sla_breached: { label: 'Quá SLA', tone: 'danger', icon: AlarmClock },
 };
 
-// Chuẩn hoá theo BE: 'urgent' (không phải 'critical')
+// Chuẩn hoá theo BE: 'urgent'. Dữ liệu seed cũ còn 'critical' -> cùng nhãn với urgent.
+const URGENT: Meta = { label: 'Khẩn cấp', tone: 'danger', icon: Flame };
 export const PRIORITY_META: Record<string, Meta> = {
   low: { label: 'Thấp', tone: 'success', icon: ArrowDown },
   medium: { label: 'Trung bình', tone: 'info', icon: Minus },
   high: { label: 'Cao', tone: 'warning', icon: ArrowUp },
-  urgent: { label: 'Khẩn cấp', tone: 'danger', icon: Flame },
+  urgent: URGENT,
+  critical: URGENT,
 };
 
 export const CATEGORY_META: Record<string, Meta> = {
