@@ -155,37 +155,3 @@ function mockListNotifications(
     offset,
   });
 }
-
-// ─── Helper functions (exported for testing) ──────────────
-
-export function formatRelativeTime(iso: string): string {
-  const then = new Date(iso).getTime();
-  const now = Date.now();
-  const diffSec = Math.floor((now - then) / 1000);
-
-  if (diffSec < 60) return `${diffSec}s ago`;
-  if (diffSec < 3600) return `${Math.floor(diffSec / 60)}m ago`;
-  if (diffSec < 86400) return `${Math.floor(diffSec / 3600)}h ago`;
-  if (diffSec < 7 * 86400) return `${Math.floor(diffSec / 86400)}d ago`;
-  return new Date(iso).toLocaleDateString();
-}
-
-export function getTypeIcon(type: NotificationType): string {
-  switch (type) {
-    case 'success': return '✓';
-    case 'warning': return '!';
-    case 'error': return '✕';
-    case 'info':
-    default: return 'i';
-  }
-}
-
-export function getTypeColor(type: NotificationType): string {
-  switch (type) {
-    case 'success': return '#10b981';
-    case 'warning': return '#f59e0b';
-    case 'error': return '#ef4444';
-    case 'info':
-    default: return '#3b82f6';
-  }
-}

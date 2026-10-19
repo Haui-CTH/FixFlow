@@ -4,6 +4,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
 import { logout } from '../lib/auth';
+import { pageTitle } from '../lib/nav';
 import { useAuthStore } from '../lib/store';
 import { ErrorBoundary } from './ErrorBoundary';
 import { NotificationBell } from './NotificationBell';
@@ -44,8 +45,9 @@ export default function Layout() {
       return !c;
     });
 
-  // Đổi route: đóng drawer, chuyển focus vào main (không ở lần render đầu)
+  // Đổi route: đóng drawer, cập nhật tiêu đề tab, chuyển focus vào main (không ở lần render đầu)
   useEffect(() => {
+    document.title = `${pageTitle(pathname)} — DX-FSM`;
     setSidebarOpen(false);
     if (firstRender.current) firstRender.current = false;
     else mainRef.current?.focus();

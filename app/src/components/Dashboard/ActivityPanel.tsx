@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: Apache-2.0
 // DX-FSM Dashboard – Hoạt động 24h (B6.7): 3 số + icon.
 // ponytail: chưa có sparkline vì BE chưa trả chuỗi theo giờ/ngày.
 

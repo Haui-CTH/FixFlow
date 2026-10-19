@@ -101,7 +101,7 @@ describe('HistoryTimeline', () => {
     await waitFor(() => {
       expect(screen.getByText(/Network error/)).toBeInTheDocument();
     });
-    expect(screen.getByRole('button', { name: /Retry/ })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /Thử lại/ })).toBeInTheDocument();
   });
 
   it('orders events newest first', async () => {

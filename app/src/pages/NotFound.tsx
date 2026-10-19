@@ -7,6 +7,7 @@ export default function NotFound() {
   return (
     <EmptyState
       icon={SearchX}
+      headingLevel={1}
       title="Không tìm thấy trang"
       description="Đường dẫn không tồn tại hoặc đã được di chuyển."
       action={<Link to="/">Về trang chủ</Link>}

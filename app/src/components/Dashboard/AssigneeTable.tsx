@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: Apache-2.0
 // DX-FSM Dashboard – Top assignees table (B6.9): cột sắp xếp được, avatar, thanh tải; mobile -> card (CSS)
 import { ArrowDown, ArrowUp, ChevronsUpDown } from 'lucide-react';
 import { useState } from 'react';
@@ -13,9 +14,9 @@ const value = (a: TopAssignee, k: Key) =>
   k === 'active' ? a.active_tickets : k === 'resolved' ? a.resolved_tickets : a.active_tickets + a.resolved_tickets;
 
 const COLS: { key: Key; label: string }[] = [
-  { key: 'active', label: 'Active' },
-  { key: 'resolved', label: 'Resolved' },
-  { key: 'total', label: 'Total' },
+  { key: 'active', label: 'Đang xử lý' },
+  { key: 'resolved', label: 'Đã giải quyết' },
+  { key: 'total', label: 'Tổng' },
 ];
 
 export function AssigneeTable({ assignees }: AssigneeTableProps) {
@@ -24,8 +25,8 @@ export function AssigneeTable({ assignees }: AssigneeTableProps) {
   if (assignees.length === 0) {
     return (
       <div className={styles.section}>
-        <h2 className={styles.sectionTitle}>Top Assignees</h2>
-        <div className={styles.empty}>No assignees yet</div>
+        <h2 className={styles.sectionTitle}>Kỹ thuật viên nổi bật</h2>
+        <div className={styles.empty}>Chưa có kỹ thuật viên</div>
       </div>
     );
   }
@@ -39,11 +40,11 @@ export function AssigneeTable({ assignees }: AssigneeTableProps) {
 
   return (
     <div className={styles.section}>
-      <h2 className={styles.sectionTitle}>Top Assignees (last {assignees.length})</h2>
+      <h2 className={styles.sectionTitle}>Kỹ thuật viên nổi bật ({assignees.length} người)</h2>
       <table className={styles.assigneeTable}>
         <thead>
           <tr>
-            <th scope="col">Technician</th>
+            <th scope="col">Kỹ thuật viên</th>
             {COLS.map((c) => {
               const active = sort?.key === c.key;
               const Icon = !active ? ChevronsUpDown : sort!.dir === 'asc' ? ArrowUp : ArrowDown;
@@ -83,13 +84,13 @@ export function AssigneeTable({ assignees }: AssigneeTableProps) {
                     </div>
                   </div>
                 </td>
-                <td className={styles.assigneeCount} data-label="Active">
+                <td className={styles.assigneeCount} data-label="Đang xử lý">
                   <span className={a.active_tickets > 0 ? styles.numActive : styles.numZero}>{a.active_tickets}</span>
                 </td>
-                <td className={styles.assigneeCount} data-label="Resolved">
+                <td className={styles.assigneeCount} data-label="Đã giải quyết">
                   <span className={a.resolved_tickets > 0 ? styles.numResolved : styles.numZero}>{a.resolved_tickets}</span>
                 </td>
-                <td className={styles.assigneeCount} data-label="Total">
+                <td className={styles.assigneeCount} data-label="Tổng">
                   {total}
                 </td>
               </tr>

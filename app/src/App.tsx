@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: Apache-2.0
 import { lazy, Suspense } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Layout from './components/Layout';

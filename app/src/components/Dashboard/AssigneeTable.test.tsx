@@ -26,7 +26,7 @@ const assignees: TopAssignee[] = [
 describe('AssigneeTable', () => {
   it('renders section title', () => {
     render(<AssigneeTable assignees={assignees} />);
-    expect(screen.getByText(/Top Assignees/)).toBeInTheDocument();
+    expect(screen.getByText(/Kỹ thuật viên nổi bật/)).toBeInTheDocument();
   });
 
   it('renders technician names', () => {
@@ -62,7 +62,7 @@ describe('AssigneeTable', () => {
 
   it('shows empty state when no assignees', () => {
     render(<AssigneeTable assignees={[]} />);
-    expect(screen.getByText('No assignees yet')).toBeInTheDocument();
+    expect(screen.getByText('Chưa có kỹ thuật viên')).toBeInTheDocument();
   });
 
   it('falls back to username when no full_name', () => {

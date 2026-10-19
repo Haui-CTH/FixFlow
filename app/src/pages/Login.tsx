@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: Apache-2.0
 // DX-FSM Login Page (GĐ 02): 2 cột desktop, 1 cột mobile
 import { ClipboardCheck, ShieldCheck, Zap } from 'lucide-react';
 import { useEffect, useState } from 'react';
@@ -18,6 +19,10 @@ export default function Login() {
   const [ready, setReady] = useState(false);
   const [redirecting, setRedirecting] = useState(false);
 
+  useEffect(() => {
+    document.title = 'Đăng nhập — DX-FSM';
+  }, []);
+
   // Keycloak must be initialised before login(); already signed in -> go to app
   useEffect(() => {
     initKeycloak()
@@ -35,7 +40,7 @@ export default function Login() {
           <img src="/logo.svg" alt="" width={40} height={40} />
           <span>DX-FSM</span>
         </div>
-        <h2 className={styles.tagline}>Quản lý dịch vụ thực địa</h2>
+        <p className={styles.tagline}>Quản lý dịch vụ thực địa</p>
         <ul className={styles.points}>
           {POINTS.map(({ icon: Icon, text }) => (
             <li key={text}>

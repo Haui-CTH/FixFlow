@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: Apache-2.0
 // DX-FSM Dashboard – Distribution bar row (B6.5): nhãn + giá trị + phần trăm luôn hiển thị
 import styles from '../../pages/Dashboard.module.css';
 

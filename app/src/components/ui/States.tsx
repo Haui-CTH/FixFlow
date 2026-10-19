@@ -11,16 +11,19 @@ export function EmptyState({
   title,
   description,
   action,
+  headingLevel = 2,
 }: {
   icon?: LucideIcon;
   title: string;
   description?: string;
   action?: ReactNode;
+  headingLevel?: 1 | 2;
 }) {
+  const H = `h${headingLevel}` as 'h1' | 'h2';
   return (
     <div className={styles.state}>
       <Icon size={40} aria-hidden="true" />
-      <h2 className={styles.stateTitle}>{title}</h2>
+      <H className={styles.stateTitle}>{title}</H>
       {description && <p>{description}</p>}
       {action}
     </div>
@@ -31,15 +34,18 @@ export function ErrorState({
   title = 'Đã xảy ra lỗi',
   message,
   onRetry,
+  headingLevel = 2,
 }: {
   title?: string;
   message?: string;
   onRetry?: () => void;
+  headingLevel?: 1 | 2;
 }) {
+  const H = `h${headingLevel}` as 'h1' | 'h2';
   return (
     <div className={`${styles.state} ${styles.errorState}`} role="alert">
       <AlertTriangle size={40} aria-hidden="true" />
-      <h2 className={styles.stateTitle}>{title}</h2>
+      <H className={styles.stateTitle}>{title}</H>
       {message && <p>{message}</p>}
       {onRetry && (
         <Button variant="secondary" onClick={onRetry}>

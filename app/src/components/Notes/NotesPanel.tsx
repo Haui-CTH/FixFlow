@@ -91,13 +91,13 @@ export function NotesPanel({ ticketId }: NotesPanelProps) {
   }
 
   return (
-    <section className={styles.panel} aria-label="Internal notes">
+    <section className={styles.panel} aria-label="Ghi chú nội bộ">
       {/* Header */}
       <header className={styles.header}>
         <h2 className={styles.title}>
           <span className={styles.titleIcon} aria-hidden="true">📝</span>
-          Internal notes
-          <span className={styles.staffBadge}>Staff only</span>
+          Ghi chú nội bộ
+          <span className={styles.staffBadge}>Chỉ nhân viên</span>
           <span className={styles.count}>({notes.length})</span>
         </h2>
       </header>
@@ -128,8 +128,8 @@ export function NotesPanel({ ticketId }: NotesPanelProps) {
 
       {isError && (
         <div className={styles.errorBox} role="alert">
-          <span>Lỗi tải notes: {(error as Error)?.message || 'Unknown'}</span>
-          <button onClick={() => refetch()}>Retry</button>
+          <span>Lỗi tải notes: {(error as Error)?.message || 'Không rõ'}</span>
+          <button onClick={() => refetch()}>Thử lại</button>
         </div>
       )}
 

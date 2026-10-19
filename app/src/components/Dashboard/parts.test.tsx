@@ -56,11 +56,11 @@ describe('AssigneeTable sorting', () => {
   it('sorts by a column and sets aria-sort', () => {
     render(<AssigneeTable assignees={rows} />);
     expect(names()).toEqual(['An', 'Bình']);
-    fireEvent.click(screen.getByRole('button', { name: /Active/ }));
+    fireEvent.click(screen.getByRole('button', { name: /Đang xử lý/ }));
     expect(names()).toEqual(['Bình', 'An']);
-    expect(screen.getByRole('columnheader', { name: /Active/ })).toHaveAttribute('aria-sort', 'descending');
-    fireEvent.click(screen.getByRole('button', { name: /Active/ }));
+    expect(screen.getByRole('columnheader', { name: /Đang xử lý/ })).toHaveAttribute('aria-sort', 'descending');
+    fireEvent.click(screen.getByRole('button', { name: /Đang xử lý/ }));
     expect(names()).toEqual(['An', 'Bình']);
-    expect(screen.getByRole('columnheader', { name: /Active/ })).toHaveAttribute('aria-sort', 'ascending');
+    expect(screen.getByRole('columnheader', { name: /Đang xử lý/ })).toHaveAttribute('aria-sort', 'ascending');
   });
 });

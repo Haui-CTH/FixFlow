@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: Apache-2.0
 // DX-FSM Dashboard – SLA panel (B6.6): gauge vòng SVG + ngưỡng chữ (Tốt/Chú ý/Nguy cấp)
 import { AlertTriangle, CheckCircle2, XOctagon } from 'lucide-react';
 import styles from '../../pages/Dashboard.module.css';
@@ -34,7 +35,7 @@ export function SLAPanel({ sla }: SLAPanelProps) {
 
   return (
     <div className={styles.section}>
-      <h2 className={styles.sectionTitle}>SLA Performance</h2>
+      <h2 className={styles.sectionTitle}>Hiệu suất SLA</h2>
 
       <div className={styles.slaTop}>
         <div
@@ -61,7 +62,7 @@ export function SLAPanel({ sla }: SLAPanelProps) {
           </div>
         </div>
         <div>
-          <div className={styles.statHint}>breach rate</div>
+          <div className={styles.statHint}>tỉ lệ vi phạm</div>
           <div className={`${styles.slaState} ${L.color}`}>
             <Icon size={16} aria-hidden="true" />
             {L.text}
@@ -71,23 +72,23 @@ export function SLAPanel({ sla }: SLAPanelProps) {
 
       <div className={styles.slaRows}>
         <div className={styles.slaRow}>
-          <span className={styles.slaLabel}>Active tickets</span>
+          <span className={styles.slaLabel}>Ticket đang xử lý</span>
           <span className={styles.slaValue}>{sla.total_active}</span>
         </div>
         <div className={styles.slaRow}>
-          <span className={styles.slaLabel}>On time</span>
+          <span className={styles.slaLabel}>Đúng hạn</span>
           <span className={`${styles.slaValue} ${styles.slaGood}`}>{sla.on_time}</span>
         </div>
         <div className={styles.slaRow}>
-          <span className={styles.slaLabel}>Breached (active)</span>
+          <span className={styles.slaLabel}>Quá hạn (đang xử lý)</span>
           <span className={`${styles.slaValue} ${styles.slaBad}`}>{sla.breached}</span>
         </div>
         <div className={styles.slaRow}>
-          <span className={styles.slaLabel}>SLA met (resolved/closed)</span>
+          <span className={styles.slaLabel}>Đạt SLA (đã giải quyết/đóng)</span>
           <span className={`${styles.slaValue} ${styles.slaGood}`}>{sla.met}</span>
         </div>
         <div className={styles.slaRow}>
-          <span className={styles.slaLabel}>SLA not met</span>
+          <span className={styles.slaLabel}>Không đạt SLA</span>
           <span className={`${styles.slaValue} ${styles.slaBad}`}>{sla.not_met}</span>
         </div>
       </div>

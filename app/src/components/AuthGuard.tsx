@@ -1,9 +1,11 @@
+// SPDX-License-Identifier: Apache-2.0
 // DX-FSM Auth Guard
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import keycloak, { initKeycloak, getCurrentUser } from '../lib/auth';
 import { useAuthStore } from '../lib/store';
 import { SkeletonBlock } from './ui/Skeleton';
+import styles from './ui/ui.module.css';
 import { ErrorState } from './ui/States';
 
 export function AuthGuard({ children }: { children: React.ReactNode }) {
@@ -27,6 +29,7 @@ export function AuthGuard({ children }: { children: React.ReactNode }) {
   if (state === 'error') {
     return (
       <ErrorState
+        headingLevel={1}
         title="Không kết nối được máy chủ đăng nhập"
         message="Kiểm tra mạng hoặc dịch vụ Keycloak rồi thử lại."
         onRetry={() => window.location.reload()}
@@ -35,7 +38,7 @@ export function AuthGuard({ children }: { children: React.ReactNode }) {
   }
   if (state === 'loading') {
     return (
-      <div style={{ padding: 'var(--space-6)', maxWidth: 480, margin: '0 auto' }} role="status" aria-label="Đang tải">
+      <div className={styles.loading} role="status" aria-label="Đang tải">
         <SkeletonBlock height={240} />
       </div>
     );
