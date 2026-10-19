@@ -7,6 +7,38 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Frontend (UI overhaul, phases 01–10)
+
+#### Added
+- **Design system**: token ngữ nghĩa light/dark, primitives `components/ui/*` (Button, Badge, Card, Field, Modal, Tabs, Pagination, FileDropzone, ...), font Plus Jakarta Sans, icon lucide.
+- **Auth & app shell**: SSO check-sso + silent-check-sso, token tự làm mới, `RoleGuard`, trang Login 2 cột, Sidebar thu gọn / drawer mobile, TopBar (chuông, đổi theme, đổi ngôn ngữ, menu người dùng), skip link, `document.title` theo trang.
+- **Ticket list**: tìm/lọc/sắp xếp/phân trang phía server, trạng thái trên URL, bảng ↔ card, đếm SLA, "Ticket của tôi".
+- **Create ticket**: form `react-hook-form`, gợi ý AI, đính kèm kéo-thả, nháp `sessionStorage`, cảnh báo rời trang.
+- **Ticket detail**: tabs (Tổng quan, Bình luận, Ghi chú nội bộ, Đính kèm, Lịch sử), hành động theo role, phân công KTV, thanh SLA, AI Insights.
+- **Dashboard**: KPI, gauge SLA, hoạt động 24h, Outbox, top KTV (sắp xếp được), tự làm mới 30s.
+- **Notifications**: chuông + dropdown, trang `/notifications` (nhóm theo ngày), toast khi có thông báo mới.
+- **i18n vi/en** với bộ chuyển ngôn ngữ; **a11y/responsive** (axe 0 lỗi, touch target ≥ 44px, không scroll ngang 360–1440px).
+- ESLint (`.eslintrc.cjs`), coverage v8 với ngưỡng, `app/README.md`, ảnh trong `docs/screenshots/`, `docs/demo-script.md`.
+
+#### Changed
+- `app/nginx.conf`: gzip, cache bất biến cho `assets/`, `index.html` luôn kiểm tra lại.
+- Priority chuẩn hoá theo BE/DB: `critical` (`urgent` chỉ là bí danh).
+
+#### Fixed
+- Gateway không chuyển query string tới ticket-service (lọc/phân trang/sắp xếp bị bỏ qua).
+- Upload file: header JSON mặc định của axios làm `multipart` bị gửi sai (422).
+- Upload treo khi MinIO tắt (kiểm tra kết nối 1 giây trước khi thử, rồi lưu cục bộ).
+- Đổi ngôn ngữ thất bại khi `localStorage` bị chặn.
+
+### Backend (phục vụ frontend)
+
+- `GET /users/me`, `GET /users/technicians` (trước đây là hàm giả trả rỗng).
+- `GET/PATCH/POST /notifications`, `/notifications/{id}/read`, `/notifications/mark-all-read` (ticket-service) + tự tạo thông báo khi có ticket mới / phân công / đổi trạng thái / bình luận công khai.
+- `GET /tickets?mine=true` (technician → ticket được giao, customer → ticket của mình).
+- `POST /tickets`: `customer_*` lấy từ JWT nếu bỏ trống; `category`/`priority` do người dùng chọn thắng AI; SLA tính theo ưu tiên cuối cùng.
+- `GET /tickets/{id}/attachments/{att}/download`; khách hàng chủ ticket được tự đóng ticket đã giải quyết.
+- Volume `ticket_attachments` cho file đính kèm khi MinIO tắt.
+
 ## [v1.2.0-sprint5] – 2026-01-16
 
 Sprint 5 — notification service, outbox dead-letter alerting, security hardening, E2E tests, secrets rotation, **frontend integration (Dashboard/Notifications/Notes/History/Responsive/Error UX)**.

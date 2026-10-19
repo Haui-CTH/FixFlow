@@ -377,6 +377,22 @@ nên chấp nhận cả 2 scale.
 | POST `/admin/outbox/run` | ✗ 403 | ✗ 403 | ✓ | ✓ |
 | GET `/admin/outbox` | ✗ 403 | ✗ 403 | ✓ | ✓ |
 
+## Frontend UI overhaul – thay đổi contract
+
+| Endpoint | Thay đổi |
+|---|---|
+| `GET /tickets` | Thêm `mine=true` (technician → `technician_id` của mình, customer → `customer_id` của mình; manager/admin: bỏ qua). Hỗ trợ `q`, `status`, `priority`, `category`, `limit` (≤100), `offset`, `sort_by` (`created_at`\|`priority`\|`sla_deadline`), `sort_dir`. Priority hợp lệ: `low`, `medium`, `high`, `critical`. |
+| `POST /tickets` | `customer_id`, `customer_name`, `customer_email` **tuỳ chọn** (mặc định lấy từ JWT). `category`, `priority` tuỳ chọn: nếu gửi thì giữ nguyên lựa chọn của người dùng, nếu bỏ trống dùng kết quả AI. `sla_deadline` tính theo priority cuối cùng. |
+| `PATCH /tickets/{id}` | `resolved → closed`: manager/admin **hoặc khách hàng là chủ ticket**. |
+| `GET /users/me` | `{user_id, technician_id, username, role}` — `technician_id` là `technicians.id` (khớp `tickets.technician_id`). |
+| `GET /users/technicians` | Danh sách KTV: `{id, user_id, full_name, employee_code, specialty[], current_load, max_concurrent_tickets, is_available}`; `current_load` đếm ticket `assigned/in_progress/pending`. |
+| `GET /tickets/{id}/attachments/{att_id}/download` | Tải/xem file (cần đăng nhập). Frontend gọi bằng axios `responseType: blob`. |
+| `GET /notifications?is_read=&limit=&offset=` | `{items[], total, unread_count, limit, offset}`; mỗi item: `{id, user_id, title, message, type, is_read, ticket_id, ticket_number, created_at, read_at}`. Chỉ trả thông báo của người dùng hiện tại. |
+| `PATCH /notifications/{id}/read` | `{id, is_read: true, read_at}`; 404 nếu không thuộc người dùng. |
+| `POST /notifications/mark-all-read` | `{marked: n}`. |
+
+Thông báo được tạo khi: ticket mới (manager/admin), phân công (KTV), đổi trạng thái (khách hàng, KTV), bình luận công khai (bên còn lại). Gateway chuyển `/api/v1/notifications` tới ticket-service; notification-service chỉ gửi email/SMS/push (`/notify`).
+
 ## Notes
 
 - All timestamps are ISO 8601 UTC.

@@ -140,7 +140,7 @@ describe('toastApi (module-level)', () => {
 
 describe('useToast hook', () => {
   it('returns context value when inside provider', () => {
-    let hookValue: any = null;
+    let hookValue: ReturnType<typeof useToast> | null = null;
     const Capture = () => {
       hookValue = useToast();
       return null;
@@ -151,18 +151,18 @@ describe('useToast hook', () => {
       </ToastProvider>
     );
     expect(hookValue).toBeTruthy();
-    expect(typeof hookValue.success).toBe('function');
-    expect(typeof hookValue.dismiss).toBe('function');
+    expect(typeof hookValue!.success).toBe('function');
+    expect(typeof hookValue!.dismiss).toBe('function');
   });
 
   it('returns fallback when outside provider', () => {
-    let hookValue: any = null;
+    let hookValue: ReturnType<typeof useToast> | null = null;
     const Capture = () => {
       hookValue = useToast();
       return null;
     };
     render(<Capture />);
     expect(hookValue).toBeTruthy();
-    expect(typeof hookValue.success).toBe('function');
+    expect(typeof hookValue!.success).toBe('function');
   });
 });

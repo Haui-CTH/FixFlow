@@ -53,3 +53,4 @@ logs/
 
 # Local UI planning docs
 docs/frontend-ui-plan/
+coverage/
