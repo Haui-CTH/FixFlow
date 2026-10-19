@@ -49,7 +49,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: "20"
+          node-version: "24" # jsdom 30 (vitest) cần Node ^22.22.2 || ^24.15
           cache: "npm"
           cache-dependency-path: app/package-lock.json
       - run: cd app && npm ci
@@ -62,7 +62,8 @@ jobs:
 
     services:
       postgres:
-        image: postgres:${{ env.POSTGRES_VERSION }}
+        # `env` context không dùng được ở services.<id>.image (làm workflow bị từ chối, 0 job) -> ghi cứng phiên bản
+        image: postgres:16
         env:
           POSTGRES_USER: dxfsm
           POSTGRES_PASSWORD: dxfsm_password
@@ -139,7 +140,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: "20"
+          node-version: "24" # jsdom 30 (vitest) cần Node ^22.22.2 || ^24.15
           cache: "npm"
           cache-dependency-path: app/package-lock.json
       - run: cd app && npm ci
