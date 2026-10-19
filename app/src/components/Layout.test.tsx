@@ -3,6 +3,7 @@
 
 import { describe, it, expect, vi } from 'vitest';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { MemoryRouter } from 'react-router-dom';
 import Layout from './Layout';
 
@@ -20,9 +21,11 @@ vi.mock('../lib/store', () => ({
 
 function setup(initialPath: string = '/') {
   return render(
-    <MemoryRouter initialEntries={[initialPath]}>
-      <Layout />
-    </MemoryRouter>
+    <QueryClientProvider client={new QueryClient({ defaultOptions: { queries: { retry: false } } })}>
+      <MemoryRouter initialEntries={[initialPath]}>
+        <Layout />
+      </MemoryRouter>
+    </QueryClientProvider>
   );
 }
 

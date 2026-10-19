@@ -75,36 +75,45 @@ describe('NotificationItem', () => {
   it('aria-label indicates unread state', () => {
     renderWithRouter(unreadNotif);
     const button = screen.getByRole('button');
-    expect(button.getAttribute('aria-label')).toMatch(/Unread:/);
+    expect(button.getAttribute('aria-label')).toMatch(/Chưa đọc:/);
   });
 
   it('aria-label omits unread prefix when read', () => {
     renderWithRouter(readNotif);
     const button = screen.getByRole('button');
     const label = button.getAttribute('aria-label') || '';
-    expect(label).not.toMatch(/^Unread:/);
+    expect(label).not.toMatch(/^Chưa đọc:/);
   });
 
-  it('renders correct type icon for each type', () => {
-    const { rerender } = renderWithRouter({ ...unreadNotif, type: 'success' });
-    expect(screen.getByText('✓')).toBeInTheDocument();
-    rerender(
+  it('shows an "Mới" label for unread items only (not color alone)', () => {
+    const { unmount } = renderWithRouter(unreadNotif);
+    expect(screen.getByText('Mới')).toBeInTheDocument();
+    unmount();
+    renderWithRouter(readNotif);
+    expect(screen.queryByText('Mới')).not.toBeInTheDocument();
+  });
+
+  it('exposes the type of notification as an icon title', () => {
+    const { container, rerender } = renderWithRouter({ ...unreadNotif, type: 'success' });
+    expect(container.querySelector('[title="Thành công"]')).toBeInTheDocument();
+    for (const [type, title] of [['warning', 'Cảnh báo'], ['error', 'Lỗi']] as const) {
+      rerender(
+        <MemoryRouter>
+          <NotificationItem notification={{ ...unreadNotif, type }} onMarkRead={vi.fn()} />
+        </MemoryRouter>
+      );
+      expect(container.querySelector(`[title="${title}"]`)).toBeInTheDocument();
+    }
+  });
+
+  it('navigates to the ticket and calls onNavigate', () => {
+    const onNavigate = vi.fn();
+    render(
       <MemoryRouter>
-        <NotificationItem
-          notification={{ ...unreadNotif, type: 'warning' }}
-          onMarkRead={vi.fn()}
-        />
+        <NotificationItem notification={unreadNotif} onMarkRead={vi.fn()} onNavigate={onNavigate} />
       </MemoryRouter>
     );
-    expect(screen.getByText('!')).toBeInTheDocument();
-    rerender(
-      <MemoryRouter>
-        <NotificationItem
-          notification={{ ...unreadNotif, type: 'error' }}
-          onMarkRead={vi.fn()}
-        />
-      </MemoryRouter>
-    );
-    expect(screen.getByText('✕')).toBeInTheDocument();
+    fireEvent.click(screen.getByRole('button'));
+    expect(onNavigate).toHaveBeenCalled();
   });
 });

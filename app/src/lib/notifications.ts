@@ -1,12 +1,11 @@
 // SPDX-License-Identifier: Apache-2.0
-// DX-FSM Notification types & API client (F5.2)
-// BE B5.1 cung cấp POST /notify. GET /notifications chưa có trong BE
-// → dùng mock data cho UI, khi BE ready sẽ swap sang real API.
+// DX-FSM Notification types & API client (F5.2, GĐ 07)
+// API thật: ticket-service (GET /notifications, PATCH /notifications/{id}/read, POST /notifications/mark-all-read).
+// Mock (dữ liệu giả) chỉ dùng khi VITE_USE_MOCK=true hoặc khi chạy test.
 
-// DX-FSM Notification types & API client (F5.2)
-// BE B5.1 cung cấp POST /notify. GET /notifications chưa có trong BE
-// → dùng mock data cho UI, khi BE ready sẽ swap sang real API.
-// import { api } from './api'; // ← Uncomment when BE list endpoint ready
+import { api } from './api';
+
+const USE_MOCK = import.meta.env.VITE_USE_MOCK === 'true' || import.meta.env.MODE === 'test';
 
 // ─── Types (matches BE notification table + B5.1 response) ─────
 
@@ -43,26 +42,18 @@ export interface MarkReadResponse {
 
 export const notificationsApi = {
   list: async (params?: { is_read?: boolean; limit?: number; offset?: number }) => {
-    // Hiện tại BE chưa có list endpoint → return mock data
-    // Khi BE sẵn sàng: swap sang api.get<NotificationsListResponse>('/notifications', { params })
-    return mockListNotifications(params);
+    if (USE_MOCK) return mockListNotifications(params);
+    return api.get<NotificationsListResponse>('/notifications', { params }).then((r) => r.data);
   },
 
   markRead: async (id: string) => {
-    // Mock response
-    return {
-      id,
-      is_read: true as const,
-      read_at: new Date().toISOString(),
-    };
+    if (USE_MOCK) return { id, is_read: true as const, read_at: new Date().toISOString() };
+    return api.patch<MarkReadResponse>(`/notifications/${id}/read`).then((r) => r.data);
   },
 
   markAllRead: async () => {
-    return { marked: 0 }; // Mock — BE chưa có
-  },
-
-  getUnreadCount: async (): Promise<number> => {
-    return 0; // Mock
+    if (USE_MOCK) return { marked: 0 };
+    return api.post<{ marked: number }>('/notifications/mark-all-read').then((r) => r.data);
   },
 };
 
