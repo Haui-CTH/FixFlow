@@ -3,8 +3,8 @@
  */
 
 .panel {
-  background: white;
-  border: 1px solid #e5e7eb;
+  background: var(--surface);
+  border: 1px solid var(--border);
   border-radius: 0.5rem;
   padding: 1.25rem;
   margin-top: 1.5rem;
@@ -22,7 +22,7 @@
 .title {
   font-size: 1.125rem;
   font-weight: 600;
-  color: #111827;
+  color: var(--text);
   margin: 0;
   display: flex;
   align-items: center;
@@ -35,7 +35,7 @@
 
 .count {
   font-size: 0.875rem;
-  color: #6b7280;
+  color: var(--text-muted);
   font-weight: normal;
   margin-left: 0.25rem;
 }
@@ -54,7 +54,7 @@
   top: 0.5rem;
   bottom: 0.5rem;
   width: 2px;
-  background: linear-gradient(to bottom, #e5e7eb 0%, #e5e7eb 100%);
+  background: linear-gradient(to bottom, var(--border) 0%, var(--border) 100%);
   border-radius: 1px;
 }
 
@@ -78,11 +78,11 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  color: white;
+  color: var(--surface);
   font-size: 0.75rem;
   font-weight: 700;
-  border: 2px solid white;
-  box-shadow: 0 0 0 1px #e5e7eb;
+  border: 2px solid var(--surface);
+  box-shadow: 0 0 0 1px var(--border);
   flex-shrink: 0;
   z-index: 1;
 }
@@ -95,13 +95,13 @@
 
 .eventText {
   font-size: 0.875rem;
-  color: #111827;
+  color: var(--text);
   line-height: 1.5;
   margin: 0;
 }
 
 .eventTextMuted {
-  color: #6b7280;
+  color: var(--text-muted);
   font-style: italic;
 }
 
@@ -110,7 +110,7 @@
   align-items: center;
   gap: 0.5rem;
   font-size: 0.75rem;
-  color: #6b7280;
+  color: var(--text-muted);
 }
 
 .eventTime {
@@ -122,8 +122,8 @@
 .eventAction {
   display: inline-block;
   padding: 0.0625rem 0.375rem;
-  background: #f3f4f6;
-  color: #4b5563;
+  background: var(--surface-2);
+  color: var(--text-muted);
   font-size: 0.6875rem;
   font-weight: 500;
   border-radius: 0.25rem;
@@ -134,15 +134,15 @@
 .eventValue {
   display: inline-block;
   padding: 0.0625rem 0.375rem;
-  background: #fef3c7;
-  color: #92400e;
+  background: var(--warning-bg);
+  color: var(--warning);
   font-size: 0.75rem;
   border-radius: 0.25rem;
   font-family: ui-monospace, 'SF Mono', monospace;
 }
 
 .eventArrow {
-  color: #9ca3af;
+  color: var(--text-muted);
   font-weight: 700;
 }
 
@@ -151,21 +151,21 @@
 .empty {
   text-align: center;
   padding: 1.5rem 1rem;
-  color: #9ca3af;
+  color: var(--text-muted);
   font-size: 0.875rem;
 }
 
 .center {
   text-align: center;
   padding: 1.5rem 1rem;
-  color: #6b7280;
+  color: var(--text-muted);
 }
 
 .spinner {
   display: inline-block;
   width: 1.5rem;
   height: 1.5rem;
-  border: 2px solid #e5e7eb;
+  border: 2px solid var(--border);
   border-top-color: #3b82f6;
   border-radius: 50%;
   animation: spin 1s linear infinite;
@@ -177,7 +177,7 @@
 }
 
 .errorBox {
-  background: #fef2f2;
+  background: var(--danger-bg);
   border: 1px solid #fecaca;
   color: #b91c1c;
   padding: 0.625rem 0.75rem;
@@ -189,7 +189,7 @@
 }
 
 .errorBox button {
-  background: white;
+  background: var(--surface);
   border: 1px solid #fecaca;
   color: #b91c1c;
   padding: 0.25rem 0.5rem;

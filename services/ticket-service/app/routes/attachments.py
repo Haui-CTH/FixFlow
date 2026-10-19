@@ -272,3 +272,62 @@ async def delete_attachment(
     await db.commit()
 
     return None
+
+
+# ─── GET /tickets/{ticket_id}/attachments/{att_id}/download ─────────────────
+
+
+@router.get("/tickets/{ticket_id}/attachments/{att_id}/download")
+async def download_attachment(
+    ticket_id: UUID,
+    att_id: UUID,
+    db: AsyncSession = Depends(get_db),
+    user: TokenUser = Depends(get_current_user),
+):
+    """
+    Tải/xem file đính kèm (cần đăng nhập). Hỗ trợ local filesystem và MinIO.
+    Frontend gọi bằng axios (blob) để mang theo Authorization header.
+    """
+    from pathlib import Path
+
+    from fastapi.responses import FileResponse, Response
+
+    result = await db.execute(
+        select(TicketAttachment).where(
+            TicketAttachment.id == att_id,
+            TicketAttachment.ticket_id == ticket_id,
+        )
+    )
+    att = result.scalar_one_or_none()
+    if not att:
+        raise HTTPException(status_code=404, detail="Attachment not found")
+
+    media = att.mime_type or "application/octet-stream"
+    path = att.file_path or ""
+    if path.startswith("/"):
+        # chỉ phục vụ file nằm trong thư mục lưu trữ (chặn path traversal)
+        p = Path(path).resolve()
+        if Path("/data/attachments").resolve() not in p.parents or not p.is_file():
+            raise HTTPException(status_code=404, detail="File not found")
+        return FileResponse(p, media_type=media, filename=att.file_name)
+
+    # MinIO: "<endpoint>/<bucket>/<object>"
+    from app.services.storage_service import get_minio_client
+    from app.config import get_settings
+
+    settings = get_settings()
+    client = get_minio_client()
+    object_name = path.split(f"/{settings.minio_bucket}/", 1)[-1]
+    if client is None:
+        raise HTTPException(status_code=503, detail="Storage unavailable")
+    try:
+        obj = client.get_object(settings.minio_bucket, object_name)
+        data = obj.read()
+        obj.close()
+    except Exception:
+        raise HTTPException(status_code=404, detail="File not found")
+    return Response(
+        content=data,
+        media_type=media,
+        headers={"Content-Disposition": f'inline; filename="{att.file_name}"'},
+    )

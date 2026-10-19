@@ -541,7 +541,13 @@ async def update_ticket(
             )
 
         # Rule: requires_role (e.g., resolved → closed cần manager/admin)
-        if rule["requires_role"] and user.role not in rule["requires_role"]:
+        # resolved → closed: manager/admin, hoặc khách hàng là chủ ticket (xác nhận đóng)
+        is_owner_close = False
+        if rule["requires_role"] and user.role == "customer" and update_data.status == "closed":
+            from app.services.user_resolver import resolve_or_create_user
+
+            is_owner_close = (await resolve_or_create_user(db, user)) == ticket.customer_id
+        if rule["requires_role"] and user.role not in rule["requires_role"] and not is_owner_close:
             raise HTTPException(
                 status_code=403,
                 detail=(

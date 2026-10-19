@@ -3,6 +3,7 @@
 // Hiển thị events theo thứ tự thời gian, có icon + color per action.
 
 import { useQuery } from '@tanstack/react-query';
+import { ArrowRight, ArrowUp, Clock, MessageSquare, Paperclip, Plus, StickyNote, UserPlus, type LucideIcon } from 'lucide-react';
 import {
   historyApi,
   getActionColor,
@@ -17,6 +18,16 @@ import styles from './HistoryTimeline.module.css';
 interface HistoryTimelineProps {
   ticketId: string;
 }
+
+const ICONS: Record<string, LucideIcon> = {
+  created: Plus,
+  status_changed: ArrowRight,
+  assigned: UserPlus,
+  priority_changed: ArrowUp,
+  comment_added: MessageSquare,
+  note_added: StickyNote,
+  attachment_added: Paperclip,
+};
 
 export function HistoryTimeline({ ticketId }: HistoryTimelineProps) {
   const { data: events = [], isLoading, isError, error, refetch } = useQuery({
@@ -35,7 +46,7 @@ export function HistoryTimeline({ ticketId }: HistoryTimelineProps) {
     <section className={styles.panel} aria-label="Ticket history">
       <header className={styles.header}>
         <h2 className={styles.title}>
-          <span className={styles.titleIcon} aria-hidden="true">🕐</span>
+          <Clock size={20} aria-hidden="true" />
           Lịch sử
           <span className={styles.count}>({events.length})</span>
         </h2>
@@ -79,6 +90,7 @@ export function HistoryTimeline({ ticketId }: HistoryTimelineProps) {
 function HistoryItem({ event }: { event: HistoryEvent }) {
   const color = getActionColor(event.action);
   const icon = getActionIcon(event.action);
+  const Icon = ICONS[event.action];
   const description = describeEvent(event);
   const showValues = event.old_value || event.new_value;
 
@@ -89,7 +101,7 @@ function HistoryItem({ event }: { event: HistoryEvent }) {
         style={{ background: color }}
         aria-hidden="true"
       >
-        {icon}
+        {Icon ? <Icon size={16} /> : icon}
       </div>
       <div className={styles.eventBody}>
         <p className={styles.eventText}>{description}</p>

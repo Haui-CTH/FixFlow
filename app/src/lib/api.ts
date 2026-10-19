@@ -61,10 +61,27 @@ export interface Ticket {
   category: string;
   customer_id?: string;
   customer_name?: string;
+  customer_email?: string | null;
+  customer_location?: string | null;
   technician_id?: string | null;
   technician_name?: string | null;
+  ai_category?: string | null;
+  ai_priority?: string | null;
+  ai_confidence?: number | null;
+  ai_recommendation?: string | null;
   created_at?: string;
+  updated_at?: string | null;
+  assigned_at?: string | null;
   sla_deadline?: string | null;
+}
+
+export interface TicketPatch {
+  status?: string;
+  technician_id?: string;
+  technician_name?: string;
+  description?: string;
+  priority?: string;
+  category?: string;
 }
 
 export interface TicketListParams {
@@ -110,17 +127,84 @@ export const ticketApi = {
   get: (id: string) =>
     api.get<Ticket>(`/tickets/${id}`),
 
+  update: (id: string, patch: TicketPatch) =>
+    api.patch<Ticket>(`/tickets/${id}`, patch).then((r) => r.data),
+
   // customer_id/name/email để trống: BE lấy từ JWT
   create: (data: TicketCreateInput) =>
     api.post<Ticket>('/tickets', data).then((r) => r.data),
 };
 
+export interface TicketComment {
+  id: string;
+  ticket_id: string;
+  user_id?: string | null;
+  user_name?: string | null;
+  content: string;
+  is_internal: boolean;
+  created_at?: string | null;
+}
+
+export const commentApi = {
+  list: (ticketId: string) =>
+    api.get<TicketComment[]>(`/tickets/${ticketId}/comments`).then((r) => r.data),
+  post: (ticketId: string, content: string, is_internal: boolean) =>
+    api.post<TicketComment>(`/tickets/${ticketId}/comments`, { content, is_internal }).then((r) => r.data),
+  remove: (ticketId: string, commentId: string) =>
+    api.delete(`/tickets/${ticketId}/comments/${commentId}`),
+};
+
+export interface Attachment {
+  id: string;
+  ticket_id: string;
+  user_id?: string | null;
+  user_name?: string | null;
+  file_name: string;
+  file_size?: number | null;
+  mime_type?: string | null;
+  url: string;
+  created_at?: string | null;
+}
+
 export const attachmentApi = {
+  list: (ticketId: string) =>
+    api.get<Attachment[]>(`/tickets/${ticketId}/attachments`).then((r) => r.data),
   upload: (ticketId: string, file: File) => {
     const form = new FormData();
     form.append('file', file);
-    return api.post(`/tickets/${ticketId}/attachments`, form).then((r) => r.data);
+    // instance mặc định gửi JSON; phải ghi đè để axios gửi multipart (kèm boundary)
+    return api
+      .post<Attachment>(`/tickets/${ticketId}/attachments`, form, { headers: { 'Content-Type': 'multipart/form-data' } })
+      .then((r) => r.data);
   },
+  remove: (ticketId: string, attId: string) =>
+    api.delete(`/tickets/${ticketId}/attachments/${attId}`),
+  // Tải qua axios (mang Authorization) rồi dùng blob URL để xem/tải
+  blob: (ticketId: string, attId: string) =>
+    api.get<Blob>(`/tickets/${ticketId}/attachments/${attId}/download`, { responseType: 'blob' }).then((r) => r.data),
+};
+
+export interface Technician {
+  id: string;
+  user_id: string;
+  full_name: string;
+  employee_code?: string | null;
+  specialty: string[];
+  current_load: number;
+  max_concurrent_tickets: number;
+  is_available: boolean;
+}
+
+export interface Me {
+  user_id: string | null;
+  technician_id: string | null;
+  username: string;
+  role: string | null;
+}
+
+export const userApi = {
+  me: () => api.get<Me>('/users/me').then((r) => r.data),
+  technicians: () => api.get<Technician[]>('/users/technicians').then((r) => r.data),
 };
 
 export const aiApi = {

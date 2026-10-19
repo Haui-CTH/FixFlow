@@ -205,3 +205,51 @@ textarea.control { min-height: 96px; resize: vertical; }
 }
 .fileList img { object-fit: cover; border-radius: var(--radius-sm); }
 .fileName { flex: 1; min-width: 0; overflow-wrap: anywhere; }
+
+/* ─── Tabs ─── */
+.tabsWrap { position: relative; }
+.tabs {
+  display: flex;
+  gap: var(--space-1);
+  overflow-x: auto;
+  border-bottom: 1px solid var(--border);
+  scrollbar-width: thin;
+}
+.tab {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-height: 44px;
+  padding: 0 var(--space-4);
+  background: transparent;
+  border: none;
+  border-bottom: 3px solid transparent;
+  color: var(--text-muted);
+  font: inherit;
+  font-weight: 600;
+  white-space: nowrap;
+  cursor: pointer;
+}
+.tab:hover { color: var(--text); }
+.tabOn { color: var(--accent); border-bottom-color: var(--accent); }
+.tabCount {
+  min-width: 22px;
+  padding: 0 var(--space-2);
+  border-radius: 999px;
+  background: var(--muted-bg);
+  color: var(--text);
+  font-size: 0.75rem;
+  text-align: center;
+}
+@media (max-width: 767px) {
+  .tabsWrap::after {
+    content: '';
+    position: absolute;
+    right: 0;
+    top: 0;
+    bottom: 1px;
+    width: 32px;
+    pointer-events: none;
+    background: linear-gradient(90deg, transparent, var(--bg));
+  }
+}
