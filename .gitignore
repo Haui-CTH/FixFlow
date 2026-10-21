@@ -47,6 +47,8 @@ logs/
 
 # Docker
 .dockerignore
+# ...nhưng giữ app/.dockerignore trong repo để build context luôn đúng
+!app/.dockerignore
 
 # Local attachments (ticket-service storage fallback)
 /data/attachments/
