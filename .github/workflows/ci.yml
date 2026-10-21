@@ -41,6 +41,11 @@ jobs:
           pip install ruff
           ruff check services/ai-service/app/
 
+      - name: Lint notification-service
+        run: |
+          pip install ruff
+          ruff check services/notification-service/app/
+
   # ─── 2. Lint Frontend ────────────────────────────────────────────
   lint-frontend:
     name: Lint Frontend
