@@ -1,0 +1,31 @@
+# Dependencies
+node_modules/
+.npm/
+
+# Build outputs
+dist/
+build/
+*.log
+
+# Test files
+*.test.ts
+*.test.tsx
+*.spec.ts
+*.spec.tsx
+coverage/
+__pycache__/
+*.pyc
+
+# Development files
+.git/
+.gitignore
+.env
+.env.*
+*.md
+README*
+.vscode/
+.idea/
+
+# IDE
+.DS_Store
+Thumbs.db
