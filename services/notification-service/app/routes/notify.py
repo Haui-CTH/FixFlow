@@ -7,7 +7,7 @@ import logging
 import uuid
 from typing import Literal, Optional
 
-from fastapi import APIRouter, Header, HTTPException
+from fastapi import APIRouter, Depends, Header, HTTPException
 from pydantic import BaseModel, Field, EmailStr, field_validator
 
 from app.channels.email import EmailPayload, send_email
@@ -94,11 +94,12 @@ def verify_service_token(authorization: Optional[str] = Header(None)) -> None:
 # ─── POST /notify ─────────────────────────────────────────
 
 
-@router.post("/notify", response_model=NotifyResponse)
-async def send_notification(
-    req: NotifyRequest,
-    _auth: None = None,
-) -> NotifyResponse:
+@router.post(
+    "/notify",
+    response_model=NotifyResponse,
+    dependencies=[Depends(verify_service_token)],
+)
+async def send_notification(req: NotifyRequest) -> NotifyResponse:
     """
     Route notification qua các channels yêu cầu.
 
@@ -109,8 +110,6 @@ async def send_notification(
 
     Permission: service-to-service (Bearer token) hoặc local dev.
     """
-    verify_service_token()  # No-op in dev mode
-
     notification_id = str(uuid.uuid4())
     results: list[ChannelResult] = []
 
