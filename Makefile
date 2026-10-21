@@ -1,7 +1,7 @@
 # DX-FSM Makefile
 # Usage: make <target>
 
-.PHONY: help up down restart logs ps clean build test lint fmt initdocs
+.PHONY: help up down restart logs ps clean build rebuild test lint fmt init migrate health shell initdocs
 
 # Default target
 help:
@@ -22,6 +22,7 @@ help:
 	@echo "  lint        Run linters"
 	@echo "  fmt         Format code"
 	@echo "  init        Initialize database and seed data"
+	@echo "  migrate     Apply pending DB migrations (idempotent)"
 	@echo "  health      Check health of all services"
 	@echo "  shell       Open shell in a service container"
 	@echo ""
@@ -90,19 +91,24 @@ fmt:
 	cd services/ai-service && ruff format app/
 	cd app && npm run format
 
-# Initialize database
-init:
-	docker compose exec postgres psql -U dxfsm -d dxfsm -f /docker-entrypoint-initdb.d/init.sql
+# Apply pending migrations (idempotent, safe to re-run)
+migrate:
+	docker compose exec -T postgres sh -c 'for f in /docker-entrypoint-initdb.d/0[2-9]*.sql; do psql -v ON_ERROR_STOP=1 -U "$$POSTGRES_USER" -d "$$POSTGRES_DB" -f "$$f"; done'
+	@echo "Migrations applied."
+
+# Initialize database (fresh volume only; entrypoint already runs schema + migrations)
+init: migrate
 	@echo "Database initialized."
 
 # Health check
 health:
 	@echo "Checking service health..."
-	@echo "PostgreSQL:" && docker compose exec postgres pg_isready -U dxfsm || echo "DOWN"
-	@echo "Keycloak:" && curl -sf http://localhost:8080/health || echo "DOWN"
-	@echo "Ticket Service:" && curl -sf http://localhost:8001/health || echo "DOWN"
-	@echo "AI Service:" && curl -sf http://localhost:8002/health || echo "DOWN"
-	@echo "MinIO:" && curl -sf http://localhost:9000/minio/health/live || echo "DOWN"
+	@echo "PostgreSQL:" && docker compose exec -T postgres pg_isready -U dxfsm || echo "DOWN"
+	@echo "Keycloak:" && curl -sf http://localhost:8080/realms/dx-fsm/.well-known/openid-configuration > /dev/null || echo "DOWN"
+	@echo "Gateway:" && curl -sf http://localhost/health > /dev/null || echo "DOWN"
+	@echo "Ticket Service:" && curl -sf http://localhost:8001/health > /dev/null || echo "DOWN"
+	@echo "AI Service:" && curl -sf http://localhost:8002/health > /dev/null || echo "DOWN"
+	@echo "Notification Service:" && curl -sf http://localhost:8003/health > /dev/null || echo "DOWN"
 
 # Open shell in container
 shell:
