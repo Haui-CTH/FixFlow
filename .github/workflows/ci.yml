@@ -132,7 +132,19 @@ jobs:
       - run: pip install -r services/ai-service/requirements.txt
       - run: cd services/ai-service && python -m pytest tests/ -v --tb=short
 
-  # ─── 5. Test Frontend ───────────────────────────────────────────
+  # ─── 5. Test notification-service ───────────────────────────────
+  test-notification-service:
+    name: Test Notification Service
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+      - run: pip install -r services/notification-service/requirements.txt -r services/notification-service/requirements-dev.txt
+      - run: cd services/notification-service && python -m pytest tests/ -v --tb=short
+
+  # ─── 6. Test Frontend ───────────────────────────────────────────
   test-frontend:
     name: Test Frontend
     runs-on: ubuntu-latest
@@ -146,7 +158,7 @@ jobs:
       - run: cd app && npm ci
       - run: cd app && npm run test:unit -- --run
 
-  # ─── 6. Secret scan (chạy cuối cùng) ────────────────────────────
+  # ─── 7. Secret scan (chạy cuối cùng) ────────────────────────────
   secret-scan:
     name: Secret Scan
     runs-on: ubuntu-latest
