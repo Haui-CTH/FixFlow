@@ -280,7 +280,7 @@ class TestNotifyEndpoint:
 
     @pytest.mark.asyncio
     async def test_notify_email_success(self):
-        from app.routes.notify import EmailResult
+        from app.channels.email import EmailResult
 
         with patch("app.routes.notify.send_email", new_callable=AsyncMock) as mock_email:
             mock_email.return_value = EmailResult(
@@ -307,7 +307,8 @@ class TestNotifyEndpoint:
     @pytest.mark.asyncio
     async def test_notify_partial_success(self):
         """email thành công, sms fail → status=partial."""
-        from app.routes.notify import EmailResult, SMSResult
+        from app.channels.email import EmailResult
+        from app.channels.sms import SMSResult
 
         with patch("app.routes.notify.send_email", new_callable=AsyncMock) as mock_email, \
              patch("app.routes.notify.send_sms", new_callable=AsyncMock) as mock_sms:
@@ -392,7 +393,7 @@ class TestServiceTokenAuth:
         from app.config import settings
         from app.routes.notify import _format_email_body
         from unittest.mock import patch, AsyncMock
-        from app.routes.notify import EmailResult
+        from app.channels.email import EmailResult
 
         original = settings.service_token
         settings.service_token = "secret-token-xyz"
@@ -417,7 +418,7 @@ class TestServiceTokenAuth:
     async def test_valid_token_accepted(self):
         from app.config import settings
         from unittest.mock import patch, AsyncMock
-        from app.routes.notify import EmailResult
+        from app.channels.email import EmailResult
 
         original = settings.service_token
         settings.service_token = "secret-token-xyz"
