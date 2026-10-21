@@ -1,0 +1,5 @@
+# SPDX-License-Identifier: Apache-2.0
+# DX-FSM Notification Service - Test dependencies
+
+pytest==8.3.3
+pytest-asyncio==0.24.0

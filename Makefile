@@ -75,6 +75,7 @@ test:
 	@echo "Running tests..."
 	cd services/ticket-service && python -m pytest tests/ -v
 	cd services/ai-service && python -m pytest tests/ -v
+	cd services/notification-service && python -m pytest tests/ -v
 	cd app && npm run test
 
 # Run linters
