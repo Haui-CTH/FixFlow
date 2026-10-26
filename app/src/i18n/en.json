@@ -103,7 +103,9 @@
     "network": "Network",
     "other": "Other",
     "plumbing": "Plumbing",
-    "software": "Software"
+    "software": "Software",
+    "access_control": "Access Control",
+    "service_request": "Service Request"
   },
   "comments_panel": {
     "an_danh": "Anonymous",

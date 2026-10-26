@@ -23,7 +23,15 @@ router = APIRouter()
 
 # ─── Valid categories / priorities (khớp enum PostgreSQL) ────────────────
 
-VALID_CATEGORIES = {"hardware", "software", "network", "electrical", "other"}
+VALID_CATEGORIES = {
+    "hardware",
+    "software",
+    "network",
+    "electrical",
+    "access_control",
+    "service_request",
+    "other",
+}
 VALID_PRIORITIES = {"low", "medium", "high", "critical"}
 SLA_HOURS = {"critical": 4, "high": 24, "medium": 72, "low": 168}
 

@@ -13,7 +13,7 @@ CREATE TYPE ticket_status AS ENUM (
 CREATE TYPE ticket_priority AS ENUM ('low', 'medium', 'high', 'critical');
 
 CREATE TYPE ticket_category AS ENUM (
-  'hardware', 'software', 'network', 'electrical', 'other'
+  'hardware', 'software', 'network', 'electrical', 'access_control', 'service_request', 'other'
 );
 
 -- ============================================================

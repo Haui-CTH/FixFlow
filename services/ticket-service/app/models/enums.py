@@ -26,6 +26,8 @@ class TicketCategory(str, Enum):
     SOFTWARE = "software"
     NETWORK = "network"
     ELECTRICAL = "electrical"
+    ACCESS_CONTROL = "access_control"
+    SERVICE_REQUEST = "service_request"
     OTHER = "other"
 
 
