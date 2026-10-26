@@ -230,6 +230,30 @@ export interface AiRecommendResponse {
   total_technicians: number;
 }
 
+export interface KbArticleHit {
+  id: string;
+  title: string;
+  category: string;
+  score: number;
+  matched_terms: string[];
+  snippet: string;
+}
+
+export interface KbSearchResponse {
+  query: string;
+  top_k: number;
+  total_articles: number;
+  hits: KbArticleHit[];
+}
+
+export interface KbArticleDetail {
+  id: string;
+  title: string;
+  body: string;
+  category: string;
+  tags: string[];
+}
+
 export const aiApi = {
   // AI service trả confidence theo thang 0–100 (hoặc 0–1); chuẩn hoá về 0–1
   classify: (title: string, description: string) =>
@@ -249,6 +273,19 @@ export const aiApi = {
       .post<AiRecommendResponse>('/recommend', data)
       .then((r) => r.data.recommendations)
       .catch(() => [] as AiTechnicianRec[]),
+
+  searchKb: (q: string, category?: string, top_k = 3) => {
+    if (!q || q.trim().length < 2) return Promise.resolve([] as KbArticleHit[]);
+    const params = new URLSearchParams({ q: q.trim(), top_k: String(top_k) });
+    if (category) params.append('category', category);
+    return api
+      .get<KbSearchResponse>(`/kb/search?${params.toString()}`)
+      .then((r) => r.data.hits)
+      .catch(() => [] as KbArticleHit[]);
+  },
+
+  getKbArticle: (id: string) =>
+    api.get<KbArticleDetail>(`/kb/articles/${id}`).then((r) => r.data),
 };
 
 // ─── Metrics API (F5.1) ───────────────────────────────────

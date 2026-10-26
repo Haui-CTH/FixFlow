@@ -13,6 +13,7 @@ import { ErrorSummary, type FieldError } from '../components/ui/ErrorSummary';
 import { Input, Select, Textarea } from '../components/ui/Field';
 import { FileDropzone } from '../components/ui/FileDropzone';
 import { PageHeader } from '../components/ui/Card';
+import { KbSuggestions } from '../components/KnowledgeBase/KbSuggestions';
 import styles from '../components/Tickets/TicketCreate.module.css';
 import { useRole } from '../hooks/useRole';
 import { aiApi, attachmentApi, ticketApi, type AiClassifyResult } from '../lib/api';
@@ -180,6 +181,14 @@ export default function TicketCreate() {
             })}
           />
         </fieldset>
+
+        <KbSuggestions
+          query={title || ''}
+          category={watch('category') || undefined}
+          onInsert={(text) =>
+            setValue('description', (description || '') + text, { shouldDirty: true, shouldValidate: true })
+          }
+        />
 
         <fieldset className={styles.group}>
           <legend>{t('ticket_create.phan_loai')}</legend>

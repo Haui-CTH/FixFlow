@@ -8,6 +8,7 @@ import { Link, useParams, useSearchParams } from 'react-router-dom';
 import { HistoryTimeline } from '../components/History/HistoryTimeline';
 import { NotesPanel } from '../components/Notes/NotesPanel';
 import { AiInsightsCard } from '../components/TicketDetail/AiInsightsCard';
+import { KbSuggestions } from '../components/KnowledgeBase/KbSuggestions';
 import { AssignModal } from '../components/TicketDetail/AssignModal';
 import { AttachmentsPanel } from '../components/TicketDetail/AttachmentsPanel';
 import { CommentsPanel } from '../components/TicketDetail/CommentsPanel';
@@ -111,6 +112,7 @@ export default function TicketDetail() {
         </div>
         <aside className={styles.side} aria-label={t('ticket_detail.thong_tin_phu')}>
           <AiInsightsCard ticket={ticket} canSuggest={canAssign} onSuggest={() => setAssignOpen(true)} />
+          <KbSuggestions query={ticket.title} category={ticket.category} />
         </aside>
       </div>
       {(role === 'manager' || role === 'admin') && (

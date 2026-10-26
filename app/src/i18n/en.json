@@ -509,5 +509,18 @@
   },
   "use_notifications": {
     "thong_bao_moi": "New notification"
+  },
+  "kb": {
+    "tai_lieu_goi_y": "Related Knowledge Base (KB)",
+    "bai_viet": "articles",
+    "xem_chi_tiet": "View guide",
+    "chen_vao_mo_ta": "Insert into description",
+    "sao_chep": "Copy",
+    "da_chep": "Copied",
+    "chi_tiet_huong_dan": "Knowledge Base Article",
+    "dang_tai": "Loading article...",
+    "danh_muc": "Category",
+    "dong": "Close",
+    "khong_tim_thay_bai_viet": "Article not found"
   }
 }
