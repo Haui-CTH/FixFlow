@@ -5,7 +5,7 @@ import type { TicketRecord } from "./recommender";
 export const recommenderSeedRecords: TicketRecord[] = [
   {
     "ticket_id": "T-1001",
-    "technician_id": "tech-001",
+    "technician_id": "d0000000-0000-0000-0000-000000000001",
     "category": "hardware",
     "priority": "high",
     "title": "Máy in HP không hoạt động",
@@ -16,7 +16,7 @@ export const recommenderSeedRecords: TicketRecord[] = [
   },
   {
     "ticket_id": "T-1002",
-    "technician_id": "tech-001",
+    "technician_id": "d0000000-0000-0000-0000-000000000001",
     "category": "hardware",
     "priority": "medium",
     "title": "Laptop không lên nguồn",
@@ -27,7 +27,7 @@ export const recommenderSeedRecords: TicketRecord[] = [
   },
   {
     "ticket_id": "T-1003",
-    "technician_id": "tech-002",
+    "technician_id": "d0000000-0000-0000-0000-000000000002",
     "category": "software",
     "priority": "high",
     "title": "Phần mềm kế toán MISA lỗi",
@@ -38,7 +38,7 @@ export const recommenderSeedRecords: TicketRecord[] = [
   },
   {
     "ticket_id": "T-1004",
-    "technician_id": "tech-002",
+    "technician_id": "d0000000-0000-0000-0000-000000000002",
     "category": "software",
     "priority": "medium",
     "title": "Outlook không gửi email",
@@ -49,7 +49,7 @@ export const recommenderSeedRecords: TicketRecord[] = [
   },
   {
     "ticket_id": "T-1005",
-    "technician_id": "tech-003",
+    "technician_id": "d0000000-0000-0000-0000-000000000003",
     "category": "network",
     "priority": "critical",
     "title": "Mất kết nối WiFi toàn bộ tầng 3",
@@ -60,7 +60,7 @@ export const recommenderSeedRecords: TicketRecord[] = [
   },
   {
     "ticket_id": "T-1006",
-    "technician_id": "tech-003",
+    "technician_id": "d0000000-0000-0000-0000-000000000003",
     "category": "network",
     "priority": "high",
     "title": "Router văn phòng bị treo",
@@ -71,7 +71,7 @@ export const recommenderSeedRecords: TicketRecord[] = [
   },
   {
     "ticket_id": "T-1007",
-    "technician_id": "tech-004",
+    "technician_id": "d0000000-0000-0000-0000-000000000004",
     "category": "access_control",
     "priority": "high",
     "title": "Thẻ từ không mở được cửa",
@@ -82,7 +82,7 @@ export const recommenderSeedRecords: TicketRecord[] = [
   },
   {
     "ticket_id": "T-1008",
-    "technician_id": "tech-004",
+    "technician_id": "d0000000-0000-0000-0000-000000000004",
     "category": "access_control",
     "priority": "medium",
     "title": "Quên password domain account",
@@ -93,7 +93,7 @@ export const recommenderSeedRecords: TicketRecord[] = [
   },
   {
     "ticket_id": "T-1009",
-    "technician_id": "tech-005",
+    "technician_id": "d0000000-0000-0000-0000-000000000005",
     "category": "electrical",
     "priority": "critical",
     "title": "Mất điện toàn bộ tầng 5",
@@ -104,7 +104,7 @@ export const recommenderSeedRecords: TicketRecord[] = [
   },
   {
     "ticket_id": "T-1010",
-    "technician_id": "tech-005",
+    "technician_id": "d0000000-0000-0000-0000-000000000005",
     "category": "electrical",
     "priority": "high",
     "title": "Aptomat nhảy liên tục",
@@ -115,7 +115,7 @@ export const recommenderSeedRecords: TicketRecord[] = [
   },
   {
     "ticket_id": "T-1011",
-    "technician_id": "tech-001",
+    "technician_id": "d0000000-0000-0000-0000-000000000001",
     "category": "hardware",
     "priority": "high",
     "title": "Màn hình laptop bị sọc ngang",
@@ -126,7 +126,7 @@ export const recommenderSeedRecords: TicketRecord[] = [
   },
   {
     "ticket_id": "T-1012",
-    "technician_id": "tech-001",
+    "technician_id": "d0000000-0000-0000-0000-000000000001",
     "category": "hardware",
     "priority": "medium",
     "title": "Bàn phím laptop bị liệt",
@@ -137,7 +137,7 @@ export const recommenderSeedRecords: TicketRecord[] = [
   },
   {
     "ticket_id": "T-1013",
-    "technician_id": "tech-002",
+    "technician_id": "d0000000-0000-0000-0000-000000000002",
     "category": "software",
     "priority": "low",
     "title": "License Office hết hạn",
@@ -148,7 +148,7 @@ export const recommenderSeedRecords: TicketRecord[] = [
   },
   {
     "ticket_id": "T-1014",
-    "technician_id": "tech-002",
+    "technician_id": "d0000000-0000-0000-0000-000000000002",
     "category": "software",
     "priority": "medium",
     "title": "Windows update gây xung đột",
@@ -159,7 +159,7 @@ export const recommenderSeedRecords: TicketRecord[] = [
   },
   {
     "ticket_id": "T-1015",
-    "technician_id": "tech-003",
+    "technician_id": "d0000000-0000-0000-0000-000000000003",
     "category": "network",
     "priority": "medium",
     "title": "VPN chập chờn",
@@ -170,7 +170,7 @@ export const recommenderSeedRecords: TicketRecord[] = [
   },
   {
     "ticket_id": "T-1016",
-    "technician_id": "tech-003",
+    "technician_id": "d0000000-0000-0000-0000-000000000003",
     "category": "network",
     "priority": "high",
     "title": "Switch tầng 4 mất port",
@@ -181,7 +181,7 @@ export const recommenderSeedRecords: TicketRecord[] = [
   },
   {
     "ticket_id": "T-1017",
-    "technician_id": "tech-004",
+    "technician_id": "d0000000-0000-0000-0000-000000000004",
     "category": "access_control",
     "priority": "high",
     "title": "Hệ thống chấm công không nhận vân tay",
@@ -192,7 +192,7 @@ export const recommenderSeedRecords: TicketRecord[] = [
   },
   {
     "ticket_id": "T-1018",
-    "technician_id": "tech-005",
+    "technician_id": "d0000000-0000-0000-0000-000000000005",
     "category": "electrical",
     "priority": "high",
     "title": "UPS phát còi báo động",
@@ -203,7 +203,7 @@ export const recommenderSeedRecords: TicketRecord[] = [
   },
   {
     "ticket_id": "T-1019",
-    "technician_id": "tech-006",
+    "technician_id": "d0000000-0000-0000-0000-000000000006",
     "category": "service_request",
     "priority": "low",
     "title": "Yêu cầu cài phần mềm",
@@ -214,7 +214,7 @@ export const recommenderSeedRecords: TicketRecord[] = [
   },
   {
     "ticket_id": "T-1020",
-    "technician_id": "tech-006",
+    "technician_id": "d0000000-0000-0000-0000-000000000006",
     "category": "service_request",
     "priority": "low",
     "title": "Yêu cầu cấp laptop mới",
@@ -225,7 +225,7 @@ export const recommenderSeedRecords: TicketRecord[] = [
   },
   {
     "ticket_id": "T-1021",
-    "technician_id": "tech-007",
+    "technician_id": "d0000000-0000-0000-0000-000000000007",
     "category": "service_request",
     "priority": "low",
     "title": "Yêu cầu format máy tính",
@@ -236,7 +236,7 @@ export const recommenderSeedRecords: TicketRecord[] = [
   },
   {
     "ticket_id": "T-1022",
-    "technician_id": "tech-007",
+    "technician_id": "d0000000-0000-0000-0000-000000000007",
     "category": "service_request",
     "priority": "low",
     "title": "Yêu cầu bảo trì định kỳ",
@@ -247,7 +247,7 @@ export const recommenderSeedRecords: TicketRecord[] = [
   },
   {
     "ticket_id": "T-1023",
-    "technician_id": "tech-008",
+    "technician_id": "d0000000-0000-0000-0000-000000000008",
     "category": "network",
     "priority": "high",
     "title": "Tường lửa chặn truy cập web",
@@ -258,7 +258,7 @@ export const recommenderSeedRecords: TicketRecord[] = [
   },
   {
     "ticket_id": "T-1024",
-    "technician_id": "tech-008",
+    "technician_id": "d0000000-0000-0000-0000-000000000008",
     "category": "electrical",
     "priority": "high",
     "title": "Đứt dây điện máy lạnh",
@@ -269,7 +269,7 @@ export const recommenderSeedRecords: TicketRecord[] = [
   },
   {
     "ticket_id": "T-1025",
-    "technician_id": "tech-001",
+    "technician_id": "d0000000-0000-0000-0000-000000000001",
     "category": "hardware",
     "priority": "high",
     "title": "Ổ cứng phát ra tiếng kêu lạ",
@@ -280,7 +280,7 @@ export const recommenderSeedRecords: TicketRecord[] = [
   },
   {
     "ticket_id": "T-1026",
-    "technician_id": "tech-002",
+    "technician_id": "d0000000-0000-0000-0000-000000000002",
     "category": "software",
     "priority": "high",
     "title": "Phần mềm CRM đơ liên tục",
@@ -291,7 +291,7 @@ export const recommenderSeedRecords: TicketRecord[] = [
   },
   {
     "ticket_id": "T-1027",
-    "technician_id": "tech-003",
+    "technician_id": "d0000000-0000-0000-0000-000000000003",
     "category": "network",
     "priority": "high",
     "title": "DNS không phân giải được",
@@ -302,7 +302,7 @@ export const recommenderSeedRecords: TicketRecord[] = [
   },
   {
     "ticket_id": "T-1028",
-    "technician_id": "tech-005",
+    "technician_id": "d0000000-0000-0000-0000-000000000005",
     "category": "electrical",
     "priority": "high",
     "title": "Máy phát điện không khởi động",
@@ -313,7 +313,7 @@ export const recommenderSeedRecords: TicketRecord[] = [
   },
   {
     "ticket_id": "T-1029",
-    "technician_id": "tech-007",
+    "technician_id": "d0000000-0000-0000-0000-000000000007",
     "category": "service_request",
     "priority": "low",
     "title": "Yêu cầu nâng cấp RAM",
@@ -324,7 +324,7 @@ export const recommenderSeedRecords: TicketRecord[] = [
   },
   {
     "ticket_id": "T-1030",
-    "technician_id": "tech-004",
+    "technician_id": "d0000000-0000-0000-0000-000000000004",
     "category": "access_control",
     "priority": "medium",
     "title": "Yêu cầu reset mật khẩu VPN",

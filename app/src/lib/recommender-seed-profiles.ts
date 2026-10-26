@@ -4,7 +4,7 @@ import type { TechnicianProfile } from "./recommender";
 
 export const recommenderSeedProfiles: TechnicianProfile[] = [
   {
-    "id": "tech-001",
+    "id": "d0000000-0000-0000-0000-000000000001",
     "name": "Trần Văn Kỹ Thuật",
     "employee_code": "TECH001",
     "specialties": [
@@ -24,7 +24,7 @@ export const recommenderSeedProfiles: TechnicianProfile[] = [
     "active": true
   },
   {
-    "id": "tech-002",
+    "id": "d0000000-0000-0000-0000-000000000002",
     "name": "Lê Thị Bảo Trì",
     "employee_code": "TECH002",
     "specialties": [
@@ -44,7 +44,7 @@ export const recommenderSeedProfiles: TechnicianProfile[] = [
     "active": true
   },
   {
-    "id": "tech-003",
+    "id": "d0000000-0000-0000-0000-000000000003",
     "name": "Phạm Minh Hùng",
     "employee_code": "TECH003",
     "specialties": [
@@ -64,7 +64,7 @@ export const recommenderSeedProfiles: TechnicianProfile[] = [
     "active": true
   },
   {
-    "id": "tech-004",
+    "id": "d0000000-0000-0000-0000-000000000004",
     "name": "Nguyễn Thị Hương",
     "employee_code": "TECH004",
     "specialties": [
@@ -83,7 +83,7 @@ export const recommenderSeedProfiles: TechnicianProfile[] = [
     "active": true
   },
   {
-    "id": "tech-005",
+    "id": "d0000000-0000-0000-0000-000000000005",
     "name": "Hoàng Minh Tuấn",
     "employee_code": "TECH005",
     "specialties": [
@@ -101,7 +101,7 @@ export const recommenderSeedProfiles: TechnicianProfile[] = [
     "active": true
   },
   {
-    "id": "tech-006",
+    "id": "d0000000-0000-0000-0000-000000000006",
     "name": "Đỗ Quang Vinh",
     "employee_code": "TECH006",
     "specialties": [
@@ -120,7 +120,7 @@ export const recommenderSeedProfiles: TechnicianProfile[] = [
     "active": true
   },
   {
-    "id": "tech-007",
+    "id": "d0000000-0000-0000-0000-000000000007",
     "name": "Vũ Thị Lan",
     "employee_code": "TECH007",
     "specialties": [
@@ -136,7 +136,7 @@ export const recommenderSeedProfiles: TechnicianProfile[] = [
     "active": true
   },
   {
-    "id": "tech-008",
+    "id": "d0000000-0000-0000-0000-000000000008",
     "name": "Bùi Anh Đức",
     "employee_code": "TECH008",
     "specialties": [
