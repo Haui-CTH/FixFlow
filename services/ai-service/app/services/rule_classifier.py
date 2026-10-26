@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """
 DX-FSM AI Service — Rule-based classifier (A5.1)
 Keyword matching với weighted scoring + phrase priority + negation detection.

@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# SPDX-License-Identifier: Apache-2.0
 # Install DX-FSM git hooks (pre-commit secret scan).
 #
 # Usage:
