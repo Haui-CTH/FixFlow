@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """
 DX-FSM AI Service — Knowledge Base semantic search (A5.2)
 TF-IDF + cosine similarity, in-memory index.

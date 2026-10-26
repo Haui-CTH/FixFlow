@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """
 DX-FSM AI Service — Recommender domain models (A5.3)
 Technician profiles + performance metrics + ticket history.

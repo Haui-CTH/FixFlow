@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """
 DX-FSM AI Service — Recommender v2 (A5.3)
 Collaborative filtering: tickets giống nhau (title/description) thường

@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """
 DX-FSM AI Service — AI classifier (A5.1)
 Hybrid: Ollama LLM first, rule-based fallback khi LLM unavailable / timeout.

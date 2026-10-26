@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """
 DX-FSM AI Service — TF-IDF text vectorizer (A5.2)
 Pure Python implementation, no numpy/scipy dependency.

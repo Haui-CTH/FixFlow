@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """
 DX-FSM AI Service — Recommender scorer (A5.3)
 Multi-factor scoring: skill match + workload + performance + recency.
