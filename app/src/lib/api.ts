@@ -211,6 +211,25 @@ export const userApi = {
   technicians: () => api.get<Technician[]>('/users/technicians').then((r) => r.data),
 };
 
+export interface AiTechnicianRec {
+  technician_id: string;
+  technician_name: string;
+  employee_code: string;
+  specialty: string[];
+  level: number;
+  score: number;
+  confidence: number;
+  reasons: string[];
+  current_workload: number;
+  estimated_pickup_hours: number;
+}
+
+export interface AiRecommendResponse {
+  ticket_id: string;
+  recommendations: AiTechnicianRec[];
+  total_technicians: number;
+}
+
 export const aiApi = {
   // AI service trả confidence theo thang 0–100 (hoặc 0–1); chuẩn hoá về 0–1
   classify: (title: string, description: string) =>
@@ -218,6 +237,18 @@ export const aiApi = {
       ...r.data,
       confidence: r.data.confidence > 1 ? r.data.confidence / 100 : r.data.confidence,
     })),
+
+  recommend: (data: {
+    ticket_id: string;
+    title: string;
+    description?: string;
+    category: string;
+    priority: string;
+  }) =>
+    api
+      .post<AiRecommendResponse>('/recommend', data)
+      .then((r) => r.data.recommendations)
+      .catch(() => [] as AiTechnicianRec[]),
 };
 
 // ─── Metrics API (F5.1) ───────────────────────────────────

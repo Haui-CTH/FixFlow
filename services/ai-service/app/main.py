@@ -11,7 +11,7 @@ from app.services.kb_search import get_index
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    """Startup: load KB seed. Shutdown: nothing."""
+    """Startup: load KB seed & Recommender seed. Shutdown: nothing."""
     idx = get_index()
     seed_path = Path(__file__).parent / "data" / "kb_seed.json"
     if seed_path.exists():
@@ -20,6 +20,14 @@ async def lifespan(app: FastAPI):
             print(f"[startup] Loaded {n} KB articles")
         except Exception as e:
             print(f"[startup] Failed to load KB seed: {e}")
+
+    try:
+        from app.routes.recommend import reset_and_seed
+        res = await reset_and_seed()
+        print(f"[startup] Loaded Recommender seed: {res.get('profiles')} profiles, {res.get('history_records')} history records")
+    except Exception as e:
+        print(f"[startup] Failed to load Recommender seed: {e}")
+
     yield
 
 

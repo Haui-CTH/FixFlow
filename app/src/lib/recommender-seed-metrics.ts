@@ -3,8 +3,8 @@
 import type { PerformanceMetrics } from "./recommender";
 
 export const recommenderSeedMetrics: Record<string, PerformanceMetrics> = {
-  "tech-001": {
-    "technician_id": "tech-001",
+  "d0000000-0000-0000-0000-000000000001": {
+    "technician_id": "d0000000-0000-0000-0000-000000000001",
     "total_resolved": 245,
     "total_assigned": 260,
     "avg_resolution_hours": 4.2,
@@ -16,8 +16,8 @@ export const recommenderSeedMetrics: Record<string, PerformanceMetrics> = {
       "other": 15
     }
   },
-  "tech-002": {
-    "technician_id": "tech-002",
+  "d0000000-0000-0000-0000-000000000002": {
+    "technician_id": "d0000000-0000-0000-0000-000000000002",
     "total_resolved": 198,
     "total_assigned": 205,
     "avg_resolution_hours": 3.1,
@@ -29,8 +29,8 @@ export const recommenderSeedMetrics: Record<string, PerformanceMetrics> = {
       "other": 8
     }
   },
-  "tech-003": {
-    "technician_id": "tech-003",
+  "d0000000-0000-0000-0000-000000000003": {
+    "technician_id": "d0000000-0000-0000-0000-000000000003",
     "total_resolved": 312,
     "total_assigned": 318,
     "avg_resolution_hours": 2.8,
@@ -43,8 +43,8 @@ export const recommenderSeedMetrics: Record<string, PerformanceMetrics> = {
       "other": 12
     }
   },
-  "tech-004": {
-    "technician_id": "tech-004",
+  "d0000000-0000-0000-0000-000000000004": {
+    "technician_id": "d0000000-0000-0000-0000-000000000004",
     "total_resolved": 89,
     "total_assigned": 95,
     "avg_resolution_hours": 3.8,
@@ -56,8 +56,8 @@ export const recommenderSeedMetrics: Record<string, PerformanceMetrics> = {
       "other": 4
     }
   },
-  "tech-005": {
-    "technician_id": "tech-005",
+  "d0000000-0000-0000-0000-000000000005": {
+    "technician_id": "d0000000-0000-0000-0000-000000000005",
     "total_resolved": 156,
     "total_assigned": 162,
     "avg_resolution_hours": 5.5,
@@ -69,8 +69,8 @@ export const recommenderSeedMetrics: Record<string, PerformanceMetrics> = {
       "other": 6
     }
   },
-  "tech-006": {
-    "technician_id": "tech-006",
+  "d0000000-0000-0000-0000-000000000006": {
+    "technician_id": "d0000000-0000-0000-0000-000000000006",
     "total_resolved": 45,
     "total_assigned": 52,
     "avg_resolution_hours": 6,
@@ -82,8 +82,8 @@ export const recommenderSeedMetrics: Record<string, PerformanceMetrics> = {
       "other": 3
     }
   },
-  "tech-007": {
-    "technician_id": "tech-007",
+  "d0000000-0000-0000-0000-000000000007": {
+    "technician_id": "d0000000-0000-0000-0000-000000000007",
     "total_resolved": 67,
     "total_assigned": 75,
     "avg_resolution_hours": 4.5,
@@ -95,8 +95,8 @@ export const recommenderSeedMetrics: Record<string, PerformanceMetrics> = {
       "other": 5
     }
   },
-  "tech-008": {
-    "technician_id": "tech-008",
+  "d0000000-0000-0000-0000-000000000008": {
+    "technician_id": "d0000000-0000-0000-0000-000000000008",
     "total_resolved": 178,
     "total_assigned": 182,
     "avg_resolution_hours": 3.5,

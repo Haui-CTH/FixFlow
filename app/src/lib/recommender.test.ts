@@ -208,7 +208,7 @@ describe('recommender.ts (A5.3)', () => {
       };
       const recs = rec.recommend(t);
       expect(recs.length).toBeGreaterThan(0);
-      // Should recommend tech-001 (Trần Văn Kỹ Thuật, hardware specialist)
+      // Should recommend d0000000-0000-0000-0000-000000000001 (Trần Văn Kỹ Thuật, hardware specialist)
       expect(recs[0].technician.name).toContain('Trần');
     });
 
@@ -219,8 +219,8 @@ describe('recommender.ts (A5.3)', () => {
         category: 'network', priority: 'critical',
       };
       const recs = rec.recommend(t);
-      // tech-003 (Phạm Minh Hùng) is network senior
-      expect(recs[0].technician.id).toBe('tech-003');
+      // d0000000-0000-0000-0000-000000000003 (Phạm Minh Hùng) is network senior
+      expect(recs[0].technician.id).toBe('d0000000-0000-0000-0000-000000000003');
     });
 
     it('recommends for access_control', () => {
@@ -230,8 +230,8 @@ describe('recommender.ts (A5.3)', () => {
         category: 'access_control', priority: 'high',
       };
       const recs = rec.recommend(t);
-      // tech-004 (Nguyễn Thị Hương) is access_control specialist
-      expect(recs[0].technician.id).toBe('tech-004');
+      // d0000000-0000-0000-0000-000000000004 (Nguyễn Thị Hương) is access_control specialist
+      expect(recs[0].technician.id).toBe('d0000000-0000-0000-0000-000000000004');
     });
 
     it('recommends for service_request', () => {
@@ -241,8 +241,8 @@ describe('recommender.ts (A5.3)', () => {
         category: 'service_request', priority: 'low',
       };
       const recs = rec.recommend(t);
-      // tech-007 (Vũ Thị Lan) is service_request specialist
-      expect(['tech-006', 'tech-007']).toContain(recs[0].technician.id);
+      // d0000000-0000-0000-0000-000000000007 (Vũ Thị Lan) is service_request specialist
+      expect(['d0000000-0000-0000-0000-000000000006', 'd0000000-0000-0000-0000-000000000007']).toContain(recs[0].technician.id);
     });
 
     it('confidence in [0, 1]', () => {

@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: Apache-2.0
-// AssignModal (P5.11): chọn KTV theo tải/chuyên môn, có gợi ý "Đề xuất".
-// ponytail: gợi ý chấm điểm phía client (chuyên môn + tải); ai-service /recommend chưa có dữ liệu KTV nên chưa gọi.
+// AssignModal (P5.11): chọn KTV theo tải/chuyên môn, kết hợp gợi ý từ AI Recommender.
+// Nếu AI Service trả về gợi ý, hiển thị điểm số và lý do đề xuất; nếu AI offline, tự động fallback sang chấm điểm client.
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
-import { ticketApi, userApi, type Technician, type Ticket } from '../../lib/api';
+import { ticketApi, userApi, aiApi, type Technician, type Ticket, type AiTechnicianRec } from '../../lib/api';
 import { categoryMeta } from '../../lib/ticket-meta';
 import { toastApi } from '../../lib/toast';
 import { Button } from '../ui/Button';
@@ -14,7 +14,7 @@ import { SkeletonRows } from '../ui/Skeleton';
 import styles from './TicketDetail.module.css';
 import { t as tr } from '../../lib/i18n';
 
-// KTV đề xuất: khớp chuyên môn > còn rảnh > tải thấp nhất. null nếu không ai nhận được.
+// Client-side fallback: khớp chuyên môn > còn rảnh > tải thấp nhất. null nếu không ai nhận được.
 export function recommendTechnician(techs: Technician[], category: string): string | null {
   const usable = techs.filter((t) => t.is_available && t.current_load < t.max_concurrent_tickets);
   if (usable.length === 0) return null;
@@ -39,7 +39,30 @@ export function AssignModal({
     enabled: open,
     staleTime: 30_000,
   });
-  const recommended = recommendTechnician(techs, ticket.category);
+
+  // Gợi ý từ AI Service (Multi-factor scoring + Collaborative Filtering)
+  const { data: aiRecs = [] } = useQuery<AiTechnicianRec[]>({
+    queryKey: ['ai-recommend', ticket.id, ticket.category, ticket.priority],
+    queryFn: () =>
+      aiApi.recommend({
+        ticket_id: ticket.ticket_number || ticket.id,
+        title: ticket.title,
+        description: ticket.description || '',
+        category: ticket.category,
+        priority: ticket.priority,
+      }),
+    enabled: open && !!ticket.id,
+    staleTime: 60_000,
+  });
+
+  // Xác định KTV được đề xuất: Ưu tiên gợi ý AI top 1, fallback sang rule client
+  const clientRecommended = recommendTechnician(techs, ticket.category);
+  const topAiRec = aiRecs.length > 0 ? aiRecs[0] : null;
+  const topAiTech = topAiRec
+    ? techs.find((t) => t.id === topAiRec.technician_id || t.employee_code === topAiRec.employee_code)
+    : null;
+  const recommended = topAiTech ? topAiTech.id : clientRecommended;
+
   const [picked, setPicked] = useState<string>('');
 
   // Mở modal: chọn sẵn KTV hiện tại hoặc KTV đề xuất
@@ -79,6 +102,9 @@ export function AssignModal({
           {techs.map((t) => {
             const full = t.current_load >= t.max_concurrent_tickets;
             const pct = Math.min(100, Math.round((t.current_load / Math.max(t.max_concurrent_tickets, 1)) * 100));
+            const aiRec = aiRecs.find((r) => r.technician_id === t.id || r.employee_code === t.employee_code);
+            const isRecommended = t.id === recommended;
+
             return (
               <label key={t.id} className={`${styles.tech} ${picked === t.id ? styles.techOn : ''}`}>
                 <input
@@ -92,11 +118,16 @@ export function AssignModal({
                 <span className={styles.techBody}>
                   <strong>
                     {t.full_name}
-                    {t.id === recommended && <span className={styles.recBadge}>{tr('assign_modal.de_xuat')}</span>}
+                    {isRecommended && (
+                      <span className={styles.recBadge}>
+                        {aiRec ? `AI Đề xuất (${Math.round(aiRec.score)}%)` : tr('assign_modal.de_xuat')}
+                      </span>
+                    )}
                     {!t.is_available && <span className={styles.offBadge}>{tr('assign_modal.khong_san_sang')}</span>}
                   </strong>
                   <span className={styles.techMeta}>
                     {t.specialty.map((s) => categoryMeta(s).label).join(', ') || tr('assign_modal.chua_khai_bao_chuyen_mon')}
+                    {aiRec && aiRec.reasons.length > 0 && ` · ${aiRec.reasons.join(', ')}`}
                   </span>
                   <span className={styles.techLoad}>
                     <span
