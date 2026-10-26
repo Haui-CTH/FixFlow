@@ -1,3 +1,4 @@
+-- SPDX-License-Identifier: Apache-2.0
 -- DX-FSM Database Schema
 -- PostgreSQL 16
 -- Licensed under Apache License 2.0
