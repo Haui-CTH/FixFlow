@@ -509,5 +509,18 @@
   },
   "use_notifications": {
     "thong_bao_moi": "Thông báo mới"
+  },
+  "kb": {
+    "tai_lieu_goi_y": "Tài liệu kỹ thuật liên quan (KB)",
+    "bai_viet": "bài viết",
+    "xem_chi_tiet": "Xem hướng dẫn",
+    "chen_vao_mo_ta": "Chèn vào mô tả",
+    "sao_chep": "Sao chép",
+    "da_chep": "Đã chép",
+    "chi_tiet_huong_dan": "Chi tiết hướng dẫn kỹ thuật",
+    "dang_tai": "Đang tải bài viết...",
+    "danh_muc": "Danh mục",
+    "dong": "Đóng",
+    "khong_tim_thay_bai_viet": "Không tìm thấy nội dung bài viết"
   }
 }

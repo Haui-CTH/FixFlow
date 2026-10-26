@@ -15,7 +15,12 @@ const { create, upload, classify, toast } = vi.hoisted(() => ({
 vi.mock('../lib/api', () => ({
   ticketApi: { create: (d: unknown) => create(d) },
   attachmentApi: { upload: (id: string, f: File) => upload(id, f) },
-  aiApi: { classify: (t: string, d: string) => classify(t, d) },
+  aiApi: {
+    classify: (t: string, d: string) => classify(t, d),
+    searchKb: () => Promise.resolve([]),
+    getKbArticle: () => Promise.resolve(null),
+    recommend: () => Promise.resolve([]),
+  },
 }));
 vi.mock('../lib/toast', () => ({ toastApi: toast }));
 vi.mock('../hooks/useRole', () => ({ useRole: () => 'customer' }));

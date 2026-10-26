@@ -19,6 +19,12 @@ vi.mock('../lib/api', () => ({
   commentApi: { list: () => Promise.resolve([{ id: 'c1' }, { id: 'c2' }]), post: vi.fn(), remove: vi.fn() },
   attachmentApi: { list: () => Promise.resolve([]), upload: vi.fn(), remove: vi.fn(), blob: vi.fn() },
   userApi: { me: () => h.me(), technicians: () => h.techs() },
+  aiApi: {
+    classify: vi.fn(),
+    recommend: () => Promise.resolve([]),
+    searchKb: () => Promise.resolve([]),
+    getKbArticle: () => Promise.resolve(null),
+  },
 }));
 vi.mock('../lib/toast', () => ({ toastApi: h.toast }));
 vi.mock('../hooks/useRole', () => ({ useRole: () => h.role.current }));
