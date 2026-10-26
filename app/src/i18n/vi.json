@@ -103,7 +103,9 @@
     "network": "Mạng",
     "other": "Khác",
     "plumbing": "Cấp thoát nước",
-    "software": "Phần mềm"
+    "software": "Phần mềm",
+    "access_control": "Kiểm soát truy cập",
+    "service_request": "Yêu cầu dịch vụ"
   },
   "comments_panel": {
     "an_danh": "Ẩn danh",

@@ -34,6 +34,8 @@ class TicketCategoryEnum(str, enum.Enum):
     software = "software"
     network = "network"
     electrical = "electrical"
+    access_control = "access_control"
+    service_request = "service_request"
     other = "other"
 
 

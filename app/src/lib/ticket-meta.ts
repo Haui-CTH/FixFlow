@@ -60,6 +60,8 @@ export const CATEGORY_META: Record<string, Meta> = {
   software: meta('category.software', 'info'),
   network: meta('category.network', 'assigned'),
   electrical: meta('category.electrical', 'warning'),
+  access_control: meta('category.access_control', 'info'),
+  service_request: meta('category.service_request', 'assigned'),
   plumbing: meta('category.plumbing', 'info'),
   hvac: meta('category.hvac', 'warning'),
   other: meta('category.other', 'muted'),
@@ -77,6 +79,6 @@ export const categoryMeta = lookup(CATEGORY_META);
 // Giá trị BE chấp nhận (enum DB) — dùng cho bộ lọc/form
 export const STATUS_VALUES = ['new', 'assigned', 'in_progress', 'pending', 'resolved', 'closed', 'cancelled'];
 export const PRIORITY_VALUES = ['low', 'medium', 'high', 'critical'];
-export const CATEGORY_VALUES = ['hardware', 'software', 'network', 'electrical', 'other'];
+export const CATEGORY_VALUES = ['hardware', 'software', 'network', 'electrical', 'access_control', 'service_request', 'other'];
 // Ticket đã kết thúc: không còn đếm SLA
 export const FINAL_STATUSES = ['resolved', 'closed', 'cancelled'];
