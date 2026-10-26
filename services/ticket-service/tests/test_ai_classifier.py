@@ -50,6 +50,14 @@ class TestCategoryClassifier:
         cat, conf = _classify_category("Đèn phòng họp cháy", "Đèn tuýp cháy có mùi khét")
         assert cat == "electrical"
 
+    def test_access_control_vietnamese(self):
+        cat, conf = _classify_category("Thẻ từ quẹt cửa không nhận", "Cửa phòng máy chủ bị khóa")
+        assert cat == "access_control"
+
+    def test_service_request_vietnamese(self):
+        cat, conf = _classify_category("Yêu cầu cấp phát máy tính mới", "Nhân viên mới cần laptop")
+        assert cat == "service_request"
+
     def test_unknown_category_falls_back_to_other(self):
         cat, conf = _classify_category("Random title", "Random text không match gì")
         assert cat == "other"

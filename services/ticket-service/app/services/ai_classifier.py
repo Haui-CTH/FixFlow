@@ -11,8 +11,18 @@ import time
 from collections import OrderedDict
 from typing import Optional
 
-import httpx
-from pydantic import BaseModel
+try:
+    import httpx
+except ImportError:
+    httpx = None  # type: ignore
+
+try:
+    from pydantic import BaseModel
+except ImportError:
+    class BaseModel:  # type: ignore
+        def __init__(self, **kwargs):
+            for k, v in kwargs.items():
+                setattr(self, k, v)
 
 from app.config import get_settings
 
@@ -89,6 +99,14 @@ CATEGORY_KEYWORDS = {
         r"(mất|cúp|tắt).*(điện|electricity|power)",
         r"(đèn|quạt|điều hòa|máy lạnh).*(cháy|chết|hỏng|không chạy)",
     ],
+    "access_control": [
+        r"\b(thẻ từ|vân tay|khóa từ|cửa từ|chấm công|camera|mật khẩu|phân quyền|access|rfid)\b",
+        r"(quẹt|mở|khóa).*(thẻ|cửa|vân tay)",
+    ],
+    "service_request": [
+        r"\b(yêu cầu|đề nghị|cấp phát|bàn giao|mượn|thu hồi|đăng ký|thay mới|nâng cấp|hỗ trợ)\b",
+        r"(xin|cần|yêu cầu).*(cấp|máy tính|tài khoản|email|laptop)",
+    ],
 }
 
 # Priority patterns — return numeric score (higher = more urgent)
@@ -150,6 +168,8 @@ def _recommend(category: str, priority: str) -> str:
         ("software", "high"): "Restart app hoặc clear cache trước khi escalate.",
         ("electrical", "critical"): "NGUY HIỂM. Cắt điện khu vực và gọi thợ chuyên môn.",
         ("electrical", "high"): "Kiểm tra CB, ổ cắm. Dùng thiết bị backup nếu có.",
+        ("access_control", "high"): "Hệ thống kiểm soát ra vào gặp sự cố. Kiểm tra đầu đọc thẻ hoặc khóa từ.",
+        ("service_request", "low"): "Yêu cầu dịch vụ tiêu chuẩn. Điều phối theo quy trình cấp phát thiết bị.",
     }
     key = (category, priority)
     if key in recs:
@@ -179,29 +199,38 @@ def rule_based_classify(title: str, description: str) -> AIClassifyResponse:
 async def call_ai_service(title: str, description: str) -> Optional[AIClassifyResponse]:
     """
     Gọi ai-service POST /classify. Trả về None nếu fail (timeout, 5xx, network).
+    Bảo toàn method thật ("ai", "fallback", "cached") từ ai-service.
     """
+    if httpx is None:
+        logger.debug("httpx not available, using local fallback")
+        return None
+
     url = f"{settings.ai_service_url}/classify"
+    timeout = getattr(settings, "ai_classify_timeout", 10.0)
     try:
-        async with httpx.AsyncClient(timeout=5.0) as client:
+        async with httpx.AsyncClient(timeout=timeout) as client:
             resp = await client.post(
                 url,
                 json={"title": title, "description": description or ""},
             )
             if resp.status_code == 200:
                 data = resp.json()
-                # Force method=ai
-                data["method"] = "ai"
+                raw_method = data.get("method", "ai")
+                if raw_method == "rule_based":
+                    data["method"] = "fallback"
+                else:
+                    data["method"] = raw_method
                 return AIClassifyResponse(**data)
-            logger.debug(f"ai-service returned {resp.status_code}: {resp.text[:200]}")
+            logger.debug("ai-service returned %s: %s", resp.status_code, resp.text[:200])
             return None
     except httpx.ConnectError:
-        logger.debug("ai-service unavailable (ConnectError)")
+        logger.debug("ai-service unavailable (ConnectError), using local fallback")
         return None
     except httpx.TimeoutException:
-        logger.debug("ai-service timeout")
+        logger.debug("ai-service timeout, using local fallback")
         return None
     except Exception as e:
-        logger.warning(f"ai-service unexpected error: {e}")
+        logger.warning("ai-service unexpected error: %s, using local fallback", e)
         return None
 
 

@@ -165,6 +165,8 @@ services:
       OLLAMA_BASE_URL: http://host.docker.internal:11434
       OLLAMA_MODEL: llama3.2:3b
       ENABLE_AI: "true"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     ports:
       - "8002:8002"
     healthcheck:

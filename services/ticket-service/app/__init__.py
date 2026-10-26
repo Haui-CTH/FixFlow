@@ -1,2 +1,2 @@
+# SPDX-License-Identifier: Apache-2.0
 # DX-FSM Ticket Service
-# Licensed under Apache License 2.0

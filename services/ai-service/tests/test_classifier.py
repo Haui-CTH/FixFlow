@@ -90,3 +90,9 @@ class TestAIClassifier:
         result = classify("Màn hình laptop bị sọc", use_ai=False)
         assert result.method == "rule_based"
         assert result.category == "hardware"
+
+    def test_classify_with_ai_offline_falls_back_to_rules(self):
+        """When use_ai=True but Ollama is offline, fallback cleanly to rule-based."""
+        result = classify("Máy in HP nhấp nháy đèn cam", use_ai=True)
+        assert result.category == "hardware"
+        assert result.method == "rule_based"
