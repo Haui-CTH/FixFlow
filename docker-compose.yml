@@ -22,6 +22,7 @@ services:
       - ./core/postgres/migrations/003_outbox_dlq.sql:/docker-entrypoint-initdb.d/03_outbox_dlq.sql:ro
       - ./core/postgres/migrations/004_add_categories.sql:/docker-entrypoint-initdb.d/04_add_categories.sql:ro
       - ./core/postgres/migrations/005_seed_technicians.sql:/docker-entrypoint-initdb.d/05_seed_technicians.sql:ro
+      - ./core/postgres/migrations/006_rich_sample_data.sql:/docker-entrypoint-initdb.d/06_rich_sample_data.sql:ro
     ports:
       - "5432:5432"
     healthcheck:
