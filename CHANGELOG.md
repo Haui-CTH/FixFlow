@@ -5,7 +5,21 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [v1.3.0] – 2026-10-27
+
+Bản phát hành chính thức Cuộc thi Phần mềm Nguồn mở HaUI 2026 (Official PMNM 2026 Release).
+Hoàn thiện toàn bộ tiêu chí PoF và Sản phẩm: đồng bộ 7 danh mục sự cố, bộ dữ liệu mẫu thực tế 77+ tickets (Migration 006), AI phân công KTV thật (UUID), Knowledge Base trực quan trên UI, AI Circuit Breaker & Graceful Degradation, 100% SPDX Apache-2.0, SBOM DEPENDENCIES.md, và bộ hồ sơ thuyết trình bảo vệ.
+
+### Added (Bản phát hành v1.3.0)
+- **Bộ Dữ liệu Mẫu Thực tế Chuẩn Doanh nghiệp (Migration 006)**: 77+ sự cố kỹ thuật đa dạng tại các tòa nhà và xưởng HaUI, đầy đủ 7 categories, 7 statuses, trao đổi bình luận giữa khách hàng & KTV (`ticket_comments`), ghi chú nội bộ (`ticket_notes`), lịch sử thay đổi (`ticket_history`) và phân bổ thời gian SLA chuẩn.
+- **Đồng bộ 7 Danh mục Sự cố (7 Categories Sync)**: Mở rộng enum `ticket_category` trên PostgreSQL, backend Ticket Service, AI Classifier, và Frontend UI (`access_control`, `service_request`).
+- **Gợi ý Kỹ thuật viên bằng Dữ liệu Thật (Phase P4)**: Ánh xạ 100% KTV với UUID cố định trong DB (`d0000000-0000-0000-0000-000000000001` - `08`), chấm điểm đa tiêu chí (40% Chuyên môn + 30% Tải việc + 30% Lịch sử/Đánh giá) hiển thị trên `AssignModal.tsx`.
+- **Knowledge Base trên Giao diện (Phase P5)**: Component `KbSuggestions.tsx` với debounce 300ms hiển thị trên màn hình Tạo Ticket và Chi tiết Ticket, hỗ trợ xem trước giải pháp và nút chèn nội dung vào mô tả chỉ với 1 click.
+- **Khả năng Chịu lỗi Cao cho AI (Phase P0/P1/P2/P6)**: Cơ chế Circuit Breaker tự ngắt sau 2s, cooldown 15s để chuyển sang Rule-based NLP < 2ms khi không có GPU; Dynamic Health Probe `/health` công bố trạng thái dự phòng trung thực.
+- **Độ phủ Bản quyền Nguồn mở 100%**: 227/227 tệp mã nguồn tuân thủ SPDX License Header Apache-2.0.
+- **Quản lý Phụ thuộc & SBOM**: File `DEPENDENCIES.md` phân tích nguồn gốc, phiên bản và tính tương thích giấy phép của toàn bộ thư viện.
+- **Hồ sơ Bảo vệ Hội đồng**: `docs/technical-report.md`, `docs/demo-script.md` (10m demo + 5m Q&A), `docs/slides.md` (12 slide chuẩn).
+
 
 ### Frontend (UI overhaul, phases 01–10)
 
