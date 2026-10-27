@@ -38,21 +38,21 @@ Bài toán: Doanh nghiệp cung cấp dịch vụ kỹ thuật (lắp đặt, b�
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
-│                   TẦNG 3: ỨNG DỤNG NGHIỆP VỤ             │
+│                   TẦNG 3: ỨNG DỤNG NGHIỆP VỤ                │
 │  Customer App │ KTV Mobile │ Manager Dashboard              │
 │                    (React 18 SPA)                           │
 ├─────────────────────────────┬───────────────────────────────┤
-│        TẦNG 2: H-P-D-I    │                               │
-│  H: User/Profile           │ P: Ticket Workflow            │
-│  D: Dashboard/KPI         │ I: AI Classify/Recommend      │
+│        TẦNG 2: H-P-D-I      │                               │
+│  H: User/Profile            │ P: Ticket Workflow            │
+│  D: Dashboard/KPI           │ I: AI Classify/Recommend      │
 ├─────────────────────────────┴───────────────────────────────┤
 │                    TẦNG 1: DX-OS OPEN-CORE (HEADLESS)       │
-│  Keycloak (SSO) │ nginx (Gateway) │ PostgreSQL (DB)     │
-│  MinIO (Files, disabled) │ n8n (Workflow) │ Ollama (AI)  │
+│  Keycloak (SSO) │ nginx (Gateway) │ PostgreSQL (DB)         │
+│  MinIO (Files, disabled) │ n8n (Workflow) │ Ollama (AI)     │
 └─────────────────────────────────────────────────────────────┘
 ```
 
-Xem chi tiết: [docs/docs/architecture/overview.md](docs/docs/architecture/overview.md)
+Xem chi tiết: [docs/architecture.md](docs/architecture.md)
 
 ---
 
@@ -61,21 +61,21 @@ Xem chi tiết: [docs/docs/architecture/overview.md](docs/docs/architecture/over
 ### Tầng 1 – Open-Core
 - [x] **Identity/SSO** với Keycloak – JWT token, RBAC
 - [x] **API Gateway** với nginx – routing, proxy
-- [x] **Database** PostgreSQL – dữ liệu quan hệ
-- [x] **File Storage** – MinIO (disabled, fallback filesystem)
+- [x] **Database** PostgreSQL – dữ liệu quan hệ, 7 danh mục sự cố
+- [x] **File Storage** – Local filesystem (MinIO disabled)
 - [x] **Workflow Engine** với n8n – ticket intake → assign → process → close
-- [x] **AI Service** – phân loại ticket tự động (rule-based + Ollama)
+- [x] **AI Service** – phân loại ticket tự động (Hybrid Rule-based + Ollama)
 
 ### Tầng 2 – H-P-D-I
 - [x] **H – Human:** Quản lý user, profile, team
 - [x] **P – Process:** Quy trình ticket có trạng thái, người tạo, người xử lý, timestamp
 - [x] **D – Data:** Dashboard, KPI, thống kê real-time
-- [x] **I – Intelligence:** AI phân loại ticket, gợi ý kỹ thuật viên
+- [x] **I – Intelligence:** AI phân loại ticket, Knowledge Base tìm kiếm giải pháp, gợi ý kỹ thuật viên
 
 ### Tầng 3 – Ứng dụng
-- [x] **Customer Portal:** Tạo ticket, theo dõi trạng thái
-- [x] **Technician Portal:** Nhận ticket, cập nhật tiến độ, upload ảnh
-- [x] **Manager Dashboard:** Tổng hợp KPI, phân công thủ công
+- [x] **Customer Portal:** Tạo ticket, theo dõi trạng thái, gợi ý KB tức thì
+- [x] **Technician Portal:** Nhận ticket, cập nhật tiến độ, upload ảnh, ghi chú nội bộ
+- [x] **Manager Dashboard:** Tổng hợp KPI, phân công KTV với AI Recommender chấm điểm đa tiêu chí
 
 ---
 
@@ -83,13 +83,13 @@ Xem chi tiết: [docs/docs/architecture/overview.md](docs/docs/architecture/over
 
 | Thành phần | Công nghệ | Giấy phép |
 |---|---|---|
-| Identity/SSO | Keycloak | Apache-2.0 |
-| API Gateway | nginx | BSD |
+| Identity/SSO | Keycloak 24 | Apache-2.0 |
+| API Gateway | nginx | BSD-2-Clause |
 | Database | PostgreSQL 16 | PostgreSQL |
 | File Storage | Local filesystem (MinIO disabled) | – |
-| Workflow | n8n | Elastic-2.0 |
+| Workflow | n8n | Elastic-2.0 / Sustainable |
 | Backend API | FastAPI (Python 3.11) | MIT |
-| AI Service | Ollama + Llama 3.2 | MIT |
+| AI Service | Hybrid (Rule-based Regex + TF-IDF + Heuristic + Ollama) | Apache-2.0 / MIT |
 | Frontend | React 18 + Vite + TypeScript | MIT |
 | Orchestration | Docker Compose | Apache-2.0 |
 
@@ -153,7 +153,7 @@ uvicorn app.main:app --reload --port 8002
 |---|---|---|---|
 | Customer | `customer@haui.vn` | `customer123` | Tạo ticket, theo dõi trạng thái |
 | Technician | `technician@haui.vn` | `tech123` | Nhận, xử lý, đóng ticket |
-| Manager | `manager@haui.vn` | `manager123` | Dashboard, phân công thủ công |
+| Manager | `manager@haui.vn` | `manager123` | Dashboard, phân công kỹ thuật viên |
 | Admin | `admin@haui.vn` | `admin123` | Quản trị Keycloak |
 
 ---
@@ -163,19 +163,19 @@ uvicorn app.main:app --reload --port 8002
 ```
 dx-fsm/
 ├── core/                    # Tầng 1: Open-Core (Headless)
-│   ├── keycloak/          # SSO + RBAC
-│   ├── nginx/              # API Gateway (thay APISIX)
-│   ├── postgres/            # Database schema
-│   ├── minio/              # File storage (disabled)
-│   └── n8n/                # Workflow engine
-├── services/               # Tầng 2: Microservices
-│   ├── ticket-service/     # Core API (FastAPI)
-│   ├── ai-service/         # AI/ML (FastAPI + Ollama)
-│   └── notification-service/
-├── app/                   # Tầng 3: React 18 Frontend
-├── docs/                  # Tài liệu Docusaurus
-├── scripts/               # Utility scripts
-└── docker-compose.yml    # Orchestration
+│   ├── keycloak/            # SSO + RBAC
+│   ├── nginx/               # API Gateway
+│   ├── postgres/            # Database schema & migrations
+│   ├── minio/               # File storage (disabled)
+│   └── n8n/                 # Workflow engine
+├── services/                # Tầng 2: Microservices
+│   ├── ticket-service/      # Core API (FastAPI)
+│   ├── ai-service/          # AI/ML (FastAPI + TF-IDF + Ollama)
+│   └── notification-service/# Notifications
+├── app/                     # Tầng 3: React 18 Frontend
+├── docs/                    # Tài liệu kỹ thuật & Báo cáo
+├── scripts/                 # Utility scripts & CI verification
+└── docker-compose.yml       # Orchestration
 ```
 
 ---
@@ -184,11 +184,14 @@ dx-fsm/
 
 | Tài liệu | Mô tả |
 |---|---|
-| [docs/docs/architecture/overview.md](docs/docs/architecture/overview.md) | Tổng quan kiến trúc |
-| [docs/docs/setup/installation.md](docs/docs/setup/installation.md) | Hướng dẫn cài đặt chi tiết |
-| [docs/docs/demo/demo-script.md](docs/docs/demo/demo-script.md) | Kịch bản demo |
-| [docs/docs/api/endpoints.md](docs/docs/api/endpoints.md) | Tài liệu API |
-| [reports/technical-report.md](reports/technical-report.md) | Báo cáo kỹ thuật |
+| [docs/architecture.md](docs/architecture.md) | Tổng quan kiến trúc DX-OS Open-Core 3 tầng |
+| [docs/technical-report.md](docs/technical-report.md) | Báo cáo kỹ thuật chi tiết (Hội đồng OLP PMNM 2026) |
+| [docs/deployment.md](docs/deployment.md) | Hướng dẫn cài đặt và vận hành Docker Compose |
+| [docs/demo-script.md](docs/demo-script.md) | Kịch bản thuyết trình & demo 10 phút chuẩn HaUI OLP |
+| [docs/api-specification.md](docs/api-specification.md) | Đặc tả kỹ thuật API RESTful |
+| [docs/danh-gia-tieu-chi-cuoc-thi-2026.md](docs/danh-gia-tieu-chi-cuoc-thi-2026.md) | Báo cáo kiểm định 100 điểm & 10 câu hỏi chất vấn |
+| [DEPENDENCIES.md](DEPENDENCIES.md) | SBOM & Phân tích tương thích giấy phép nguồn mở |
+| [docs/SECURITY.md](docs/SECURITY.md) | Chính sách an toàn thông tin & Quản trị bí mật |
 
 ---
 
@@ -201,6 +204,7 @@ Xem [CONTRIBUTING.md](CONTRIBUTING.md) để biết quy trình đóng góp.
 ## Giấy phép
 
 Dự án này được phân phối theo **Apache License 2.0**. Xem file [LICENSE](LICENSE) để biết chi tiết.
+100% tệp mã nguồn tuân thủ SPDX License Header: `// SPDX-License-Identifier: Apache-2.0` hoặc `# SPDX-License-Identifier: Apache-2.0`.
 
 ---
 
