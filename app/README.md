@@ -73,7 +73,6 @@ src/
 - Mặc định `vi`. Chuyển bằng nút **VI | EN** (lưu `localStorage`, đổi `<html lang>`).
 - Dùng `t('khoá')` từ `src/lib/i18n.ts`. Khi đổi ngôn ngữ, `main.tsx` remount cây UI nên không cần hook ở từng component. **Không** giữ chuỗi dịch trong hằng số tính lúc import — dùng hàm/getter.
 - Thêm chuỗi: thêm khoá vào **cả** `vi.json` và `en.json` (test kiểm tra hai file khớp khoá và `{{biến}}`).
-- Kiểm tra chuỗi cứng còn sót: `python scripts/i18n-scan.py`.
 
 ## Kiểm thử và chất lượng
 

@@ -1,15 +1,16 @@
+<!-- SPDX-License-Identifier: Apache-2.0 -->
 # DX-FSM Core – Tầng 1: Open-Core (Headless)
 
 ## Tổng quan
 
-Tầng 1 cung cấp các service headless cho toàn bộ hệ thống. Không có UI cho user cuối – chỉ cung cấp API và dịch vụ nền tảng.
+Tầng 1 cung cấp các service headless cho toàn bộ hệ thống theo kiến trúc mở DX-OS. Không có UI cho user cuối – chỉ cung cấp API và dịch vụ nền tảng.
 
 ## Các thành phần
 
 | Service | Port | Mô tả |
 |---|---|---|
 | Keycloak | 8080 | Identity/SSO, quản lý user và role |
-| APISIX | 9180/80 | API Gateway, routing, auth |
+| Nginx Gateway | 80 | API Gateway, routing, SSL/TLS, reverse proxy |
 | PostgreSQL | 5432 | Database chính |
 | MinIO | 9000/9001 | Object storage (file/ảnh) |
 | n8n | 5678 | Workflow automation |
@@ -18,18 +19,18 @@ Tầng 1 cung cấp các service headless cho toàn bộ hệ thống. Không c�
 
 ```bash
 # Toàn bộ stack
-cd dx-fsm && docker compose up -d
+docker compose up -d
 
 # Chỉ Open-Core
-docker compose up -d keycloak apisix postgres minio n8n
+docker compose up -d keycloak gateway postgres minio n8n
 ```
 
 ## Cấu hình
 
 - `keycloak/realm-export.json` – Import realm + user demo tự động
-- `apisix/config.yaml` – Cấu hình APISIX
-- `apisix/routes.yaml` – Định nghĩa routes
+- `nginx/nginx.conf` – Cấu hình reverse proxy và bảo mật cho API Gateway
 - `postgres/init.sql` – Schema database + seed data
+- `postgres/migrations/` – Các bản cập nhật schema và dữ liệu mẫu thực tế
 - `n8n/workflows/` – Workflow JSON exports
 
 ## Kiểm tra
@@ -38,8 +39,8 @@ docker compose up -d keycloak apisix postgres minio n8n
 # Keycloak health
 curl http://localhost:8080/health/ready
 
-# APISIX
-curl http://localhost:9180/apisix/adminRoutes
+# API Gateway health
+curl -I http://localhost:80/health
 
 # PostgreSQL
 docker compose exec postgres pg_isready -U dxfsm
