@@ -67,7 +67,6 @@ export function KbSuggestions({ query, category, onInsert, className }: KbSugges
 
       <div className={styles.kbList}>
         {hits.map((hit) => {
-          const cat = categoryMeta(hit.category);
           const matchPct = Math.round(Math.min(100, hit.score * 100));
 
           return (
