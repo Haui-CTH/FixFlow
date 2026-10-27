@@ -31,6 +31,10 @@ Dự án được xây dựng tuân thủ 100% định nghĩa DX-OS Open-Core c�
 
 ## 2. Kiến trúc Hệ thống (System Architecture)
 
+![Sơ đồ Kiến trúc DX-FSM](architecture-diagram.svg)
+
+> 💡 **Sơ đồ Vector & Trình xem tương tác:** File [docs/architecture-diagram.svg](architecture-diagram.svg) và [docs/architecture-diagram.html](architecture-diagram.html).
+
 ```
 ┌─────────────────────────────────────────────────────────────────────────────┐
 │                       TẦNG 3: REACT 18 SPA (PORT 3000)                      │

@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DX-FSM · Sơ đồ Kiến trúc Hệ thống (DX-OS Open-Core & H-P-D-I)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0F172A;
+      --card-bg: #1E293B;
+      --text: #F8FAFC;
+      --text-muted: #94A3B8;
+      --border: #334155;
+      --accent: #3B82F6;
+    }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 24px;
+    }
+    header {
+      width: 100%;
+      max-width: 1600px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+    .header-left h1 {
+      font-size: 24px;
+      font-weight: 800;
+      color: #FFFFFF;
+      letter-spacing: -0.5px;
+    }
+    .header-left p {
+      font-size: 14px;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+    .header-right {
+      display: flex;
+      gap: 12px;
+    }
+    .btn {
+      padding: 10px 18px;
+      border-radius: 10px;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s ease;
+      text-decoration: none;
+    }
+    .btn-primary {
+      background: #2563EB;
+      color: #FFFFFF;
+      border: 1px solid #3B82F6;
+    }
+    .btn-primary:hover {
+      background: #1D4ED8;
+      transform: translateY(-1px);
+    }
+    .btn-secondary {
+      background: #1E293B;
+      color: #E2E8F0;
+      border: 1px solid #475569;
+    }
+    .btn-secondary:hover {
+      background: #334155;
+    }
+    .canvas-container {
+      width: 100%;
+      max-width: 1600px;
+      background: #FFFFFF;
+      border-radius: 20px;
+      box-shadow: 0 20px 40px -15px rgba(0,0,0,0.4);
+      overflow: hidden;
+      border: 1px solid #334155;
+    }
+    .canvas-container svg {
+      display: block;
+      width: 100%;
+      height: auto;
+    }
+    .insights-panel {
+      width: 100%;
+      max-width: 1600px;
+      margin-top: 24px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+      gap: 16px;
+    }
+    .insight-card {
+      background: #1E293B;
+      border: 1px solid #334155;
+      border-radius: 14px;
+      padding: 18px 22px;
+    }
+    .insight-card h3 {
+      font-size: 15px;
+      font-weight: 700;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .insight-card p {
+      font-size: 13px;
+      color: var(--text-muted);
+      line-height: 1.6;
+    }
+    .badge-hpdi {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 800;
+      margin-right: 4px;
+    }
+    .badge-h { background: #DBEAFE; color: #1E40AF; }
+    .badge-p { background: #D1FAE5; color: #065F46; }
+    .badge-d { background: #FEF3C7; color: #92400E; }
+    .badge-i { background: #FFE4E6; color: #9F1239; }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="header-left">
+      <h1>DX-FSM · Kiến Trúc Hệ Thống Chuẩn OLP PMNM 2026</h1>
+      <p>Mô hình 3 tầng phân rã DX-OS Open-Core (Headless PaaS) & Chuỗi giá trị số hóa H-P-D-I</p>
+    </div>
+    <div class="header-right">
+      <a href="architecture-diagram.svg" download="DX-FSM-Architecture.svg" class="btn btn-secondary">
+        📥 Tải File Vector SVG
+      </a>
+      <button onclick="downloadPNG()" class="btn btn-primary">
+        📸 Tải Ảnh PNG Siêu Nét (4K)
+      </button>
+    </div>
+  </header>
+
+  <div class="canvas-container" id="canvas-card">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1080" width="100%" height="100%" style="background-color: #F8FAFC; font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;">
+  <defs>
+    <!-- Shadows -->
+    <filter id="card-shadow" x="-4%" y="-4%" width="108%" height="108%" filterUnits="userSpaceOnUse">
+      <feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="#0F172A" flood-opacity="0.06"/>
+      <feDropShadow dx="0" dy="1" stdDeviation="2" flood-color="#0F172A" flood-opacity="0.04"/>
+    </filter>
+    <filter id="gateway-shadow" x="-5%" y="-3%" width="110%" height="106%" filterUnits="userSpaceOnUse">
+      <feDropShadow dx="0" dy="8" stdDeviation="12" flood-color="#047857" flood-opacity="0.08"/>
+      <feDropShadow dx="0" dy="2" stdDeviation="4" flood-color="#047857" flood-opacity="0.06"/>
+    </filter>
+
+    <!-- Arrow Markers -->
+    <marker id="arrow" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#64748B" />
+    </marker>
+    <marker id="arrow-green" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#059669" />
+    </marker>
+    <marker id="arrow-blue" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#2563EB" />
+    </marker>
+    <marker id="arrow-amber" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#D97706" />
+    </marker>
+    <marker id="arrow-purple" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#7C3AED" />
+    </marker>
+  </defs>
+
+  <!-- Title & Header -->
+  <text x="60" y="48" font-size="24" font-weight="800" fill="#0F172A" letter-spacing="-0.5">DX-FSM · KIẾN TRÚC TỔNG THỂ NỀN TẢNG (DX-OS OPEN-CORE &amp; H-P-D-I)</text>
+  <text x="60" y="76" font-size="14" font-weight="500" fill="#64748B">Hệ thống Quản lý Dịch vụ Thực địa cho Đơn vị Đào tạo &amp; Cơ sở Vật chất HaUI · Chuẩn Olympic PMNM 2026</text>
+
+  <!-- ══════════════════════════════════════════════════════════════════════════ -->
+  <!-- LEFT ZONE: NGƯỜI DÙNG & TIẾP NHẬN                                          -->
+  <!-- ══════════════════════════════════════════════════════════════════════════ -->
+  <g id="zone-users">
+    <rect x="50" y="110" width="220" height="920" rx="20" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="1.5" stroke-dasharray="6 6"/>
+    <text x="75" y="145" font-size="14" font-weight="700" fill="#475569" letter-spacing="0.5">NGƯỜI DÙNG HỆ THỐNG</text>
+    <text x="75" y="165" font-size="12" font-weight="500" fill="#94A3B8">3 Cổng nghiệp vụ phân quyền</text>
+
+    <!-- Card 1: Khách hàng / Giảng viên -->
+    <g transform="translate(68, 190)" filter="url(#card-shadow)">
+      <rect width="184" height="210" rx="14" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1.5"/>
+      <rect width="184" height="6" rx="3" fill="#3B82F6"/>
+      <circle cx="36" cy="38" r="18" fill="#EFF6FF"/>
+      <text x="36" y="44" font-size="18" text-anchor="middle">🎓</text>
+      <text x="64" y="36" font-size="14" font-weight="700" fill="#1E293B">Khách hàng</text>
+      <text x="64" y="52" font-size="11" font-weight="600" fill="#3B82F6">Giảng viên / Sinh viên</text>
+      <line x1="16" y1="70" x2="168" y2="70" stroke="#F1F5F9" stroke-width="1.5"/>
+      <text x="20" y="94" font-size="12" fill="#475569">• Gửi ticket sự cố phòng lab</text>
+      <text x="20" y="118" font-size="12" fill="#475569">• Tra cứu Knowledge Base</text>
+      <text x="20" y="142" font-size="12" fill="#475569">• Trao đổi phản hồi trực tuyến</text>
+      <text x="20" y="166" font-size="12" fill="#475569">• Đánh giá KTV sau xử lý</text>
+      <rect x="20" y="180" width="144" height="20" rx="4" fill="#F8FAFC"/>
+      <text x="92" y="194" font-size="10" font-weight="600" fill="#64748B" text-anchor="middle">Role: customer (HaUI SSO)</text>
+    </g>
+
+    <!-- Card 2: Kỹ thuật viên -->
+    <g transform="translate(68, 440)" filter="url(#card-shadow)">
+      <rect width="184" height="210" rx="14" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1.5"/>
+      <rect width="184" height="6" rx="3" fill="#10B981"/>
+      <circle cx="36" cy="38" r="18" fill="#ECFDF5"/>
+      <text x="36" y="44" font-size="18" text-anchor="middle">🔧</text>
+      <text x="64" y="36" font-size="14" font-weight="700" fill="#1E293B">Kỹ thuật viên</text>
+      <text x="64" y="52" font-size="11" font-weight="600" fill="#10B981">Đội ngũ cơ sở vật chất</text>
+      <line x1="16" y1="70" x2="168" y2="70" stroke="#F1F5F9" stroke-width="1.5"/>
+      <text x="20" y="94" font-size="12" fill="#475569">• Tiếp nhận &amp; nhận ticket</text>
+      <text x="20" y="118" font-size="12" fill="#475569">• Xem gợi ý giải pháp KB AI</text>
+      <text x="20" y="142" font-size="12" fill="#475569">• Ghi chú bảo mật nội bộ</text>
+      <text x="20" y="166" font-size="12" fill="#475569">• Chuyển trạng thái 7 bước</text>
+      <rect x="20" y="180" width="144" height="20" rx="4" fill="#F8FAFC"/>
+      <text x="92" y="194" font-size="10" font-weight="600" fill="#64748B" text-anchor="middle">Role: technician (HaUI SSO)</text>
+    </g>
+
+    <!-- Card 3: Điều phối / Quản lý -->
+    <g transform="translate(68, 690)" filter="url(#card-shadow)">
+      <rect width="184" height="210" rx="14" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1.5"/>
+      <rect width="184" height="6" rx="3" fill="#8B5CF6"/>
+      <circle cx="36" cy="38" r="18" fill="#F5F3FF"/>
+      <text x="36" y="44" font-size="18" text-anchor="middle">📊</text>
+      <text x="64" y="36" font-size="14" font-weight="700" fill="#1E293B">Quản lý / Dispatcher</text>
+      <text x="64" y="52" font-size="11" font-weight="600" fill="#8B5CF6">Trung tâm Điều hành</text>
+      <line x1="16" y1="70" x2="168" y2="70" stroke="#F1F5F9" stroke-width="1.5"/>
+      <text x="20" y="94" font-size="12" fill="#475569">• Dashboard SLA thời gian thực</text>
+      <text x="20" y="118" font-size="12" fill="#475569">• Gợi ý phân công KTV (AI)</text>
+      <text x="20" y="142" font-size="12" fill="#475569">• Giám sát tải việc &amp; vi phạm</text>
+      <text x="20" y="166" font-size="12" fill="#475569">• Xuất báo cáo kiểm toán</text>
+      <rect x="20" y="180" width="144" height="20" rx="4" fill="#F8FAFC"/>
+      <text x="92" y="194" font-size="10" font-weight="600" fill="#64748B" text-anchor="middle">Role: manager / admin</text>
+    </g>
+  </g>
+
+  <!-- ══════════════════════════════════════════════════════════════════════════ -->
+  <!-- MIDDLE ZONE: API GATEWAY                                                   -->
+  <!-- ══════════════════════════════════════════════════════════════════════════ -->
+  <g id="zone-gateway" transform="translate(300, 110)" filter="url(#gateway-shadow)">
+    <rect width="170" height="920" rx="20" fill="#ECFDF5" stroke="#10B981" stroke-width="2"/>
+    <rect x="15" y="18" width="140" height="28" rx="14" fill="#10B981"/>
+    <text x="85" y="36" font-size="11" font-weight="700" fill="#FFFFFF" text-anchor="middle">CỔNG VÀO DUY NHẤT</text>
+
+    <text x="85" y="80" font-size="18" font-weight="800" fill="#065F46" text-anchor="middle">Nginx Gateway</text>
+    <text x="85" y="100" font-size="12" font-weight="700" fill="#047857" text-anchor="middle">API &amp; Reverse Proxy</text>
+    <rect x="35" y="112" width="100" height="22" rx="11" fill="#D1FAE5"/>
+    <text x="85" y="127" font-size="11" font-weight="700" fill="#065F46" text-anchor="middle">PORT 80 : 80</text>
+
+    <!-- Gateway features list -->
+    <g transform="translate(18, 155)">
+      <rect width="134" height="52" rx="8" fill="#FFFFFF" stroke="#A7F3D0"/>
+      <text x="10" y="20" font-size="11" font-weight="700" fill="#065F46">Kiểm tra Biên JWT</text>
+      <text x="10" y="38" font-size="10" fill="#047857">Keycloak JWKS validation</text>
+    </g>
+
+    <g transform="translate(18, 220)">
+      <rect width="134" height="52" rx="8" fill="#FFFFFF" stroke="#A7F3D0"/>
+      <text x="10" y="20" font-size="11" font-weight="700" fill="#065F46">Gắn Tracing ID</text>
+      <text x="10" y="38" font-size="10" fill="#047857">X-Request-Id audit logs</text>
+    </g>
+
+    <g transform="translate(18, 285)">
+      <rect width="134" height="52" rx="8" fill="#FFFFFF" stroke="#A7F3D0"/>
+      <text x="10" y="20" font-size="11" font-weight="700" fill="#065F46">Phục vụ SPA &amp; Cache</text>
+      <text x="10" y="38" font-size="10" fill="#047857">Bất biến assets gzip</text>
+    </g>
+
+    <!-- Route paths -->
+    <text x="20" y="380" font-size="11" font-weight="700" fill="#047857">ĐỊNH TUYẾN REVERSE:</text>
+
+    <g transform="translate(16, 400)">
+      <rect width="138" height="26" rx="6" fill="#F0FDF4" stroke="#86EFAC"/>
+      <text x="8" y="17" font-size="10" font-family="monospace" font-weight="700" fill="#15803D">/ ➔ Frontend SPA</text>
+    </g>
+    <g transform="translate(16, 435)">
+      <rect width="138" height="26" rx="6" fill="#F0FDF4" stroke="#86EFAC"/>
+      <text x="8" y="17" font-size="10" font-family="monospace" font-weight="700" fill="#15803D">/api/v1/tickets ➔ :8001</text>
+    </g>
+    <g transform="translate(16, 470)">
+      <rect width="138" height="26" rx="6" fill="#F0FDF4" stroke="#86EFAC"/>
+      <text x="8" y="17" font-size="10" font-family="monospace" font-weight="700" fill="#15803D">/api/v1/classify ➔ :8002</text>
+    </g>
+    <g transform="translate(16, 505)">
+      <rect width="138" height="26" rx="6" fill="#F0FDF4" stroke="#86EFAC"/>
+      <text x="8" y="17" font-size="10" font-family="monospace" font-weight="700" fill="#15803D">/api/v1/recommend ➔ :8002</text>
+    </g>
+    <g transform="translate(16, 540)">
+      <rect width="138" height="26" rx="6" fill="#F0FDF4" stroke="#86EFAC"/>
+      <text x="8" y="17" font-size="10" font-family="monospace" font-weight="700" fill="#15803D">/api/v1/kb ➔ :8002</text>
+    </g>
+    <g transform="translate(16, 575)">
+      <rect width="138" height="26" rx="6" fill="#F0FDF4" stroke="#86EFAC"/>
+      <text x="8" y="17" font-size="10" font-family="monospace" font-weight="700" fill="#15803D">/api/v1/notify ➔ :8003</text>
+    </g>
+    <g transform="translate(16, 610)">
+      <rect width="138" height="26" rx="6" fill="#F0FDF4" stroke="#86EFAC"/>
+      <text x="8" y="17" font-size="10" font-family="monospace" font-weight="700" fill="#15803D">/realms ➔ :8080 (SSO)</text>
+    </g>
+
+    <!-- Security shield badge -->
+    <g transform="translate(25, 780)">
+      <circle cx="60" cy="40" r="32" fill="#D1FAE5" stroke="#10B981" stroke-width="2"/>
+      <text x="60" y="47" font-size="28" text-anchor="middle">🛡️</text>
+      <text x="60" y="90" font-size="11" font-weight="700" fill="#065F46" text-anchor="middle">Zero-Trust Edge</text>
+      <text x="60" y="106" font-size="10" fill="#047857" text-anchor="middle">Chặn Port Nội bộ</text>
+    </g>
+  </g>
+
+  <!-- Connectors from Users to Gateway -->
+  <path d="M 252 295 L 300 295" stroke="#3B82F6" stroke-width="2" stroke-dasharray="4 4" marker-end="url(#arrow-blue)"/>
+  <path d="M 252 545 L 300 545" stroke="#10B981" stroke-width="2" stroke-dasharray="4 4" marker-end="url(#arrow-green)"/>
+  <path d="M 252 795 L 300 795" stroke="#8B5CF6" stroke-width="2" stroke-dasharray="4 4" marker-end="url(#arrow-purple)"/>
+
+  <!-- ══════════════════════════════════════════════════════════════════════════ -->
+  <!-- RIGHT ZONE: DOCKER NETWORK ARCHITECTURE (3 TIERS)                          -->
+  <!-- ══════════════════════════════════════════════════════════════════════════ -->
+  <g id="zone-docker-network" transform="translate(500, 110)">
+    <!-- Outer Docker Network Frame -->
+    <rect width="1050" height="920" rx="20" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1.5"/>
+    <rect x="25" y="16" width="310" height="26" rx="6" fill="#F1F5F9"/>
+    <text x="35" y="33" font-size="11" font-weight="700" fill="#475569">MẠNG NỘI BỘ DOCKER (BRIDGE NETWORK: dx-fsm-net)</text>
+    <text x="1025" y="33" font-size="11" font-weight="600" fill="#94A3B8" text-anchor="end">Cô lập 100% dịch vụ backend, chỉ mở cổng 80 &amp; 3000</text>
+
+    <!-- ──────────────────────────────────────────────────────────────────────── -->
+    <!-- TẦNG 3: ỨNG DỤNG CÓ GIAO DIỆN                                           -->
+    <!-- ──────────────────────────────────────────────────────────────────────── -->
+    <g id="tier-3" transform="translate(25, 55)">
+      <rect width="1000" height="175" rx="14" fill="#F8FAFC" stroke="#E2E8F0" stroke-width="1.5"/>
+      <rect x="15" y="12" width="260" height="24" rx="6" fill="#EFF6FF" stroke="#BFDBFE"/>
+      <text x="25" y="28" font-size="11" font-weight="800" fill="#1D4ED8">TẦNG 3 · ỨNG DỤNG CÓ GIAO DIỆN (UI)</text>
+      <text x="380" y="28" font-size="11" font-weight="600" fill="#64748B">React 18 SPA · TypeScript · TanStack Query · Zustand · Vite · i18n (VI/EN) · Dark/Light Mode</text>
+
+      <!-- Portal 1 -->
+      <g transform="translate(20, 48)" filter="url(#card-shadow)">
+        <rect width="300" height="110" rx="10" fill="#FFFFFF" stroke="#DBEAFE" stroke-width="1.5"/>
+        <text x="18" y="28" font-size="13" font-weight="800" fill="#1E40AF">Customer Service Portal</text>
+        <rect x="215" y="14" width="70" height="18" rx="4" fill="#DBEAFE"/>
+        <text x="250" y="27" font-size="9" font-weight="700" fill="#1E40AF" text-anchor="middle">[H] Human</text>
+        <text x="18" y="52" font-size="11" fill="#475569">• Form tạo ticket bám sát vị trí HaUI (A1, B, Xưởng)</text>
+        <text x="18" y="70" font-size="11" fill="#475569">• Modal KbSuggestions tra cứu cẩm nang tức thì</text>
+        <text x="18" y="88" font-size="11" fill="#475569">• Đính kèm tệp đa định dạng &amp; xem timeline tiến độ</text>
+        <text x="18" y="104" font-size="10" font-weight="600" fill="#3B82F6">URL: /tickets/new · /tickets/:id</text>
+      </g>
+
+      <!-- Portal 2 -->
+      <g transform="translate(345, 48)" filter="url(#card-shadow)">
+        <rect width="310" height="110" rx="10" fill="#FFFFFF" stroke="#D1FAE5" stroke-width="1.5"/>
+        <text x="18" y="28" font-size="13" font-weight="800" fill="#065F46">Technician Field Workplace</text>
+        <rect x="225" y="14" width="70" height="18" rx="4" fill="#D1FAE5"/>
+        <text x="260" y="27" font-size="9" font-weight="700" fill="#047857" text-anchor="middle">[P] Process</text>
+        <text x="18" y="52" font-size="11" fill="#475569">• Máy trạng thái 7 bước Poka-yoke chặn sai quyền</text>
+        <text x="18" y="70" font-size="11" fill="#475569">• Tab Ghi chú nội bộ (NotesPanel) bảo mật kỹ thuật</text>
+        <text x="18" y="88" font-size="11" fill="#475569">• 1-Click chèn nội dung giải pháp từ Knowledge Base</text>
+        <text x="18" y="104" font-size="10" font-weight="600" fill="#10B981">Mobile-First UI (360px - 1440px không scroll ngang)</text>
+      </g>
+
+      <!-- Portal 3 -->
+      <g transform="translate(680, 48)" filter="url(#card-shadow)">
+        <rect width="300" height="110" rx="10" fill="#FFFFFF" stroke="#EDE9FE" stroke-width="1.5"/>
+        <text x="18" y="28" font-size="13" font-weight="800" fill="#5B21B6">Dispatcher Command Center</text>
+        <rect x="215" y="14" width="70" height="18" rx="4" fill="#EDE9FE"/>
+        <text x="250" y="27" font-size="9" font-weight="700" fill="#6D28D9" text-anchor="middle">[D] Data &amp; [I]</text>
+        <text x="18" y="52" font-size="11" fill="#475569">• Gauge SLA thực tế (~92% tuân thủ, cảnh báo trễ)</text>
+        <text x="18" y="70" font-size="11" fill="#475569">• Phân tích 7 danh mục sự cố (Pie/Bar distribution)</text>
+        <text x="18" y="88" font-size="11" fill="#475569">• AssignModal tích hợp AI Recommender gợi ý KTV</text>
+        <text x="18" y="104" font-size="10" font-weight="600" fill="#8B5CF6">Bảng Top KTV theo số việc &amp; điểm đánh giá</text>
+      </g>
+    </g>
+
+    <!-- ──────────────────────────────────────────────────────────────────────── -->
+    <!-- TẦNG 2: MICROSERVICES H-P-D-I                                            -->
+    <!-- ──────────────────────────────────────────────────────────────────────── -->
+    <g id="tier-2" transform="translate(25, 250)">
+      <rect width="1000" height="300" rx="14" fill="#FFFBEB" stroke="#FDE68A" stroke-width="1.5"/>
+      <rect x="15" y="12" width="280" height="24" rx="6" fill="#FEF3C7" stroke="#FCD34D"/>
+      <text x="25" y="28" font-size="11" font-weight="800" fill="#B45309">TẦNG 2 · MICROSERVICES H-P-D-I (NGHIỆP VỤ)</text>
+      <text x="310" y="28" font-size="11" font-weight="600" fill="#78350F">Kiến trúc H-P-D-I độc lập · FastAPI Async · Circuit Breaker Chịu lỗi · Transactional Outbox Pattern</text>
+
+      <!-- Service 1: Ticket Service -->
+      <g transform="translate(20, 50)" filter="url(#card-shadow)">
+        <rect width="315" height="230" rx="12" fill="#FFFFFF" stroke="#FCD34D" stroke-width="1.5"/>
+        <rect width="315" height="6" rx="3" fill="#F59E0B"/>
+        <text x="20" y="32" font-size="14" font-weight="800" fill="#92400E">ticket-service</text>
+        <rect x="235" y="18" width="65" height="18" rx="4" fill="#FEF3C7"/>
+        <text x="267" y="31" font-size="10" font-weight="700" fill="#B45309" text-anchor="middle">PORT 8001</text>
+        <text x="20" y="50" font-size="11" font-weight="600" fill="#D97706">FastAPI Core Engine · P &amp; D Dimension</text>
+        <line x1="20" y1="62" x2="295" y2="62" stroke="#FEF3C7" stroke-width="1.5"/>
+
+        <g transform="translate(18, 72)">
+          <rect width="280" height="38" rx="6" fill="#FFFBEB" stroke="#FDE68A"/>
+          <text x="8" y="16" font-size="11" font-weight="700" fill="#92400E">★ Transactional Outbox Pattern</text>
+          <text x="8" y="30" font-size="10" fill="#78350F">Lưu sự kiện cùng transaction với ticket, chống mất data</text>
+        </g>
+        <g transform="translate(18, 116)">
+          <rect width="280" height="38" rx="6" fill="#FFFBEB" stroke="#FDE68A"/>
+          <text x="8" y="16" font-size="11" font-weight="700" fill="#92400E">★ Dead-letter Queue (DLQ) &amp; Alerting</text>
+          <text x="8" y="30" font-size="10" fill="#78350F">Retry 5 lần; tự động bắn webhook cảnh báo khi outbox lỗi</text>
+        </g>
+        <text x="20" y="176" font-size="11" fill="#475569">• Máy trạng thái 7 bước: new ➔ assigned ➔ ... ➔ closed</text>
+        <text x="20" y="196" font-size="11" fill="#475569">• Worker nền quét SLA định kỳ mỗi 30 giây (SLA Monitor)</text>
+        <text x="20" y="216" font-size="11" fill="#475569">• Bảng kiểm toán ticket_history ghi nhận từng thao tác</text>
+      </g>
+
+      <!-- Service 2: AI Service -->
+      <g transform="translate(355, 50)" filter="url(#card-shadow)">
+        <rect width="320" height="230" rx="12" fill="#FFFFFF" stroke="#F43F5E" stroke-width="1.5"/>
+        <rect width="320" height="6" rx="3" fill="#F43F5E"/>
+        <text x="20" y="32" font-size="14" font-weight="800" fill="#9F1239">ai-service</text>
+        <rect x="240" y="18" width="65" height="18" rx="4" fill="#FFE4E6"/>
+        <text x="272" y="31" font-size="10" font-weight="700" fill="#E11D48" text-anchor="middle">PORT 8002</text>
+        <text x="20" y="50" font-size="11" font-weight="600" fill="#E11D48">FastAPI Intelligence · I Dimension</text>
+        <line x1="20" y1="62" x2="300" y2="62" stroke="#FFE4E6" stroke-width="1.5"/>
+
+        <g transform="translate(18, 72)">
+          <rect width="284" height="38" rx="6" fill="#FFF1F2" stroke="#FECDD3"/>
+          <text x="8" y="16" font-size="11" font-weight="700" fill="#9F1239">⚡ AI Circuit Breaker (Tự ngắt sau 2s)</text>
+          <text x="8" y="30" font-size="10" fill="#881337">Cooldown 15s; không bao giờ làm treo hệ thống</text>
+        </g>
+        <g transform="translate(18, 116)">
+          <rect width="284" height="38" rx="6" fill="#FFF1F2" stroke="#FECDD3"/>
+          <text x="8" y="16" font-size="11" font-weight="700" fill="#9F1239">⚡ Graceful Fallback NLP Engine (&lt; 2ms)</text>
+          <text x="8" y="30" font-size="10" fill="#881337">Tự động suy luận cực nhanh ngay cả khi máy không có GPU</text>
+        </g>
+        <text x="20" y="176" font-size="11" fill="#475569">• AI Recommender: Gợi ý 8 UUIDs KTV thật (Skill + Load + Rate)</text>
+        <text x="20" y="196" font-size="11" fill="#475569">• TF-IDF Knowledge Base Search: Tra cứu cẩm nang tức thì</text>
+        <text x="20" y="216" font-size="11" fill="#475569">• Dynamic Health Probe: /health báo trung thực trạng thái AI</text>
+      </g>
+
+      <!-- Service 3: Notification Service -->
+      <g transform="translate(695, 50)" filter="url(#card-shadow)">
+        <rect width="285" height="230" rx="12" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1.5"/>
+        <rect width="285" height="6" rx="3" fill="#64748B"/>
+        <text x="20" y="32" font-size="14" font-weight="800" fill="#1E293B">notification-service</text>
+        <rect x="205" y="18" width="65" height="18" rx="4" fill="#F1F5F9"/>
+        <text x="237" y="31" font-size="10" font-weight="700" fill="#475569" text-anchor="middle">PORT 8003</text>
+        <text x="20" y="50" font-size="11" font-weight="600" fill="#475569">Multi-Channel Alerts · H Dimension</text>
+        <line x1="20" y1="62" x2="265" y2="62" stroke="#F1F5F9" stroke-width="1.5"/>
+
+        <g transform="translate(16, 72)">
+          <rect width="253" height="38" rx="6" fill="#F8FAFC" stroke="#E2E8F0"/>
+          <text x="8" y="16" font-size="11" font-weight="700" fill="#334155">✉ Email Bất đồng bộ (aiosmtplib)</text>
+          <text x="8" y="30" font-size="10" fill="#64748B">Gửi thông báo tạo ticket, phân công, hoàn thành</text>
+        </g>
+        <text x="20" y="136" font-size="11" fill="#475569">• Kênh SMS &amp; Web Push Stubs mở rộng</text>
+        <text x="20" y="156" font-size="11" fill="#475569">• Xác thực an toàn qua SERVICE_TOKEN</text>
+        <text x="20" y="176" font-size="11" fill="#475569">• Tích hợp Webhook cảnh báo vi phạm SLA</text>
+        <rect x="20" y="195" width="245" height="22" rx="4" fill="#F1F5F9"/>
+        <text x="142" y="210" font-size="10" font-weight="600" fill="#475569" text-anchor="middle">Dev Inspector: MailHog Port 8025</text>
+      </g>
+    </g>
+
+    <!-- ──────────────────────────────────────────────────────────────────────── -->
+    <!-- TẦNG 1: DX-OS OPEN-CORE (HEADLESS PAAS)                                 -->
+    <!-- ──────────────────────────────────────────────────────────────────────── -->
+    <g id="tier-1" transform="translate(25, 570)">
+      <rect width="1000" height="325" rx="14" fill="#F5F3FF" stroke="#DDD6FE" stroke-width="1.5"/>
+      <rect x="15" y="12" width="310" height="24" rx="6" fill="#EDE9FE" stroke="#C4B5FD"/>
+      <text x="25" y="28" font-size="11" font-weight="800" fill="#6D28D9">TẦNG 1 · DX-OS OPEN-CORE (HEADLESS PAAS)</text>
+      <text x="340" y="28" font-size="11" font-weight="600" fill="#5B21B6">Dịch vụ nền tảng dùng chung · Không UI · Ứng dụng mới cắm vào lõi qua Gateway mà không sửa mã Core</text>
+
+      <!-- Core 1: Keycloak -->
+      <g transform="translate(20, 50)" filter="url(#card-shadow)">
+        <rect width="230" height="255" rx="12" fill="#FFFFFF" stroke="#C4B5FD" stroke-width="1.5"/>
+        <circle cx="36" cy="35" r="16" fill="#F5F3FF"/>
+        <text x="36" y="41" font-size="16" text-anchor="middle">🔑</text>
+        <text x="60" y="32" font-size="13" font-weight="800" fill="#4C1D95">Keycloak 24</text>
+        <text x="60" y="47" font-size="10" font-weight="700" fill="#7C3AED">PORT 8080 : 8080</text>
+        <line x1="16" y1="60" x2="214" y2="60" stroke="#EDE9FE" stroke-width="1.5"/>
+        <text x="18" y="82" font-size="11" font-weight="700" fill="#6D28D9">1. Identity &amp; SSO Tập trung</text>
+        <text x="18" y="102" font-size="11" fill="#475569">• Realm: dx-fsm (OpenID Connect)</text>
+        <text x="18" y="122" font-size="11" fill="#475569">• Cấp phát JWT Bearer Token</text>
+        <text x="18" y="142" font-size="11" fill="#475569">• Đồng bộ Token Frontend/Backend</text>
+        <text x="18" y="162" font-size="11" fill="#475569">• 4 Vai trò RBAC chuẩn mực:</text>
+        <text x="26" y="180" font-size="10" fill="#6D28D9">Customer · Tech · Manager · Admin</text>
+        <text x="18" y="202" font-size="11" fill="#475569">• Cơ chế Silent Token Refresh</text>
+        <rect x="18" y="222" width="194" height="22" rx="4" fill="#F5F3FF"/>
+        <text x="115" y="237" font-size="10" font-weight="600" fill="#6D28D9" text-anchor="middle">realm-export.json nạp tự động</text>
+      </g>
+
+      <!-- Core 2: PostgreSQL 16 -->
+      <g transform="translate(265, 50)" filter="url(#card-shadow)">
+        <rect width="250" height="255" rx="12" fill="#FFFFFF" stroke="#93C5FD" stroke-width="1.5"/>
+        <circle cx="36" cy="35" r="16" fill="#EFF6FF"/>
+        <text x="36" y="41" font-size="16" text-anchor="middle">🐘</text>
+        <text x="60" y="32" font-size="13" font-weight="800" fill="#1E3A8A">PostgreSQL 16</text>
+        <text x="60" y="47" font-size="10" font-weight="700" fill="#2563EB">PORT 5432 : 5432</text>
+        <line x1="16" y1="60" x2="234" y2="60" stroke="#DBEAFE" stroke-width="1.5"/>
+        <text x="18" y="82" font-size="11" font-weight="700" fill="#1D4ED8">2. Single Source of Truth [D]</text>
+        <text x="18" y="102" font-size="11" fill="#475569">• 77+ Ticket mẫu thực tế (Mig 006)</text>
+        <text x="18" y="122" font-size="11" fill="#475569">• Bảng outbox_events (Transactional)</text>
+        <text x="18" y="142" font-size="11" fill="#475569">• Bảng outbox_dead_letter (DLQ)</text>
+        <text x="18" y="162" font-size="11" fill="#475569">• Bảng ticket_history (Audit Trail)</text>
+        <text x="18" y="182" font-size="11" fill="#475569">• Chuẩn hóa Enum 7 danh mục IT/OT</text>
+        <text x="18" y="202" font-size="11" fill="#475569">• 8 UUID KTV thật khớp AI Recommender</text>
+        <rect x="18" y="222" width="214" height="22" rx="4" fill="#EFF6FF"/>
+        <text x="125" y="237" font-size="10" font-weight="600" fill="#1D4ED8" text-anchor="middle">Init schema + 5 Migrations tự chạy</text>
+      </g>
+
+      <!-- Core 3: n8n Workflow Engine -->
+      <g transform="translate(530, 50)" filter="url(#card-shadow)">
+        <rect width="225" height="255" rx="12" fill="#FFFFFF" stroke="#FDE047" stroke-width="1.5"/>
+        <circle cx="36" cy="35" r="16" fill="#FEFCE8"/>
+        <text x="36" y="41" font-size="16" text-anchor="middle">⚡</text>
+        <text x="60" y="32" font-size="13" font-weight="800" fill="#854D0E">n8n Automation</text>
+        <text x="60" y="47" font-size="10" font-weight="700" fill="#CA8A04">PORT 5678 : 5678</text>
+        <line x1="16" y1="60" x2="209" y2="60" stroke="#FEF08A" stroke-width="1.5"/>
+        <text x="18" y="82" font-size="11" font-weight="700" fill="#A16207">3. Workflow Engine [P]</text>
+        <text x="18" y="102" font-size="11" fill="#475569">• Bắt sự kiện Webhook từ Outbox</text>
+        <text x="18" y="122" font-size="11" fill="#475569">• Kích hoạt quy trình thông báo đa kênh</text>
+        <text x="18" y="142" font-size="11" fill="#475569">• Tự động hóa leo thang SLA quá hạn</text>
+        <text x="18" y="162" font-size="11" fill="#475569">• Tách rời luồng việc khỏi backend</text>
+        <text x="18" y="182" font-size="11" fill="#475569">• Webhook URL cấu hình động qua .env</text>
+        <rect x="18" y="222" width="189" height="22" rx="4" fill="#FEFCE8"/>
+        <text x="112" y="237" font-size="10" font-weight="600" fill="#854D0E" text-anchor="middle">Workflow JSON sẵn sàng</text>
+      </g>
+
+      <!-- Core 4: Storage & Dev Tools -->
+      <g transform="translate(770, 50)" filter="url(#card-shadow)">
+        <rect width="210" height="255" rx="12" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1.5"/>
+        <circle cx="36" cy="35" r="16" fill="#F8FAFC"/>
+        <text x="36" y="41" font-size="16" text-anchor="middle">📦</text>
+        <text x="60" y="32" font-size="13" font-weight="800" fill="#334155">Storage &amp; Infra</text>
+        <text x="60" y="47" font-size="10" font-weight="700" fill="#64748B">CƠ CHẾ LƯU TRỮ AN TOÀN</text>
+        <line x1="16" y1="60" x2="194" y2="60" stroke="#E2E8F0" stroke-width="1.5"/>
+        <text x="18" y="82" font-size="11" font-weight="700" fill="#475569">4. File Storage &amp; SMTP</text>
+        <text x="18" y="102" font-size="11" fill="#475569">• Local Volume: ticket_attachments</text>
+        <text x="18" y="122" font-size="11" fill="#475569">• Tự động fallback khi MinIO off</text>
+        <text x="18" y="142" font-size="11" fill="#475569">• Chống timeout upload &lt; 1 giây</text>
+        <text x="18" y="162" font-size="11" fill="#475569">• MailHog SMTP dev server</text>
+        <text x="18" y="182" font-size="11" fill="#475569">• Web UI thanh tra email (:8025)</text>
+        <rect x="18" y="222" width="174" height="22" rx="4" fill="#F8FAFC"/>
+        <text x="105" y="237" font-size="10" font-weight="600" fill="#64748B" text-anchor="middle">Hoàn toàn tự chủ (Self-hosted)</text>
+      </g>
+    </g>
+
+    <!-- Connectors inside Docker Network -->
+    <!-- Gateway to Frontend -->
+    <path d="M -30 180 C 10 180, 20 120, 45 120" stroke="#059669" stroke-width="2" fill="none" marker-end="url(#arrow-green)"/>
+    <!-- Gateway to Ticket Service -->
+    <path d="M -30 435 C 10 435, 15 360, 45 360" stroke="#D97706" stroke-width="2" fill="none" marker-end="url(#arrow-amber)"/>
+    <!-- Gateway to AI Service -->
+    <path d="M -30 490 C 180 490, 260 360, 375 360" stroke="#F43F5E" stroke-width="2" fill="none" marker-end="url(#arrow)"/>
+    <!-- Gateway to Keycloak -->
+    <path d="M -30 620 C 10 620, 15 680, 45 680" stroke="#7C3AED" stroke-width="2" fill="none" marker-end="url(#arrow-purple)"/>
+
+    <!-- Inter-service: Ticket Service to DB -->
+    <path d="M 175 530 L 390 620" stroke="#2563EB" stroke-width="2" stroke-dasharray="4 4" fill="none" marker-end="url(#arrow-blue)"/>
+    <!-- Inter-service: Outbox to n8n -->
+    <path d="M 335 440 C 480 440, 560 550, 640 620" stroke="#D97706" stroke-width="2" stroke-dasharray="3 3" fill="none" marker-end="url(#arrow-amber)"/>
+    <!-- Inter-service: AI Service to DB (Tech UUIDs) -->
+    <path d="M 515 530 L 400 620" stroke="#2563EB" stroke-width="1.5" stroke-dasharray="3 3" fill="none"/>
+  </g>
+</svg>
+
+  </div>
+
+  <div class="insights-panel">
+    <div class="insight-card">
+      <h3 style="color: #60A5FA;">
+        <span class="badge-hpdi badge-h">[H]</span> Con Người Số (Human Portal)
+      </h3>
+      <p>
+        Chuẩn hóa môi trường làm việc số khép kín cho 3 vai trò: Khách hàng (Giảng viên/SV), Kỹ thuật viên (CSVC), và Quản trị viên (Dispatcher). Đăng nhập một lần (SSO Keycloak) và giao diện di động chuẩn công nghiệp.
+      </p>
+    </div>
+
+    <div class="insight-card">
+      <h3 style="color: #34D399;">
+        <span class="badge-hpdi badge-p">[P]</span> Quy Trình Số (Process Automation)
+      </h3>
+      <p>
+        Máy trạng thái 7 bước Poka-yoke chặn đứng sai quyền. Áp dụng <strong>Transactional Outbox Pattern</strong> kết hợp Dead-letter Queue đảm bảo không bao giờ thất lạc sự kiện khi đồng bộ luồng n8n.
+      </p>
+    </div>
+
+    <div class="insight-card">
+      <h3 style="color: #FBBF24;">
+        <span class="badge-hpdi badge-d">[D]</span> Dữ Liệu Số (Single Source of Truth)
+      </h3>
+      <p>
+        CSDL trung tâm PostgreSQL 16 quản trị dữ liệu quan hệ, lịch sử kiểm toán <code>ticket_history</code> và 77+ mẫu sự cố thực tế bám sát các tòa nhà và phòng thí nghiệm Đại học Công nghiệp Hà Nội.
+      </p>
+    </div>
+
+    <div class="insight-card">
+      <h3 style="color: #F43F5E;">
+        <span class="badge-hpdi badge-i">[I]</span> Trí Tuệ Số (Resilient AI & Fallback)
+      </h3>
+      <p>
+        AI Circuit Breaker tự ngắt sau 2s, tự động chuyển về bộ máy Rule-based NLP &lt; 2ms khi máy yếu/không có GPU. Thuật toán điều phối gợi ý KTV theo chuyên môn, tải việc và điểm đánh giá thực tế.
+      </p>
+    </div>
+  </div>
+
+  <canvas id="hidden-canvas" style="display:none;"></canvas>
+
+  <script>
+    function downloadPNG() {
+      const svgElement = document.querySelector('.canvas-container svg');
+      const svgString = new XMLSerializer().serializeToString(svgElement);
+      const svgBlob = new Blob([svgString], { type: 'image/svg+xml;charset=utf-8' });
+      const URL = window.URL || window.webkitURL || window;
+      const blobURL = URL.createObjectURL(svgBlob);
+      
+      const image = new Image();
+      image.onload = () => {
+        const canvas = document.getElementById('hidden-canvas');
+        const scale = 2; // 2x high resolution (3200x2160)
+        canvas.width = 1600 * scale;
+        canvas.height = 1080 * scale;
+        const ctx = canvas.getContext('2d');
+        ctx.fillStyle = '#FFFFFF';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
+        
+        const pngURL = canvas.toDataURL('image/png');
+        const downloadLink = document.createElement('a');
+        downloadLink.href = pngURL;
+        downloadLink.download = 'DX-FSM-Architecture-Diagram-4K.png';
+        document.body.appendChild(downloadLink);
+        downloadLink.click();
+        document.body.removeChild(downloadLink);
+      };
+      image.src = blobURL;
+    }
+  </script>
+</body>
+</html>

@@ -2,7 +2,11 @@
 
 ## 1. Tổng quan
 
-DX-FSM (Digital Transformation Field Service Management) là nền tảng quản lý dịch vụ thực địa được thiết kế theo mô hình Open-Core với 4 tầng nghiệp vụ.
+DX-FSM (Digital Transformation Field Service Management) là nền tảng quản lý dịch vụ thực địa được thiết kế theo mô hình DX-OS Open-Core 3 tầng.
+
+![Sơ đồ Kiến trúc DX-FSM](architecture-diagram.svg)
+
+> 💡 **Bản tương tác & Tải ảnh 4K:** Xem chi tiết và xuất ảnh tại [architecture-diagram.html](architecture-diagram.html).
 
 ## 2. Mô hình 4 tầng
 

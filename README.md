@@ -79,6 +79,10 @@ make demo-sample-data  # [Demo 5] Thống kê 77+ tickets dữ liệu mẫu th�
 
 ## Kiến trúc
 
+![Sơ đồ Kiến trúc DX-FSM](docs/architecture-diagram.svg)
+
+> 💡 **Bản tương tác & Tải ảnh 4K:** Mở file [docs/architecture-diagram.html](docs/architecture-diagram.html) trên trình duyệt để tải ảnh PNG siêu nét phục vụ slide thuyết trình và báo cáo.
+
 ```
 ┌─────────────────────────────────────────────────────────────┐
 │                   TẦNG 3: ỨNG DỤNG NGHIỆP VỤ                │
