@@ -10,7 +10,7 @@ DX-FSM (Digital Transformation Field Service Management) là nền tảng quản
 Cung cấp các service nền tảng, không có UI người dùng.
 
 - **Keycloak**: Identity Provider, SSO, Role-Based Access Control
-- **APISIX**: API Gateway, authentication, rate limiting, routing
+- **Nginx**: API Gateway (Port 80), reverse proxy routing, rate limiting
 - **PostgreSQL**: Primary database, JSONB support
 - **MinIO**: Object storage cho file đính kèm
 - **n8n**: Workflow automation engine

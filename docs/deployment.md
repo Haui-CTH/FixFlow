@@ -86,6 +86,91 @@ docker compose down
 docker compose down -v
 ```
 
+## Triển khai & Cài đặt trực tiếp từ Source Code (Native / Non-Docker)
+
+Phù hợp cho môi trường kiểm thử mã nguồn, phát triển tính năng hoặc đóng gói độc lập theo yêu cầu Hội đồng chấm thi:
+
+### 1. Yêu cầu môi trường
+- Python 3.11+
+- Node.js 20+ & npm 10+
+- PostgreSQL 16 (chạy local hoặc remote)
+- Keycloak 24+ (cung cấp SSO/OIDC realm `dx-fsm`)
+
+### 2. Cấu hình trước khi build (Pre-build Configuration)
+Hệ thống cho phép cấu hình 100% các tham số kết nối, cổng và khóa bí mật trước khi build/chạy thông qua biến môi trường:
+```bash
+# Cấu hình chung hệ thống
+cp .env.example .env
+
+# Cấu hình frontend trước khi build tĩnh
+cp app/.env.example app/.env
+# Chỉnh sửa VITE_API_BASE_URL, VITE_KEYCLOAK_URL nếu cần đổi endpoint
+```
+
+### 3. Cài đặt CSDL từ Source
+```bash
+# Khởi tạo schema và bảng
+psql -U dxfsm -d dxfsm -f core/postgres/init.sql
+
+# Áp dụng các bản cập nhật migrations tuần tự (002 đến 006)
+for f in core/postgres/migrations/*.sql; do
+  psql -U dxfsm -d dxfsm -f "$f"
+done
+```
+
+### 4. Build và Chạy Backend Microservices
+Mỗi dịch vụ backend có thể chạy độc lập trong virtualenv riêng biệt:
+
+```bash
+# ─── Ticket Service (Port 8001) ───
+cd services/ticket-service
+python -m venv .venv && source .venv/bin/activate  # Trên Windows: .venv\Scripts\activate
+pip install -r requirements.txt
+export DATABASE_URL="postgresql://dxfsm:<DEMO_PASSWORD>@localhost:5432/dxfsm"
+export KEYCLOAK_URL="http://localhost:8080"
+uvicorn app.main:app --host 0.0.0.0 --port 8001 --reload
+
+# ─── AI Service (Port 8002) ───
+cd ../ai-service
+python -m venv .venv && source .venv/bin/activate
+pip install -r requirements.txt
+export OLLAMA_BASE_URL="http://localhost:11434"
+uvicorn app.main:app --host 0.0.0.0 --port 8002 --reload
+
+# ─── Notification Service (Port 8003) ───
+cd ../notification-service
+python -m venv .venv && source .venv/bin/activate
+pip install -r requirements.txt
+uvicorn app.main:app --host 0.0.0.0 --port 8003 --reload
+```
+
+### 5. Build và Chạy Frontend ngoài thư mục Source
+Frontend sử dụng Vite + React 18, hỗ trợ build thành gói tĩnh độc lập để phục vụ ngoài thư mục source:
+```bash
+cd app
+npm install
+
+# Build gói tĩnh độc lập vào thư mục dist/
+npm run build
+
+# Gói sản phẩm sau build nằm tại app/dist/, có thể deploy độc lập vào:
+# - Web server bất kỳ: Nginx, Apache, Caddy
+# - Hoặc phục vụ nhanh:
+npx serve -s dist -l 3000
+```
+
+### 6. Kiểm tra & Chạy Test Suite từ Source
+Hội đồng có thể kiểm tra toàn diện chất lượng source code trực tiếp:
+```bash
+# Chạy toàn bộ 324 tests frontend
+cd app && npm test -- --run
+
+# Chạy unit tests backend
+cd services/ticket-service && pytest tests/ -v
+cd services/ai-service && pytest tests/ -v
+cd services/notification-service && pytest tests/ -v
+```
+
 ## Triển khai môi trường Production
 
 1. Đổi tất cả passwords trong `.env` và thay placeholder `CHANGE_ME_*` trong realm Keycloak

@@ -137,6 +137,7 @@ uvicorn app.main:app --reload --port 8001
 # Frontend (React 18)
 cd app
 npm install
+npm run build
 npm run dev
 
 # AI Service

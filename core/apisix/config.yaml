@@ -1,4 +1,5 @@
 # APISIX Configuration
+# SPDX-License-Identifier: Apache-2.0
 # DX-FSM API Gateway
 
 deployment:

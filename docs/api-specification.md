@@ -13,7 +13,7 @@ http://localhost:8080          # keycloak
 Gateway (nginx) exposes all services under:
 
 ```
-http://localhost:9180/api/v1
+http://localhost/api/v1
 ```
 
 ## Authentication
