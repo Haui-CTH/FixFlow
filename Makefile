@@ -177,4 +177,8 @@ demo-contrast:
 	@docker compose exec app npm test -- src/test/contrast.test.ts --run
 	@echo "✓ Minh chứng: 100% token màu sắc đạt chuẩn tương phản >= 4.5:1 (a11y)."
 
+demo-it-ot:
+	@echo "=== [DEMO 8] Hội tụ IT/OT (Cảm biến nhiệt độ IoT -> Tự động tạo Ticket & Phân công) ==="
+	@python scripts/demo_iot_sensor.py
+
 .DEFAULT_GOAL := help
