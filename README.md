@@ -1,11 +1,16 @@
-# DX-FSM – Field Service Management Platform
+# FixFlow — Field Service Management Platform
 
-**Nền tảng Quản lý Dịch vụ Thực địa trên nền tảng DX-OS Open-Core**
+**Nền tảng Quản lý Dịch vụ Kỹ thuật Thực địa trên nền tảng DX-OS Open-Core**
 
 ![Apache 2.0](https://img.shields.io/badge/License-Apache%202.0-blue)
 ![Docker](https://img.shields.io/badge/Docker-Ready-2496ed)
 ![Python](https://img.shields.io/badge/Python-3.11+-3776ab)
 ![React](https://img.shields.io/badge/React-18-61dafb)
+![Tests](https://img.shields.io/badge/Tests-332%20passed-success)
+
+Sản phẩm tham gia thi đấu **Olympic Tin học Sinh viên Việt Nam 2026 — Khối Phần mềm Nguồn mở (OLP PMNM 2026)**, chủ đề *DX-OS Open-Core* (VFOSSA).
+
+**Tài liệu trọng tâm:** [Hỏi đáp Hội đồng Giám khảo](docs/council-qa.md) · [Mức độ hoàn thiện & Minh chứng](docs/muc-hoan-thien.md) · [Thẩm định Bản quyền OSI](docs/licenses-audit.md) · [Kịch bản Thuyết trình 10 phút](docs/demo-script.md)
 
 ## Mục lục
 
@@ -57,8 +62,8 @@ Bảng đối soát minh chứng kỹ thuật phục vụ Hội đồng giám kh
 |:---:|---|:---:|---|---|
 | **7** | Đúng kiến trúc DX-OS & H-P-D-I | 10 | Tầng 1 Headless PaaS độc lập (SSO, Gateway, DB, Workflow); chứng minh chuỗi giá trị H-P-D-I | `make demo-core` |
 | **8** | Mức độ hoàn thiện & ổn định | 10 | 77+ tickets thực tế HaUI (Migration 006), AI Circuit Breaker tự ngắt fallback < 2ms | `make demo-ai`<br>`make demo-sample-data` |
-| **9** | Tính thân thiện & Giá trị thực tế | 10 | Giải quyết bài toán bảo trì cơ sở vật chất phòng lab/xưởng HaUI; phân quyền 3 cổng; VI/EN | Mở `http://localhost:3000` |
-| **10** | Chất lượng kỹ thuật & Mở rộng | 10 | Transactional Outbox + DLQ, Zero hardcoded secrets, 324 tests tự động passed 100% | `make test` |
+| **9** | Tính thân thiện & Giá trị thực tế | 10 | Giải quyết bài toán bảo trì cơ sở vật chất phòng lab/xưởng HaUI; phân quyền 4 vai; VI/EN | Mở `http://localhost/` |
+| **10** | Chất lượng kỹ thuật & Mở rộng | 10 | Transactional Outbox + DLQ, Zero hardcoded secrets, 332 tests tự động passed 100% | `make test` |
 | **11** | Trình diễn & Tiềm năng cộng đồng | 10 | Kịch bản 10 phút demo ([docs/demo-script.md](docs/demo-script.md)), 12 slides ([docs/slides.md](docs/slides.md)), AI Recommender & KB | `make demo-recommender`<br>`make demo-kb` |
 
 ---
@@ -73,6 +78,9 @@ make demo-ai           # [Demo 2] Test AI Classifier & Circuit Breaker tự ng�
 make demo-recommender  # [Demo 3] Test AI Recommender gợi ý KTV bằng dữ liệu thật (8 UUIDs CSDL)
 make demo-kb           # [Demo 4] Test Tra cứu Cẩm nang Kỹ thuật Knowledge Base (TF-IDF tức thì)
 make demo-sample-data  # [Demo 5] Thống kê 77+ tickets dữ liệu mẫu thực tế tại các tòa nhà HaUI
+make demo-pii          # [Demo 6] Che giấu thông tin cá nhân PII (CCCD, SĐT, Email - NĐ 13/2023/NĐ-CP)
+make demo-contrast     # [Demo 7] Kiểm thử tương phản màu sắc đạt chuẩn WCAG 2.2 AA (>= 4.5:1)
+make demo-it-ot        # [Demo 8] Hội tụ IT/OT: Cảm biến IoT quá nhiệt -> Tự sinh Ticket khẩn cấp
 ```
 
 ---
