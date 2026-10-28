@@ -1,6 +1,6 @@
 # FixFlow — Field Service Management Platform
 
-**Nền tảng Quản lý Dịch vụ Kỹ thuật Thực địa trên nền tảng DX-OS Open-Core**
+> **Nền tảng Quản lý Dịch vụ Kỹ thuật Thực địa trên Lõi mở DX-OS** — Hợp nhất quy trình tiếp nhận sự cố, phân công kỹ thuật viên thông minh bằng AI, tra cứu cẩm nang kỹ thuật Knowledge Base và giám sát vận hành toàn diện theo kiến trúc 3 tầng H-P-D-I.
 
 ![Apache 2.0](https://img.shields.io/badge/License-Apache%202.0-blue)
 ![Docker](https://img.shields.io/badge/Docker-Ready-2496ed)
@@ -8,36 +8,30 @@
 ![React](https://img.shields.io/badge/React-18-61dafb)
 ![Tests](https://img.shields.io/badge/Tests-332%20passed-success)
 
+**Đội thi:** HaUI · **Trường:** Trường Công nghệ Thông tin và Truyền thông, Đại học Công nghiệp Hà Nội  
 Sản phẩm tham gia thi đấu **Olympic Tin học Sinh viên Việt Nam 2026 — Khối Phần mềm Nguồn mở (OLP PMNM 2026)**, chủ đề *DX-OS Open-Core* (VFOSSA).
 
-**Tài liệu trọng tâm:** [Hỏi đáp Hội đồng Giám khảo](docs/council-qa.md) · [Mức độ hoàn thiện & Minh chứng](docs/muc-hoan-thien.md) · [Thẩm định Bản quyền OSI](docs/licenses-audit.md) · [Tài liệu API Swagger UI (47 endpoints)](http://localhost/docs) · [Bảng Giám sát & Truy vết](http://localhost/monitor) · [Kịch bản Thuyết trình 10 phút](docs/demo-script.md)
+**Dùng thử trực tuyến:** <https://phentermine-exec-calgary-outreach.trycloudflare.com> · Hoặc chạy tại máy: `http://localhost/`
 
-## Mục lục
-
-- [Giới thiệu](#giới-thiệu)
-- [Bằng chứng đánh giá (100 điểm)](#bằng-chứng-đánh-giá-100-điểm)
-- [Lệnh Live Demo 1 Chạm](#lệnh-live-demo-1-chạm)
-- [Kiến trúc](#kiến-trúc)
-- [Tính năng](#tính-năng)
-- [Tech Stack](#tech-stack)
-- [Cài đặt nhanh](#cài-đặt-nhanh)
-- [Tài khoản demo](#tài-khoản-demo)
-- [Cấu trúc dự án](#cấu-trúc-dự-án)
-- [Tài liệu](#tài-liệu)
-- [Đóng góp](#đóng-góp)
-- [Giấy phép](#giấy-phép)
+**Đọc nhanh:** [Giới thiệu](#giới-thiệu) · [Kiến trúc](#kiến-trúc) · [Tính năng](#tính-năng) · [11 Tiêu chí Minh chứng (100 điểm)](#bằng-chứng-đánh-giá-100-điểm) · [Live Demo 1 Chạm](#lệnh-live-demo-1-chạm) · [Công nghệ](#tech-stack) · [Cài đặt](#cài-đặt-nhanh) · [Cổng Dịch vụ (Endpoints)](#danh-mục-cổng-dịch-vụ-cho-hội-đồng-chấm-thi) · [Tài liệu dự thi](#tài-liệu) · [Giấy phép](#giấy-phép)
 
 ---
 
 ## Giới thiệu
 
-DX-FSM là hệ thống quản lý dịch vụ thực địa, được xây dựng theo kiến trúc **DX-OS Open-Core 3 tầng**:
+Hàng ngàn cơ sở đào tạo, phòng lab thí nghiệm, xưởng thực hành và doanh nghiệp dịch vụ kỹ thuật hiện nay đang quản lý sự cố trang thiết bị bằng sổ tay, tin nhắn Zalo hoặc các file Excel phân mảnh:
+- Khách hàng/sinh viên báo hỏng không rõ ai đang tiếp nhận, thời hạn cam kết SLA khi nào hoàn tất.
+- Kỹ thuật viên nhận việc thủ công, thiếu cẩm nang kỹ thuật và không có lịch sử xử lý tương tự để đối chiếu.
+- Quản lý không đo lường được tỷ lệ vi phạm SLA, năng suất kỹ thuật viên và hao phí linh kiện định kỳ.
 
-- **Tầng 1 – Open-Core (Headless):** Keycloak, nginx, PostgreSQL, MinIO, n8n
-- **Tầng 2 – H-P-D-I:** Không gian Human, Process, Data, Intelligence
-- **Tầng 3 – Ứng dụng:** React 18 SPA cho Customer, Technician, Manager
+**FixFlow** tách toàn bộ phần nghiệp vụ dùng chung thành **Lõi mở DX-OS không giao diện (Headless Open-Core)**, kết hợp cùng **bộ 4 không gian H-P-D-I** và ứng dụng đa vai trò:
 
-Bài toán: Doanh nghiệp cung cấp dịch vụ kỹ thuật (lắp đặt, bảo trì, sửa chữa) cần một nền tảng thống nhất thay thế Excel và tin nhắn rời rạc.
+| Không gian H-P-D-I | FixFlow giải quyết bài toán gì? | Công nghệ lõi Tầng 1 & Tầng 2 |
+|---|---|---|
+| **H — Human** | Quản lý người dùng, hồ sơ, kỹ năng chuyên môn, phân quyền định danh SSO tập trung | Keycloak 24, RBAC 4 vai trò |
+| **P — Process** | Vòng đời Ticket FSM 7 trạng thái, Outbox Pattern & DLQ đảm bảo toàn vẹn giao dịch | PostgreSQL 16, n8n BPMN |
+| **D — Data** | Bảng điều khiển KPI vận hành real-time, lưu trữ ảnh/biên bản S3, kiểm toán chuỗi băm | MinIO S3, Merkle Hash Chain |
+| **I — Intelligence** | Phân loại sự cố tự động, AI Recommender gợi ý KTV & linh kiện, Cẩm nang KB | TF-IDF + Cosine, Ollama Hybrid |
 
 ---
 
@@ -178,13 +172,25 @@ docker compose up -d --build
 docker compose ps
 
 # 4. Truy cập các service
-# Frontend:       http://localhost/ (hoặc http://localhost:3000)
-# Giám sát & Tracing: http://localhost/monitor
-# Tài liệu API:     http://localhost/docs
-# API Gateway:    http://localhost/api/v1/tickets
-# Keycloak:       http://localhost:8080/realms/dx-fsm
-# n8n Workflow:   http://localhost:5678
+# Frontend Web App:        http://localhost/ (hoặc http://localhost:3000)
+# Cổng Giám sát & Tracing: http://localhost/monitor
+# Cổng Tài liệu API Docs:  http://localhost/docs
+# Keycloak SSO Console:    http://localhost:8080/realms/dx-fsm
+# n8n Workflow Engine:     http://localhost:5678
 ```
+
+### Danh mục Cổng Dịch vụ (cho Hội đồng Chấm thi)
+
+| Cổng Dịch vụ | Địa chỉ truy cập | Tài khoản / Xác thực | Vai trò & Mục đích |
+|---|---|---|---|
+| **FixFlow Web Portal** | `http://localhost/` (hoặc `:3000`) | SSO (4 tài khoản bên dưới) | Ứng dụng FSM chính cho Quản lý, KTV, Khách hàng |
+| **Bảng Giám sát & Truy vết** | `http://localhost/monitor` | Public / DevOps | Giám sát 7 microservices, Merkle Hash Chain, Outbox DLQ |
+| **Cổng Tài liệu API Swagger** | `http://localhost/docs` | Public / Bearer Token | Hợp nhất 47 endpoints OAS 3.1 + Server Selector |
+| **Đặc tả Kỹ thuật ReDoc** | `http://localhost/redoc` | Public | Định dạng ReDoc phục vụ tích hợp kỹ thuật |
+| **OpenAPI 3.1 Schema** | `http://localhost/api/v1/openapi.json` | Public JSON | JSON schema cho SDK & mở rộng ứng dụng |
+| **Keycloak SSO Console** | `http://localhost:8080` | `admin` / `admin123` | Quản trị Identity, RBAC, Realm `dx-fsm` |
+| **MinIO Storage S3** | `http://localhost:9001` | `minioadmin` / `minioadmin` | Kho lưu trữ đối tượng (S3 API) chứa ảnh đính kèm |
+| **n8n Workflow Automation** | `http://localhost:5678` | Không cần mật khẩu | Tự động hóa luồng quy trình nghiệp vụ BPMN |
 
 ### Build từ source
 
@@ -243,16 +249,19 @@ dx-fsm/
 
 ## Tài liệu
 
-| Tài liệu | Mô tả |
+| Tài liệu trọng tâm | Mô tả nội dung phục vụ Hội đồng Giám khảo |
 |---|---|
-| [docs/architecture.md](docs/architecture.md) | Tổng quan kiến trúc DX-OS Open-Core 3 tầng |
-| [docs/technical-report.md](docs/technical-report.md) | Báo cáo kỹ thuật chi tiết (Hội đồng OLP PMNM 2026) |
-| [docs/deployment.md](docs/deployment.md) | Hướng dẫn cài đặt và vận hành Docker Compose |
-| [docs/demo-script.md](docs/demo-script.md) | Kịch bản thuyết trình & demo 10 phút chuẩn HaUI OLP |
-| [docs/api-specification.md](docs/api-specification.md) | Đặc tả kỹ thuật API RESTful |
-| [docs/danh-gia-tieu-chi-cuoc-thi-2026.md](docs/danh-gia-tieu-chi-cuoc-thi-2026.md) | Báo cáo kiểm định 100 điểm & 10 câu hỏi chất vấn |
-| [DEPENDENCIES.md](DEPENDENCIES.md) | SBOM & Phân tích tương thích giấy phép nguồn mở |
-| [docs/SECURITY.md](docs/SECURITY.md) | Chính sách an toàn thông tin & Quản trị bí mật |
+| [docs/council-qa.md](docs/council-qa.md) | **Hỏi đáp Hội đồng Giám khảo:** 10 câu hỏi chất vấn chuyên sâu & câu trả lời bảo vệ đề tài |
+| [docs/muc-hoan-thien.md](docs/muc-hoan-thien.md) | **Mức độ hoàn thiện & Minh chứng:** Báo cáo đối soát 11 tiêu chí đánh giá (100 điểm OLP) |
+| [docs/licenses-audit.md](docs/licenses-audit.md) | **Thẩm định Bản quyền OSI:** Quét 100% mã nguồn, ma trận tương thích Apache-2.0 / AGPL / MIT |
+| [docs/demo-script.md](docs/demo-script.md) | **Kịch bản Thuyết trình 10 phút:** Khung thời gian và kịch bản demo trực tiếp trước Hội đồng |
+| [docs/slides.md](docs/slides.md) | **Slide thuyết trình OLP PMNM 2026:** 12 slide tóm lược đề tài, bài toán và công nghệ |
+| [docs/architecture.md](docs/architecture.md) | **Kiến trúc DX-OS 3 tầng:** Thiết kế chi tiết Open-Core, 4 không gian H-P-D-I và luồng dữ liệu |
+| [docs/technical-report.md](docs/technical-report.md) | **Báo cáo kỹ thuật tổng thể:** Toàn văn thuyết minh giải pháp kỹ thuật FixFlow |
+| [docs/deployment.md](docs/deployment.md) | **Hướng dẫn triển khai & vận hành:** Quy trình cài đặt Docker Compose và Cloudflare Tunnel |
+| [docs/api-specification.md](docs/api-specification.md) | **Đặc tả kỹ thuật API:** Danh mục 47 RESTful endpoints và cấu trúc dữ liệu trao đổi |
+| [DEPENDENCIES.md](DEPENDENCIES.md) | **SBOM & Phân tích phần mềm bên thứ ba:** Quản lý xuất xứ và bản quyền thư viện |
+| [docs/SECURITY.md](docs/SECURITY.md) | **Chính sách an toàn thông tin:** Quản trị bí mật, không hardcode mật khẩu, che PII |
 
 ---
 
