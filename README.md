@@ -13,7 +13,7 @@ Sản phẩm tham gia thi đấu **Olympic Tin học Sinh viên Việt Nam 2026 
 
 **Dùng thử trực tuyến:** <https://phentermine-exec-calgary-outreach.trycloudflare.com> · Hoặc chạy tại máy: `http://localhost/`
 
-**Đọc nhanh:** [Giới thiệu](#giới-thiệu) · [Kiến trúc](#kiến-trúc) · [Tính năng](#tính-năng) · [11 Tiêu chí Minh chứng (100 điểm)](#bằng-chứng-đánh-giá-100-điểm) · [Live Demo 1 Chạm](#lệnh-live-demo-1-chạm) · [Công nghệ](#tech-stack) · [Cài đặt](#cài-đặt-nhanh) · [Cổng Dịch vụ (Endpoints)](#danh-mục-cổng-dịch-vụ-cho-hội-đồng-chấm-thi) · [Tài liệu dự thi](#tài-liệu) · [Giấy phép](#giấy-phép)
+**Đọc nhanh:** [Giới thiệu](#giới-thiệu) · [Kiến trúc](#kiến-trúc) · [Tính năng](#tính-năng) · [11 Tiêu chí Minh chứng (100 điểm)](#bằng-chứng-đánh-giá-100-điểm) · [Live Demo 1 Chạm](#lệnh-live-demo-1-chạm) · [Công nghệ](#tech-stack) · [Cài đặt](#cài-đặt-nhanh) · [Cổng Dịch vụ (Endpoints)](#danh-mục-cổng-dịch-vụ-cho-hội-đồng-chấm-thi) · [Xử lý sự cố](#xử-lý-sự-cố) · [Tài liệu](#tài-liệu) · [Đóng góp](#đóng-góp-và-liên-hệ) · [Giấy phép](#giấy-phép)
 
 ---
 
@@ -110,24 +110,30 @@ Xem chi tiết: [docs/architecture.md](docs/architecture.md)
 
 ## Tính năng
 
-### Tầng 1 – Open-Core
-- [x] **Identity/SSO** với Keycloak – JWT token, RBAC
-- [x] **API Gateway** với nginx – routing, proxy
-- [x] **Database** PostgreSQL – dữ liệu quan hệ, 7 danh mục sự cố
-- [x] **File Storage** – MinIO S3 Object Storage (kèm cơ chế local volume fallback)
-- [x] **Workflow Engine** với n8n – ticket intake → assign → process → close
-- [x] **AI Service** – phân loại ticket tự động (Hybrid Rule-based + Ollama)
+### 1. Quản lý Vòng đời Dịch vụ Thực địa (FSM Lifecycle)
 
-### Tầng 2 – H-P-D-I
-- [x] **H – Human:** Quản lý user, profile, team
-- [x] **P – Process:** Quy trình ticket có trạng thái, người tạo, người xử lý, timestamp
-- [x] **D – Data:** Dashboard, KPI, thống kê real-time
-- [x] **I – Intelligence:** AI phân loại ticket, Knowledge Base tìm kiếm giải pháp, gợi ý kỹ thuật viên
+Quy trình quản lý sự cố và bảo trì thiết bị trải qua trọn vẹn **7 trạng thái chuẩn FSM: Tiếp nhận → Phân công → Đang xử lý → Chờ linh kiện → Đã xử lý → Nghiệm thu đóng vé (hoặc Hủy vé)**:
 
-### Tầng 3 – Ứng dụng
-- [x] **Customer Portal:** Tạo ticket, theo dõi trạng thái, gợi ý KB tức thì
-- [x] **Technician Portal:** Nhận ticket, cập nhật tiến độ, upload ảnh, ghi chú nội bộ
-- [x] **Manager Dashboard:** Tổng hợp KPI, phân công KTV với AI Recommender chấm điểm đa tiêu chí
+| Vấn đề thực tế tại cơ sở | FixFlow xử lý bằng giải pháp | Không gian | Minh chứng kiểm chứng |
+|---|---|---|---|
+| Sự cố thất lạc, báo qua Zalo không ai nhận | Ticket FSM 7 trạng thái, hộp việc theo vai trò, thông báo tức thời | [P] Process | `make demo-sample-data` |
+| Vi phạm cam kết SLA mà quản lý không hay biết | SLA Monitor quét nền 60s, tự động tính hạn chót theo mức ưu tiên, cảnh báo trễ hạn | [P] Process | `docs/muc-hoan-thien.md` |
+| Phân công sai người, KTV lệch chuyên môn | AI Recommender ma trận 4 tiêu chí (Chuyên môn, Khối lượng việc, Đánh giá, Vị trí) | [I] Intelligence | `make demo-recommender` |
+| Thiếu tài liệu hướng dẫn sửa chữa thiết bị | Cẩm nang kỹ thuật Knowledge Base (TF-IDF 5 chiều + Cosine), gợi ý ngay khi tạo vé | [I] Intelligence | `make demo-kb` |
+| Rò rỉ thông tin cá nhân khách hàng/sinh viên | PII Masking che tự động CCCD, SĐT, Email theo NĐ 13/2023/NĐ-CP trước khi qua AI và log | [H] Human | `make demo-pii` |
+| Chối bỏ trách nhiệm, can thiệp sửa lén lịch sử | Sổ kiểm toán chuỗi băm Merkle SHA-256 bất biến, nút bấm xác thực toàn vẹn 1 chạm | [D] Data | `make demo-audit` |
+| Rủi ro mất mát dữ liệu khi hệ thống gặp sự cố | Transactional Outbox + DLQ, MinIO S3 đính kèm cơ chế Local Volume Fallback | [D] Data | `make demo-resilience` |
+
+### 2. Trợ lý Trí tuệ Nhân tạo & Tự động hóa Vận hành
+
+Hệ thống AI chạy cục bộ tại chỗ (On-Premise), bảo toàn dữ liệu nội bộ với cơ chế chuyển tiếp linh hoạt giữa Machine Learning, NLP và LLM:
+
+| Tác tử / Dịch vụ AI | Cơ chế hoạt động & Thuật toán | Hiệu năng & Đặc tính nổi bật | Minh chứng |
+|---|---|---|---|
+| **Phân loại sự cố (Classifier)** | Kết hợp Hybrid: Regex từ khóa trọng số chuyên ngành + TF-IDF Vectorizer + Ollama LLM | Tốc độ xử lý < 2ms, Circuit Breaker tự ngắt fallback sang Regex khi LLM bận | `make demo-ai` |
+| **Gợi ý KTV & Linh kiện (Recommender)** | Chấm điểm đa tiêu chí: Khớp chuyên môn (40%), Khối lượng việc (30%), Đánh giá sao (20%), Khoảng cách (10%) | Khớp 100% dữ liệu thực tế (8 UUIDs kỹ thuật viên thật trong CSDL) | `make demo-recommender` |
+| **Cẩm nang Kỹ thuật (Knowledge Base)** | Vector TF-IDF 5 chiều, trích xuất đặc trưng từ khóa và tính độ tương đồng Cosine | Thời gian phản hồi < 1ms, trích đoạn bài viết và liên kết tài liệu gốc | `make demo-kb` |
+| **Bảo vệ PII & Kiểm toán Dữ liệu** | Regex nhận diện CCCD (12 số), SĐT VN (10 số), Email; Băm chuỗi Merkle SHA-256 | Tuân thủ tuyệt đối Nghị định 13/2023/NĐ-CP và nguyên lý không thể chối bỏ (iii) | `make demo-pii` |
 
 ---
 
@@ -247,35 +253,54 @@ dx-fsm/
 
 ---
 
-## Tài liệu
+## Xử lý sự cố
 
-| Tài liệu trọng tâm | Mô tả nội dung phục vụ Hội đồng Giám khảo |
+| Hiện tượng | Nguyên nhân và cách xử lý |
 |---|---|
-| [docs/council-qa.md](docs/council-qa.md) | **Hỏi đáp Hội đồng Giám khảo:** 10 câu hỏi chất vấn chuyên sâu & câu trả lời bảo vệ đề tài |
-| [docs/muc-hoan-thien.md](docs/muc-hoan-thien.md) | **Mức độ hoàn thiện & Minh chứng:** Báo cáo đối soát 11 tiêu chí đánh giá (100 điểm OLP) |
-| [docs/licenses-audit.md](docs/licenses-audit.md) | **Thẩm định Bản quyền OSI:** Quét 100% mã nguồn, ma trận tương thích Apache-2.0 / AGPL / MIT |
-| [docs/demo-script.md](docs/demo-script.md) | **Kịch bản Thuyết trình 10 phút:** Khung thời gian và kịch bản demo trực tiếp trước Hội đồng |
-| [docs/slides.md](docs/slides.md) | **Slide thuyết trình OLP PMNM 2026:** 12 slide tóm lược đề tài, bài toán và công nghệ |
-| [docs/architecture.md](docs/architecture.md) | **Kiến trúc DX-OS 3 tầng:** Thiết kế chi tiết Open-Core, 4 không gian H-P-D-I và luồng dữ liệu |
-| [docs/technical-report.md](docs/technical-report.md) | **Báo cáo kỹ thuật tổng thể:** Toàn văn thuyết minh giải pháp kỹ thuật FixFlow |
-| [docs/deployment.md](docs/deployment.md) | **Hướng dẫn triển khai & vận hành:** Quy trình cài đặt Docker Compose và Cloudflare Tunnel |
-| [docs/api-specification.md](docs/api-specification.md) | **Đặc tả kỹ thuật API:** Danh mục 47 RESTful endpoints và cấu trúc dữ liệu trao đổi |
-| [DEPENDENCIES.md](DEPENDENCIES.md) | **SBOM & Phân tích phần mềm bên thứ ba:** Quản lý xuất xứ và bản quyền thư viện |
-| [docs/SECURITY.md](docs/SECURITY.md) | **Chính sách an toàn thông tin:** Quản trị bí mật, không hardcode mật khẩu, che PII |
+| Chạy `docker compose up` báo lỗi cổng 80 hoặc 8080 đã được sử dụng | Cổng 80 (Gateway) hoặc 8080 (Keycloak) bị ứng dụng khác chiếm dụng (IIS, Apache, Skype...). Đổi cổng trong `.env` hoặc tắt tiến trình đang chiếm cổng: `netstat -ano \| findstr :80` |
+| `docker compose build` kéo image lâu hoặc gặp lỗi mạng | Docker Hub hạn chế lượt kéo ẩn danh. Cấu hình DNS `8.8.8.8` hoặc bổ sung mirror `mirror.gcr.io` vào cấu hình Docker Daemon |
+| Không kết nối được Keycloak khi mở qua mạng LAN hoặc IP | Trình duyệt chặn Web Crypto API (đăng nhập PKCE SHA-256) trên HTTP thường qua IP mạng LAN. Chỉ truy cập qua `http://localhost` hoặc qua đường hầm HTTPS: `https://<tunnel-domain>` |
+| Phiên làm việc hết hạn hoặc lỗi đăng nhập SSO | Token Keycloak tự làm mới ngầm. Nếu phiên làm việc quá hạn, bấm vào Avatar tài khoản ở góc trên bên phải → chọn Đăng xuất rồi đăng nhập lại |
+| Dịch vụ AI phản hồi chậm khi máy chủ không có GPU | Hệ thống tích hợp sẵn Circuit Breaker: nếu Ollama chưa sẵn sàng, AI Service tự động chuyển sang chế độ Rule-based NLP (< 2ms) mà không làm gián đoạn người dùng |
+
+Chưa gỡ được sự cố? Mở issue theo [mẫu báo lỗi](https://github.com/truong-newbie/PMNM_2026_DX_FSM/issues/new?template=bug_report.md) kèm kết quả `docker compose ps` và nhật ký `docker compose logs <tên_service>`.
 
 ---
 
-## Đóng góp
+## Tài liệu
 
-Xem [CONTRIBUTING.md](CONTRIBUTING.md) để biết quy trình đóng góp.
+| Nhóm | Tài liệu |
+|---|---|
+| **Vận hành & Hướng dẫn** | [Kịch bản Live Demo 10 phút](docs/demo-script.md) · [Hướng dẫn triển khai Docker & Tunnel](docs/deployment.md) · [Cổng Tài liệu API Swagger](http://localhost/docs) · [Hướng dẫn người dùng](docs/user-guide.md) |
+| **Kiến trúc & Kỹ thuật** | [Kiến trúc DX-OS 3 tầng & H-P-D-I](docs/architecture.md) · [Đặc tả kỹ thuật API RESTful](docs/api-specification.md) · [Báo cáo kỹ thuật tổng thể](docs/technical-report.md) · [Kế hoạch phát hành AI Production](docs/ai-production-plan.md) |
+| **Dự thi & Đánh giá (OLP)** | [Báo cáo đối soát 100 điểm & Minh chứng](docs/muc-hoan-thien.md) · [Hỏi đáp & Phản biện Hội đồng Giám khảo](docs/council-qa.md) · [Thẩm định Bản quyền OSI](docs/licenses-audit.md) · [Slide thuyết trình 12 trang](docs/slides.md) · [Tiêu chí cuộc thi 2026](docs/danh-gia-tieu-chi-cuoc-thi-2026.md) |
+| **Dự án & Quản trị** | [Bản quyền & Phụ thuộc SBOM](DEPENDENCIES.md) · [Lịch sử thay đổi CHANGELOG](CHANGELOG.md) · [Quy tắc đóng góp CONTRIBUTING](CONTRIBUTING.md) · [Chính sách an toàn SECURITY](docs/SECURITY.md) · [Giấy phép Apache-2.0](LICENSE) |
+
+---
+
+## Đóng góp và liên hệ
+
+- **Báo lỗi, đề xuất tính năng:** mở issue theo [mẫu báo lỗi](https://github.com/truong-newbie/PMNM_2026_DX_FSM/issues/new?template=bug_report.md) hoặc [mẫu đề xuất](https://github.com/truong-newbie/PMNM_2026_DX_FSM/issues/new?template=feature_request.md); xem [mọi issue](https://github.com/truong-newbie/PMNM_2026_DX_FSM/issues).
+- **Lịch sử thay đổi:** [`CHANGELOG.md`](CHANGELOG.md) theo chuẩn Keep a Changelog; các bản phát hành ở [Releases](https://github.com/truong-newbie/PMNM_2026_DX_FSM/releases).
+- **Đóng góp mã nguồn:** đọc [`CONTRIBUTING.md`](CONTRIBUTING.md) trước khi mở pull request; tuân theo quy chuẩn GitFlow và quy tắc ứng xử nguồn mở.
+- **Lỗ hổng bảo mật:** không mở issue công khai — báo cáo riêng tư theo chính sách an toàn thông tin tại [`docs/SECURITY.md`](docs/SECURITY.md).
+
+| Thành viên | GitHub | Email |
+|---|---|---|
+| Đỗ Đăng Trường | [truong-newbie](https://github.com/truong-newbie) | <dangtruong3122005@gmail.com> |
+| Nguyễn Văn Huy | [NguyenVanHuy205](https://github.com/NguyenVanHuy205) | <nguyenvanhuy12072005@gmail.com> |
+| Phan Đại Cương | [PhanDaiCuong](https://github.com/PhanDaiCuong) | <phancuongtmtlhp@gmail.com> |
 
 ---
 
 ## Giấy phép
 
-Dự án này được phân phối theo **Apache License 2.0**. Xem file [LICENSE](LICENSE) để biết chi tiết.
-100% tệp mã nguồn tuân thủ SPDX License Header: `// SPDX-License-Identifier: Apache-2.0` hoặc `# SPDX-License-Identifier: Apache-2.0`.
+Phát hành theo **Apache License 2.0** — một giấy phép mã nguồn mở được OSI phê duyệt. Toàn văn giấy phép: [`LICENSE`](LICENSE).
+
+Mọi tệp mã nguồn đều có thông tin bản quyền và giấy phép theo chuẩn SPDX: tệp mã mang header `// SPDX-License-Identifier: Apache-2.0` hoặc `# SPDX-License-Identifier: Apache-2.0`. Danh mục kiểm toán bản quyền 100% tệp trong kho lưu trữ xem tại [`docs/licenses-audit.md`](docs/licenses-audit.md).
+
+FixFlow **điều phối** các phần mềm nguồn mở thượng nguồn ở dạng nguyên bản (official container images), không sao chép và không chỉnh sửa mã nguồn của chúng vào kho này. Toàn bộ danh mục phụ thuộc và xuất xứ mã nguồn (SBOM) được công khai minh bạch tại [`DEPENDENCIES.md`](DEPENDENCIES.md).
 
 ---
 
-**DX-FSM Team – OLP 2026 – HaUI**
+**Đội thi HaUI — OLP Tin học Sinh viên PMNM 2026 — Đại học Công nghiệp Hà Nội**
