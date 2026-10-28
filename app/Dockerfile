@@ -10,7 +10,7 @@ COPY . .
 
 # Vite inlines VITE_* at build time, so they must be build args (not runtime env)
 ARG VITE_API_BASE_URL=/api/v1
-ARG VITE_KEYCLOAK_URL=http://localhost:8080
+ARG VITE_KEYCLOAK_URL=""
 ARG VITE_KEYCLOAK_REALM=dx-fsm
 ARG VITE_KEYCLOAK_CLIENT_ID=dx-fsm-frontend
 

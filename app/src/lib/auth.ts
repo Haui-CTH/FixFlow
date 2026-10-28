@@ -2,8 +2,23 @@
 // DX-FSM Keycloak Auth
 import Keycloak from 'keycloak-js';
 
+const getKeycloakUrl = () => {
+  const envUrl = import.meta.env.VITE_KEYCLOAK_URL;
+  if (typeof window !== 'undefined') {
+    // Khi chạy trên trình duyệt qua Gateway (cổng 80, domain thật, hoặc Cloudflare Tunnel),
+    // luôn dùng window.location.origin để cùng chung domain/scheme với web app.
+    // Chỉ fallback về localhost:8080 khi dev độc lập trên Vite dev server (cổng 3000).
+    if (!envUrl || envUrl.includes('localhost:8080')) {
+      if (window.location.port !== '3000') {
+        return window.location.origin;
+      }
+    }
+  }
+  return envUrl || 'http://localhost:8080';
+};
+
 const keycloak = new Keycloak({
-  url: import.meta.env.VITE_KEYCLOAK_URL || 'http://localhost:8080',
+  url: getKeycloakUrl(),
   realm: import.meta.env.VITE_KEYCLOAK_REALM || 'dx-fsm',
   clientId: import.meta.env.VITE_KEYCLOAK_CLIENT_ID || 'dx-fsm-frontend',
 });
