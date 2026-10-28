@@ -16,7 +16,7 @@ from fastapi.openapi.utils import get_openapi
 
 from app.config import settings
 from app.db.database import init_db
-from app.routes import tickets, users, auth, health, comments, attachments, admin, notes, history, metrics, notifications
+from app.routes import tickets, users, auth, health, comments, attachments, admin, notes, history, metrics, notifications, monitor
 from app.services.sla_monitor import sla_monitor_loop, SCAN_INTERVAL_SEC
 from app.services.outbox_dispatcher import outbox_worker_loop, WORKER_INTERVAL_SEC
 from app.services.alert_dispatcher import alert_worker_loop, WORKER_INTERVAL_SEC as ALERT_INTERVAL_SEC
@@ -284,6 +284,7 @@ SWAGGER_HTML = """<!DOCTYPE html>
       <span class="ff-brand">FixFlow</span>
       <span class="ff-sub">Cổng Tài liệu & Thử nghiệm API Hợp nhất (DX-OS Open-Core)</span>
       <div class="ff-actions">
+        <a class="ff-link" href="/monitor" target="_blank">📊 Giám sát /monitor</a>
         <a class="ff-link" href="/api/v1/openapi.json" target="_blank">📄 OpenAPI JSON</a>
         <a class="ff-link" href="/redoc" target="_blank">📖 ReDoc</a>
         <a class="ff-link" href="/" target="_blank">🌐 App Portal</a>
@@ -354,6 +355,7 @@ app.include_router(metrics.router, tags=["Metrics"])
 app.include_router(users.router, prefix="/users", tags=["Users"])
 app.include_router(admin.router, tags=["Admin"])
 app.include_router(notifications.router, tags=["Notifications"])
+app.include_router(monitor.router)
 
 
 @app.get("/")
