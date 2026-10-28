@@ -28,7 +28,7 @@ describe('Login', () => {
     h.init.mockResolvedValue(false);
     setup();
     expect(screen.getByRole('heading', { level: 1, name: 'Đăng nhập' })).toBeInTheDocument();
-    expect(document.title).toBe('Đăng nhập — DX-FSM');
+    expect(document.title).toBe('Đăng nhập — FixFlow');
     expect(await screen.findByRole('button', { name: 'Đăng nhập với SSO' })).toBeEnabled();
   });
 

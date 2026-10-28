@@ -48,7 +48,7 @@ export default function Layout() {
 
   // Đổi route: đóng drawer, cập nhật tiêu đề tab, chuyển focus vào main (không ở lần render đầu)
   useEffect(() => {
-    document.title = `${pageTitle(pathname)} — DX-FSM`;
+    document.title = `${pageTitle(pathname)} — FixFlow`;
     setSidebarOpen(false);
     if (firstRender.current) firstRender.current = false;
     else mainRef.current?.focus();

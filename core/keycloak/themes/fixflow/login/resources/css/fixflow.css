@@ -72,6 +72,16 @@ html, body, body.login-pf {
 }
 
 /* Brand Container inside Left Panel (2-Column Grid: Icon Left, Text Right) */
+#kc-header,
+#kc-header *,
+#kc-header-wrapper,
+#kc-header-wrapper *,
+#kc-header-wrapper span {
+  font-family: "Segoe UI", -apple-system, BlinkMacSystemFont, Roboto, "Helvetica Neue", Arial, sans-serif !important;
+  text-transform: none !important;
+  letter-spacing: normal !important;
+}
+
 #kc-header-wrapper {
   display: grid !important;
   grid-template-columns: 60px minmax(0, 1fr) !important;

@@ -118,7 +118,7 @@ export function TopBar({
       >
         <Menu size={20} aria-hidden="true" />
       </Button>
-      <span className={styles.mobileBrand}>DX-FSM</span>
+      <span className={styles.mobileBrand}>FixFlow</span>
       <span className={styles.pageName}>{title}</span>
       <div className={styles.topActions}>
         {slot}

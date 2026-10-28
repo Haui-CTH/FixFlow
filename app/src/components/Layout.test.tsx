@@ -32,7 +32,7 @@ function setup(initialPath: string = '/') {
 describe('Layout', () => {
   it('renders brand', () => {
     setup();
-    expect(screen.getAllByText('DX-FSM').length).toBeGreaterThan(0);
+    expect(screen.getAllByText('FixFlow').length).toBeGreaterThan(0);
   });
 
   it('renders nav items for the role (technician: no dashboard)', () => {
