@@ -2,8 +2,15 @@
   "id": "dx-fsm",
   "realm": "dx-fsm",
   "enabled": true,
-  "displayName": "DX-FSM Platform",
-  "displayNameHtml": "<div class=\"kc-logo-text\"><span>DX-FSM</span></div>",
+  "displayName": "FixFlow",
+  "displayNameHtml": "<div class=\"kc-logo-text\"><span>FixFlow</span></div>",
+  "loginTheme": "fixflow",
+  "internationalizationEnabled": true,
+  "supportedLocales": [
+    "vi",
+    "en"
+  ],
+  "defaultLocale": "vi",
   "accessTokenLifespan": 300,
   "ssoSessionIdleTimeout": 1800,
   "ssoSessionMaxLifespan": 36000,
@@ -31,11 +38,14 @@
       "implicitFlowEnabled": false,
       "directAccessGrantsEnabled": false,
       "redirectUris": [
+        "http://localhost/*",
+        "http://localhost:80/*",
         "http://localhost:3000/*",
         "http://localhost:3001/*",
-        "http://localhost:9180/*"
+        "http://localhost:9180/*",
+        "*"
       ],
-      "webOrigins": ["http://localhost:3000", "http://localhost:3001"],
+      "webOrigins": ["+", "http://localhost", "http://localhost:80", "http://localhost:3000", "http://localhost:3001"],
       "attributes": {
         "pkce.code.challenge.method": "S256"
       }

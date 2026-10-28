@@ -144,19 +144,19 @@ demo-core:
 
 demo-ai:
 	@echo "=== [DEMO 2] Kiểm thử AI Classifier & Circuit Breaker Graceful Fallback ==="
-	@curl -s -X POST http://localhost:8002/api/v1/classify -H "Content-Type: application/json" -d "{\"title\": \"Máy tính phòng Lab 402 không lên nguồn\", \"description\": \"Quạt nguồn không quay, có mùi khét nhẹ\"}" || echo "Hãy khởi chạy dịch vụ trước (make up)"
+	@curl -s -X POST http://localhost/api/v1/classify -H "Content-Type: application/json" -d "{\"title\": \"Máy tính phòng Lab 402 không lên nguồn\", \"description\": \"Quạt nguồn không quay, có mùi khét nhẹ\"}" || echo "Hãy khởi chạy dịch vụ trước (make up)"
 	@echo ""
 	@echo "✓ Minh chứng: AI phân loại tự động; Circuit Breaker fallback < 2ms mượt mà khi không có GPU."
 
 demo-recommender:
 	@echo "=== [DEMO 3] Gợi ý Phân công Kỹ thuật viên (Multi-criteria Scoring) ==="
-	@curl -s -X POST http://localhost:8002/api/v1/recommend -H "Content-Type: application/json" -d "{\"title\": \"Mạng phòng Lab 301 mất tín hiệu internet\", \"category\": \"network\", \"priority\": \"high\"}" || echo "Hãy khởi chạy dịch vụ trước (make up)"
+	@curl -s -X POST http://localhost/api/v1/recommend -H "Content-Type: application/json" -d "{\"ticket_id\": \"demo-ticket-01\", \"title\": \"Mạng phòng Lab 301 mất tín hiệu internet\", \"category\": \"network\", \"priority\": \"high\"}" || echo "Hãy khởi chạy dịch vụ trước (make up)"
 	@echo ""
 	@echo "✓ Minh chứng: Gợi ý KTV với 8 UUIDs thực tế trong DB: 40% Chuyên môn + 30% Tải việc + 30% Đánh giá."
 
 demo-kb:
 	@echo "=== [DEMO 4] Tra cứu Tri thức Cẩm nang Kỹ thuật (Knowledge Base TF-IDF) ==="
-	@curl -s -X POST http://localhost:8002/api/v1/kb/search -H "Content-Type: application/json" -d "{\"query\": \"máy in kẹt giấy\", \"category\": \"hardware\", \"limit\": 2}" || echo "Hãy khởi chạy dịch vụ trước (make up)"
+	@curl -s -G "http://localhost/api/v1/kb/search" --data-urlencode "q=máy in kẹt giấy" --data-urlencode "top_k=2" || echo "Hãy khởi chạy dịch vụ trước (make up)"
 	@echo ""
 	@echo "✓ Minh chứng: Thuật toán TF-IDF gợi ý giải pháp tức thì cho KTV và khách hàng."
 

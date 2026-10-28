@@ -40,7 +40,7 @@ export default function Login() {
       <section className={styles.panel}>
         <div className={styles.brand}>
           <img src="/logo.svg" alt="" width={40} height={40} />
-          <span>DX-FSM</span>
+          <span>FixFlow</span>
         </div>
         <p className={styles.tagline}>{t('login.quan_ly_dich_vu_thuc_dia')}</p>
         <ul className={styles.points}>
