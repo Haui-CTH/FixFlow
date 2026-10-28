@@ -1,7 +1,7 @@
 # DX-FSM Makefile
 # Usage: make <target>
 
-.PHONY: help up down restart logs ps clean build rebuild test lint fmt init migrate health shell initdocs demo-core demo-ai demo-recommender demo-kb demo-sample-data demo-pii demo-contrast
+.PHONY: help up down restart logs ps clean build rebuild test lint fmt init migrate health shell initdocs license-check demo-core demo-ai demo-recommender demo-kb demo-sample-data demo-pii demo-contrast demo-it-ot demo-nong-lanh demo-audit demo-resilience
 
 # Default target
 help:
@@ -93,6 +93,10 @@ lint:
 	cd services/ticket-service && ruff check app/
 	cd services/ai-service && ruff check app/
 	cd app && npm run lint
+
+# Check license headers (SPDX / REUSE)
+license-check:
+	@python scripts/license_check.py
 
 # Format code
 fmt:

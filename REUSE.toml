@@ -1,0 +1,37 @@
+# FixFlow REUSE 3.0 Specification
+# SPDX-FileCopyrightText: 2026 Đội thi HaUI (Đại học Công nghiệp Hà Nội)
+# SPDX-License-Identifier: Apache-2.0
+
+# Khai báo bản quyền và giấy phép theo chuẩn REUSE (https://reuse.software)
+# cho các tệp không thể chèn tiêu đề nhận diện trực tiếp (JSON, ảnh, SVG, SQL, Markdown, dữ liệu mẫu).
+# Các tệp mã nguồn (.py, .ts, .tsx, .sh) mang tiêu đề SPDX riêng và được ưu tiên (precedence = "closest").
+
+version = 1
+
+[[annotations]]
+path = [
+  "**.md",
+  "NOTICE",
+  "**.json",
+  "**.txt",
+  "**.csv",
+  "**.tsv",
+  "**.sql",
+  "**.png",
+  "**.jpg",
+  "**.svg",
+  "**.ico",
+  "**.properties",
+  "**.toml",
+  "**.yml",
+  "**.yaml",
+  "**.gitignore",
+  "**.dockerignore",
+  ".editorconfig",
+  ".env.example",
+  "Makefile"
+]
+precedence = "closest"
+SPDX-FileCopyrightText = "2026 Đội thi HaUI (Đỗ Đăng Trường, Nguyễn Văn Huy, Phan Đại Cương)"
+SPDX-License-Identifier = "Apache-2.0"
+

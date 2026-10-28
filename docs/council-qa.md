@@ -49,7 +49,7 @@ FixFlow được thiết kế bao phủ toàn diện 4 trục năng lực số:
 | :--- | :--- | :--- |
 | **[H] Human** | Phân quyền 4 vai trò rõ rệt (Admin, Manager, Technician, Customer). Giao diện tối ưu công thái học hiện trường: Dark/Light mode chống lóa ngoài trời, mobile responsive, đạt chuẩn tương phản màu sắc **WCAG 2.2 AA (>= 4.5:1)**. | [`app/src/test/contrast.test.ts`](../app/src/test/contrast.test.ts) (332 unit tests) |
 | **[P] Process** | Động cơ chuyển trạng thái hữu hạn (FSM) kiểm soát vòng đời vé: `new` $\rightarrow$ `assigned` $\rightarrow$ `in_progress` $\rightarrow$ `pending_customer` $\rightarrow$ `resolved` $\rightarrow$ `closed`. Khóa trạng thái sai quyền, đo đếm SLA phản hồi & xử lý. | [`services/ticket-service/app/services/ticket_service.py`](../services/ticket-service/app/services/ticket_service.py) |
-| **[D] Data** | Mô hình dữ liệu phân tầng, lưu trữ ảnh/tệp đính kèm trên MinIO S3, lưu nhật ký biến động trạng thái (History Timeline), sổ kiểm toán Outbox Event chống thất thoát sự kiện tích hợp. | [`services/ticket-service/app/models/history.py`](../services/ticket-service/app/models/history.py) |
+| **[D] Data** | Mô hình dữ liệu phân tầng, lưu trữ ảnh/tệp đính kèm trên MinIO S3, lưu nhật ký biến động trạng thái (History Timeline), sổ kiểm toán Outbox Event chống thất thoát sự kiện tích hợp. | [`services/ticket-service/app/models/ticket.py`](../services/ticket-service/app/models/ticket.py) |
 | **[I] Intelligence** | Bộ 3 tác tử AI thực dụng: (1) Phân loại tự động có Circuit Breaker < 2ms; (2) Thuật toán gợi ý KTV đa tiêu chí (40% chuyên môn + 30% tải việc + 30% đánh giá); (3) Cẩm nang tri thức TF-IDF tra cứu tức thì; (4) Che thông tin cá nhân PII. | [`services/ai-service/app/`](../services/ai-service/app/) |
 
 ---
@@ -123,3 +123,36 @@ FixFlow được thiết kế bao phủ toàn diện 4 trục năng lực số:
   - Người dùng truy cập `http://localhost/` (hoặc tên miền Internet qua Cloudflare Tunnel), khi đăng nhập hệ thống chuyển sang `/realms/dx-fsm/...` trên **cùng một tên miền**, không hề bị nhảy cổng sang `:8080`.
 - **Bộ nhận diện thương hiệu FixFlow:**
   - Keycloak được gắn Custom Theme (`fixflow`) với bố cục 2 cột hiện đại: panel thương hiệu xanh Navy bên trái có logo và khẩu hiệu *"Quản lý Dịch vụ Kỹ thuật Thực địa"*, thẻ đăng nhập bo góc thanh lịch bên phải, hỗ trợ chuyển đổi đa ngôn ngữ Tiếng Việt / English.
+
+
+---
+
+## 11. Hệ thống Giám sát, Đo kiểm & Truy vết Sự cố (Observability & Tracing) được tổ chức thế nào?
+
+- **Truy vết đầu-cuối (End-to-End Tracing):**
+  - Mọi yêu cầu đi qua Nginx Gateway đều được gán một mã định danh duy nhất (X-Request-ID). Mã này được truyền xuyên suốt qua FastAPI microservices, truy vấn PostgreSQL và lưu trữ MinIO, cho phép đối soát nhật ký sự cố tức thì khi xảy ra lỗi.
+- **Giám sát sức khỏe dịch vụ tập trung (/monitor):**
+  - FixFlow tích hợp sẵn bảng điều khiển giám sát thời gian thực tại đường dẫn nội bộ /monitor (dành riêng cho Quản trị viên).
+  - Giám sát đồng thời: trạng thái sống còn (Health status) của 11 container, thời gian phản hồi từng microservice, lưu lượng hàng đợi Outbox, tỷ lệ hoàn thành SLA, và số liệu hoạt động của AI Circuit Breaker.
+- **Minh chứng tự phục hồi:** Chạy make demo-resilience để kiểm chứng khả năng tự phát hiện sự cố và khôi phục dịch vụ lưu trữ mà không mất dữ liệu.
+
+---
+
+## 12. Tại sao Giám sát (/monitor) và Swagger (/docs) không để trên thanh Menu chính?
+
+- **Chuẩn công thái học & Trải nghiệm Hiện trường (Separation of Concerns):**
+  - Người dùng tác nghiệp chính của FixFlow là **Kỹ thuật viên hiện trường** và **Khách hàng báo hỏng**. Họ cần một giao diện tối giản, trực quan, thao tác nhanh trên điện thoại hoặc máy tính bảng ngoài trời, không bị rối mắt bởi các công cụ kỹ thuật/DevOps.
+  - Việc đưa Swagger API Documentation hoặc Dashboard Giám sát hạ tầng vào thanh menu nghiệp vụ chính là một lỗi thiết kế UX điển hình (lẫn lộn giữa *Không gian nghiệp vụ người dùng* và *Cổng thông tin quản trị nền tảng*).
+- **Phân định Quyền hạn (RBAC) & Vị trí hợp lý:**
+  - Đường dẫn /monitor và /docs được bảo vệ theo vai trò: chỉ hiển thị trong Menu tài khoản góc trên bên phải (**TopBar UserMenu**) khi đăng nhập bằng tài khoản có đặc quyền (dmin hoặc manager).
+  - Đối với Hội đồng giám khảo và kỹ sư tích hợp, các cổng kỹ thuật này được công khai minh bạch ngay tại bảng **Điểm truy cập dịch vụ** của README.md và tài liệu kiến trúc.
+
+---
+
+## 13. Cơ chế Quản trị Dữ liệu Thế hệ mới (Nguyên lý iii) chống sửa đổi dữ liệu thế nào?
+
+- **Chuỗi băm mật mã bất biến (Tamper-evident Hash-Chain):**
+  - Toàn bộ các sự kiện chuyển trạng thái vé (từ lúc tạo, tiếp nhận, xử lý đến hoàn thành) đều được ký băm SHA-256 liên kết theo mô hình chuỗi Merkle: Mã băm khối hiện tại = SHA-256(Block_Data + Previous_Hash).
+- **Chống chối bỏ trách nhiệm (Non-repudiation):**
+  - Nếu bất kỳ ai (kể cả quản trị viên có quyền truy cập trực tiếp vào CSDL PostgreSQL) can thiệp sửa đổi trường dữ liệu quá khứ (ví dụ sửa thời gian SLA hoặc sửa người thực hiện), toàn bộ các mắt xích phía sau sẽ bị phá vỡ mã băm ngay lập tức.
+- **Minh chứng kiểm chứng:** Chạy make demo-audit (hoặc python scripts/demo_audit_chain.py) để xem FixFlow tự động phát hiện hành vi gian lận dữ liệu tại từng Block cụ thể.

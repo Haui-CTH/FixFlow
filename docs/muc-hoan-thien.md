@@ -12,7 +12,7 @@ Tài liệu này tổng hợp chi tiết mức độ hoàn thiện của từng 
 
 | Mức | Tiêu chí đánh giá |
 |---|---|
-| **Hoàn thiện** | Có mã nguồn hoàn chỉnh; có kiểm thử tự động (Unit / Integration / E2E test); kiểm thử chạy đạt 100%; có lệnh demo chạy thực tế tức thì (`make demo-*`); không còn lỗi chặn luồng chính. |
+| **Hoàn thiện** | Có mã nguồn hoàn chỉnh; có kiểm thử tự động (Unit / Integration / E2E test); kiểm thử chạy đạt 100%; có lệnh demo chạy thực tế tức thì (``make demo-*``); không còn lỗi chặn luồng chính. |
 | **Dùng được** | Đã triển khai đầu-cuối và hoạt động ổn định, có kiểm thử trong CI nhưng còn phụ thuộc một số thao tác cấu hình thủ công ngoài giao diện. |
 | **Minh họa** | Đã có mã nguồn và kiểm thử hoạt động, chủ đích phục vụ chứng minh năng lực kiến trúc (như kịch bản mô phỏng cảm biến IoT, thiết bị giả lập). |
 | **Một phần** | Đang phát triển, mới hoàn thành một phần phạm vi yêu cầu. |
@@ -25,10 +25,12 @@ Tài liệu này tổng hợp chi tiết mức độ hoàn thiện của từng 
 | Phân hệ / Dịch vụ | Thư mục mã nguồn | Khung kiểm thử | Số lượng kiểm thử | Trạng thái |
 | :--- | :--- | :--- | :--- | :--- |
 | **Frontend Web App** | `app/src/` | Vitest, React Testing Library | **332 tests** (43 test suites) | **332/332 Passed (100%)** |
-| **AI Service** | `services/ai-service/tests/` | Pytest, HTTPX | 18 tests | Passed |
-| **Ticket Service** | `services/ticket-service/tests/` | Pytest, AsyncSQLAlchemy | 24 tests | Passed |
-| **Kiểm thử Tương phản a11y** | `app/src/test/contrast.test.ts` | Vitest (WCAG 2.2 AA) | 8 tests | Passed (Contrast >= 4.5:1) |
-| **Kịch bản Demo trực tiếp** | `scripts/`, `Makefile` | Python 3, cURL | 8 kịch bản `make demo-*` | Hoạt động tức thì |
+| **Ticket Service** | `services/ticket-service/tests/` | Pytest, AsyncSQLAlchemy | **144 tests** | **144/144 Passed (100%)** |
+| **AI Service** | `services/ai-service/tests/` | Pytest, Scikit-learn, HTTPX | **80 tests** | **80/80 Passed (100%)** |
+| **Notification Service** | `services/notification-service/tests/` | Pytest, AsyncIO | **32 tests** | **32/32 Passed (100%)** |
+| **Kiểm thử Tương phản a11y** | `app/src/test/contrast.test.ts` | Vitest (WCAG 2.2 AA) | **8 tests** | **8/8 Passed (Contrast >= 4.5:1)** |
+| **Kịch bản Live Demo (Hội đồng)** | `scripts/`, `Makefile` | Python 3, cURL | **11 kịch bản `make demo-*`** | **11/11 Hoạt động tức thì** |
+| **Tổng kiểm thử tự động toàn diện** | Toàn bộ dự án | Vitest + Pytest | **588 tests** | **588/588 Passed (100%)** |
 
 ---
 

@@ -1,9 +1,9 @@
 # FixFlow API Specification & Cổng Tài liệu Swagger UI
 
 > 🌐 **Cổng Tài liệu Tương tác (Interactive Swagger UI):** Truy cập ngay tại **`http://localhost/docs`** (hoặc `/swagger-ui`, `/tai-lieu-api`) để tra cứu, đọc mô tả tham số và "Try it out" gọi thử trực tiếp 47 endpoints trên trình duyệt!
-> - **OpenAPI 3.1 Spec (Core & Ticket Service - 30 endpoints):** [`/api/v1/openapi.json`](/api/v1/openapi.json)
-> - **OpenAPI 3.1 Spec (AI & Intelligence Service - 17 endpoints):** [`/api/v1/ai/openapi.json`](/api/v1/ai/openapi.json)
-> - **ReDoc Document:** [`/redoc`](/redoc)
+> - **OpenAPI 3.1 Spec (Core & Ticket Service - 30 endpoints):** `http://localhost/api/v1/openapi.json`
+> - **OpenAPI 3.1 Spec (AI & Intelligence Service - 17 endpoints):** `http://localhost/api/v1/ai/openapi.json`
+> - **ReDoc Document:** `http://localhost/redoc`
 
 ## Base URL
 

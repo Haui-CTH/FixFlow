@@ -44,8 +44,8 @@ Bảng đối soát minh chứng kỹ thuật phục vụ Hội đồng giám kh
 | STT | Tiêu chí đánh giá | Điểm | Tài liệu & Minh chứng | Lệnh kiểm tra nhanh |
 |:---:|---|:---:|---|---|
 | **1** | Kho mã nguồn & Lịch sử Git | 5 | [Repo GitHub công khai](https://github.com/truong-newbie/PMNM_2026_DX_FSM), web viewer hoạt động, 8 nhánh GitFlow | `git branch -a` |
-| **2** | Giấy phép nguồn mở OSI | 10 | [LICENSE](LICENSE) (toàn văn 202 dòng Apache-2.0), 100% tệp có header SPDX | Quét 239/239 tệp mã |
-| **3** | Quản lý phiên bản / Release | 5 | [RELEASE-NOTES-v1.3.0.md](RELEASE-NOTES-v1.3.0.md), thẻ tag `v1.3.0`, `v1.2.0`, `v1.1.0` | `git tag -l` |
+| **2** | Giấy phép nguồn mở OSI | 10 | [LICENSE](LICENSE) (Apache-2.0), [NOTICE](NOTICE), [REUSE.toml](REUSE.toml), 100% SPDX | make license-check |
+| **3** | Quản lý phiên bản / Release | 5 | [docs/releases/v1.3.0.md](docs/releases/v1.3.0.md), thẻ tag `v1.3.0`, `v1.2.0`, `v1.1.0` | `git tag -l` |
 | **4** | Build/install from source | 10 | [docs/deployment.md](docs/deployment.md), cấu hình pre-build `.env`, Docker Compose | `docker compose up -d --build` |
 | **5** | Quản lý thư viện & Provenance | 10 | [DEPENDENCIES.md](DEPENDENCIES.md) (SBOM 200 dòng, ma trận license, không commit vendor/node_modules) | `npm ls`, `pip list` |
 | **6** | Tài liệu & Bug tracker | 10 | [README.md](README.md), [CHANGELOG.md](CHANGELOG.md), [CONTRIBUTING.md](CONTRIBUTING.md), GitHub Issues/PRs | `docs/demo-script.md` |

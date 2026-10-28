@@ -1,0 +1,45 @@
+FixFlow — Nền tảng Quản lý Dịch vụ Kỹ thuật Thực địa (DX-FSM) trên nền DX-OS Open-Core
+Copyright 2026 Đội thi HaUI (Đại học Công nghiệp Hà Nội)
+
+Sản phẩm dự thi Olympic Tin học Sinh viên Việt Nam 2026 — Khối Phần mềm Nguồn mở (OLP PMNM 2026).
+Phát triển bởi:
+  - Đỗ Đăng Trường (dangtruong3122005@gmail.com)
+  - Nguyễn Văn Huy (nguyenvanhuy12072005@gmail.com)
+  - Phan Đại Cương (phancuongtmtlhp@gmail.com)
+
+Sản phẩm này được phát hành dưới giấy phép Apache License, Version 2.0
+(một giấy phép được OSI phê duyệt — https://opensource.org/license/apache-2-0).
+
+MỤC ĐÍCH CỦA GIẤY PHÉP
+----------------------
+Nhóm tác giả chọn Apache-2.0 nhằm đảm bảo bốn quyền tự do cốt lõi của phần mềm nguồn mở:
+  1. Tự do sử dụng cho mọi mục đích, kể cả thương mại, không phải trả phí bản quyền.
+  2. Tự do nghiên cứu và sửa đổi mã nguồn để phù hợp nghiệp vụ quản lý hiện trường riêng.
+  3. Tự do phân phối lại bản gốc hoặc bản đã sửa đổi.
+  4. Tự do đóng góp ngược lại cho cộng đồng.
+
+Apache-2.0 được chọn thay vì các giấy phép copyleft mạnh vì FixFlow áp dụng kiến trúc
+Open-Core lắp ghép từ nhiều phần mềm nguồn mở thượng nguồn có giấy phép khác nhau
+(Keycloak, PostgreSQL, Nginx, FastAPI, React, MinIO). Giấy phép permissive giúp bảo đảm
+không phát sinh xung đột giấy phép giữa các thành phần.
+
+Toàn văn giấy phép: xem tệp LICENSE ở thư mục gốc.
+Mỗi tệp mã nguồn đều mang thông báo giấy phép ở phần đầu tệp (SPDX-License-Identifier: Apache-2.0).
+Tệp không chèn được thông báo (JSON, ảnh, SVG, SQL, Markdown) được khai trong REUSE.toml
+theo chuẩn REUSE (https://reuse.software); kiểm tra toàn bộ kho bằng lệnh:
+`make license-check` hoặc `uvx --from reuse==5.0.2 reuse lint`.
+
+THÀNH PHẦN THỨ BA (UPSTREAM COMPONENTS)
+--------------------------------------
+FixFlow điều phối các phần mềm nguồn mở thượng nguồn ở dạng NGUYÊN BẢN (Official Docker Images),
+không sao chép và không chỉnh sửa mã nguồn của chúng vào kho này. Danh sách chi tiết kèm
+giấy phép và trang chủ xem tại DEPENDENCIES.md và docs/licenses-audit.md:
+  - Keycloak 24 (Apache-2.0)
+  - PostgreSQL 16 (PostgreSQL License)
+  - Nginx 1.27 (2-clause BSD-like)
+  - MinIO (AGPL-3.0) — chạy container dịch vụ nguyên bản
+  - FastAPI (MIT)
+  - React 18 & Vite (MIT)
+  - n8n (Sustainable Use License) — công cụ tự động hóa phụ trợ
+  - MailHog (MIT) — giả lập máy chủ SMTP kiểm thử
+

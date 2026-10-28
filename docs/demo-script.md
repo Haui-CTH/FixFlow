@@ -3,7 +3,7 @@
 ### Định dạng: 10 phút Trình bày + 5 phút Trả lời chất vấn Hội đồng Giám khảo
 
 > Đọc kèm:
-> - [`docs/council-qa.md`](council-qa.md) — 10 câu hỏi & trả lời phản biện chuyên sâu của Hội đồng.
+> - [`docs/council-qa.md`](council-qa.md) — 13 câu hỏi & trả lời phản biện chuyên sâu (bổ sung Observability/Tracing, Tamper-evident Hash-chain, và Phân định UX Menu) của Hội đồng.
 > - [`docs/muc-hoan-thien.md`](muc-hoan-thien.md) — Bảng đối chiếu mức hoàn thiện và độ phủ kiểm thử.
 > - [`docs/licenses-audit.md`](licenses-audit.md) — Thẩm định giấy phép nguồn mở chuẩn OSI 100%.
 
@@ -91,7 +91,7 @@
 * **Người thuyết trình chốt lại**:
   > *"Để đảm bảo tính nghiêm túc của một phần mềm nguồn mở tiêu chuẩn:
   > - **100% tệp mã nguồn** đều có SPDX License Header chuẩn Apache-2.0, không có giấy phép hạn chế non-OSI.
-  > - Hệ thống đạt **332 unit tests passed (43 test suites)** trên frontend, kiểm thử tương phản WCAG 2.2 AA.
+  > - Hệ thống đạt **588 tests passed 100%** (332 tests frontend + 256 tests backend microservices), kiểm thử tương phản WCAG 2.2 AA.
   > - Đầy đủ bộ minh chứng: [`docs/muc-hoan-thien.md`](muc-hoan-thien.md) và [`docs/council-qa.md`](council-qa.md).
   > Chúng em xin trân trọng cảm ơn và sẵn sàng nhận câu hỏi từ Hội đồng!"*
 
@@ -99,4 +99,4 @@
 
 ## 3. Chiến lược Trả lời Chất vấn Hội đồng (5 Phút Q&A)
 
-Chi tiết 10 câu hỏi & trả lời phản biện chuyên sâu: xem tại [`docs/council-qa.md`](council-qa.md).
+Chi tiết 13 câu hỏi & trả lời phản biện chuyên sâu (bổ sung Observability/Tracing, Tamper-evident Hash-chain, và Phân định UX Menu): xem tại [`docs/council-qa.md`](council-qa.md).
