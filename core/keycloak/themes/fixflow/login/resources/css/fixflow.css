@@ -1,3 +1,4 @@
+@charset "UTF-8";
 /* SPDX-License-Identifier: Apache-2.0 */
 /* FixFlow Modern Enterprise Login Theme for Keycloak */
 
@@ -55,9 +56,9 @@ html, body, body.login-pf {
 #kc-header,
 .login-pf-page-header,
 .pf-v5-c-login__header {
-  flex: 0 0 42% !important;
-  min-width: 380px !important;
-  max-width: 520px !important;
+  flex: 0 0 40% !important;
+  min-width: 360px !important;
+  max-width: 500px !important;
   background: linear-gradient(165deg, var(--ff-navy) 0%, var(--ff-navy-dark) 100%) !important;
   display: flex !important;
   flex-direction: column !important;
@@ -70,48 +71,69 @@ html, body, body.login-pf {
   box-shadow: 4px 0 24px rgba(15, 23, 42, 0.15) !important;
 }
 
-/* Brand Container inside Left Panel */
+/* Brand Container inside Left Panel (2-Column Grid: Icon Left, Text Right) */
 #kc-header-wrapper {
-  display: flex !important;
-  flex-direction: column !important;
-  align-items: flex-start !important;
-  gap: 16px !important;
+  display: grid !important;
+  grid-template-columns: 60px minmax(0, 1fr) !important;
+  column-gap: 18px !important;
+  row-gap: 4px !important;
+  align-items: center !important;
   margin: 0 !important;
   padding: 0 !important;
   width: 100% !important;
   color: #FFFFFF !important;
-  font-size: 36px !important;
-  font-weight: 800 !important;
-  letter-spacing: -0.03em !important;
-  line-height: 1.1 !important;
+  text-transform: none !important;
+  letter-spacing: normal !important;
+  white-space: normal !important;
+  text-align: left !important;
 }
 
 /* Brand Symbol Logo */
 #kc-header-wrapper::before {
   content: "" !important;
   display: block !important;
-  width: 64px !important;
-  height: 64px !important;
+  grid-column: 1 !important;
+  grid-row: 1 / span 2 !important;
+  width: 60px !important;
+  height: 60px !important;
   background: url("../img/logo.svg") no-repeat center / contain !important;
   border-radius: 14px !important;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4) !important;
-  margin-bottom: 4px !important;
+  margin: 0 !important;
   flex-shrink: 0 !important;
 }
 
-/* Brand Subtitle Tagline */
-#kc-header-wrapper::after {
-  content: "Qu\1EA3n l\00FD D\1ECBch v\1EE5 K\1EF9 thu\1EADt Th\1EF1c \0111\1ECBa" !important;
-  display: block !important;
-  font-size: 16px !important;
-  font-weight: 500 !important;
-  color: #94A3B8 !important;
-  line-height: 1.5 !important;
-  letter-spacing: -0.01em !important;
+/* Brand Title: "FixFlow" */
+#kc-header-wrapper > span:first-of-type {
+  grid-column: 2 !important;
+  grid-row: 1 !important;
+  font-size: 34px !important;
+  font-weight: 800 !important;
+  color: #FFFFFF !important;
+  letter-spacing: -0.025em !important;
+  line-height: 1.15 !important;
+  text-transform: none !important;
+  white-space: normal !important;
+  margin: 0 !important;
 }
 
-:lang(en) #kc-header-wrapper::after {
-  content: "Field Service Management Platform" !important;
+/* Brand Subtitle: "Quản lý Dịch vụ Kỹ thuật Thực địa" */
+#kc-header-wrapper > span:last-of-type {
+  grid-column: 2 !important;
+  grid-row: 2 !important;
+  font-size: 15px !important;
+  font-weight: 500 !important;
+  color: #94A3B8 !important;
+  line-height: 1.45 !important;
+  letter-spacing: 0 !important;
+  text-transform: none !important;
+  white-space: normal !important;
+  margin: 0 !important;
+}
+
+#kc-header-wrapper::after {
+  content: none !important;
+  display: none !important;
 }
 
 /* ─── Right Content Area & Card ─────────────────────────────────────────── */
@@ -443,22 +465,24 @@ input[type="submit"].pf-c-button,
   }
 
   #kc-header-wrapper {
+    display: flex !important;
+    flex-direction: column !important;
     align-items: center !important;
     text-align: center !important;
-    gap: 12px !important;
+    gap: 8px !important;
   }
 
   #kc-header-wrapper::before {
     width: 48px !important;
     height: 48px !important;
+    margin-bottom: 4px !important;
   }
 
-  #kc-header-wrapper .kc-logo-text,
-  #kc-header-wrapper span {
+  #kc-header-wrapper > span:first-of-type {
     font-size: 26px !important;
   }
 
-  #kc-header-wrapper::after {
+  #kc-header-wrapper > span:last-of-type {
     font-size: 14px !important;
   }
 

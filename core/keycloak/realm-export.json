@@ -3,7 +3,7 @@
   "realm": "dx-fsm",
   "enabled": true,
   "displayName": "FixFlow",
-  "displayNameHtml": "<div class=\"kc-logo-text\"><span>FixFlow</span></div>",
+  "displayNameHtml": "<span>FixFlow</span><span>Quản lý Dịch vụ Kỹ thuật Thực địa</span>",
   "loginTheme": "fixflow",
   "internationalizationEnabled": true,
   "supportedLocales": [
