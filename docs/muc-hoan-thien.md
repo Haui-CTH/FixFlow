@@ -70,7 +70,8 @@ Tài liệu này tổng hợp chi tiết mức độ hoàn thiện của từng 
 
 | Nguyên lý đề bài | Tính năng hiện thực | Mức | Lệnh kiểm chứng |
 | :--- | :--- | :---: | :--- |
-| **(i) Vòng đời & Tốc độ dữ liệu** | Phân tách dữ liệu giao dịch nóng (PostgreSQL) và lưu trữ tệp đối tượng (MinIO S3) | **Hoàn thiện** | `make demo-storage-resilience` |
-| **(ii) Hội tụ IT/OT** | Cảm biến IoT viễn trắc phát hiện quá nhiệt trạm máy chủ $\rightarrow$ Tự sinh Ticket khẩn cấp & AI phân công KTV | **Minh họa** | `make demo-it-ot` (`python scripts/demo_iot_sensor.py`) |
-| **(iii) Quản trị dữ liệu thế hệ mới** | Nhật ký biến động trạng thái (History Timeline), sổ kiểm toán Outbox Event chống mất mát dữ liệu | **Hoàn thiện** | `services/ticket-service/app/models/history.py`, `app/src/components/History/HistoryTimeline.test.tsx` |
-| **(iv) Zero-Trust & Chịu lỗi** | Xác thực tập trung Keycloak OIDC, bảo vệ PII, Circuit Breaker bảo vệ dịch vụ khi quá tải | **Hoàn thiện** | `make demo-ai`, `make demo-pii` |
+| **(i) Vòng đời & Tốc độ dữ liệu** | Phân tách dữ liệu giao dịch nóng (PostgreSQL) và đóng gói vé WORM vào kho lạnh (MinIO S3 Archive) | **Hoàn thiện** | make demo-nong-lanh (scripts/demo_cold_archive.py) |
+| **(ii) Hội tụ IT/OT** | Cảm biến IoT viễn trắc phát hiện quá nhiệt trạm máy chủ $\rightarrow$ Tự sinh Ticket khẩn cấp & AI phân công KTV | **Hoàn thiện** | make demo-it-ot (scripts/demo_iot_sensor.py) |
+| **(iii) Quản trị dữ liệu thế hệ mới** | Sổ kiểm toán chống sửa đổi (Tamper-evident SHA-256 Hash-Chain) trên nhật ký sự kiện vé | **Hoàn thiện** | make demo-audit (scripts/demo_audit_chain.py) |
+| **(iv) Zero-Trust & Chịu lỗi** | Chịu lỗi & Tự phục hồi: Tự động chuyển đổi S3 $\leftrightarrow$ Spool cục bộ khi gặp thảm họa hạ tầng | **Hoàn thiện** | make demo-resilience (scripts/demo_resilience.py) |
+

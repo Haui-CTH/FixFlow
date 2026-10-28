@@ -78,13 +78,12 @@
 
 ---
 
-### ⏱ Phút 7:30 – 9:00 | Điểm nhấn Kỹ thuật: Hội tụ IT/OT & Khả năng Chịu lỗi
-* **Người thuyết trình nói & Demo nhanh**:
-  1. **Hội tụ IT/OT (Nguyên lý ii của DX-OS)**:
-     > *"FixFlow kết nối trực tiếp cảm biến phần cứng hiện trường với quy trình IT. Cảm biến quá nhiệt phòng Server Lab 402 tự động bắn bản tin cảnh báo qua Gateway $\rightarrow$ Hệ thống tự sinh Ticket khẩn cấp và AI tính điểm phân công KTV ca trực tức thì!"*
-     - Thao tác: Chạy `make demo-it-ot`.
-  2. **Graceful Degradation (Chịu lỗi mềm của AI & Storage)**:
-     > *"Đặc biệt, phân hệ AI của chúng em được thiết kế có Circuit Breaker. Nếu máy chủ hiện trường không có card đồ họa GPU hoặc Ollama bị tắt, hệ thống tự động chuyển sang bộ máy Rule-based NLP và TF-IDF chạy bằng CPU trong vòng 2ms, đảm bảo quy trình nhà máy không bị gián đoạn dù chỉ 1 giây! Đồng thời tệp đính kèm tự động chuyển S3 $\leftrightarrow$ Local Disk nếu MinIO tạm dừng."*
+### ⏱ Phút 7:30 – 9:00 | Điểm nhấn Kỹ thuật: 4 Nguyên lý Thiết kế DX-OS
+* **Người thuyết trình nói & Demo nhanh 4 Nguyên lý**:
+  1. **Nguyên lý (i) Nóng - Lạnh**: Đóng gói vé nén kèm SHA-256 Manifest vào kho lạnh MinIO sm-archive, truy vấn thống kê không làm nghẽn CSDL nóng -> Chạy make demo-nong-lanh.
+  2. **Nguyên lý (ii) Hội tụ IT/OT**: Cảm biến IoT quá nhiệt phòng máy chủ Lab 402 tự động bắn bản tin qua Gateway, sinh vé khẩn cấp và AI tính điểm phân công KTV -> Chạy make demo-it-ot.
+  3. **Nguyên lý (iii) Quản trị Dữ liệu Toàn vẹn**: Chuỗi băm mật mã SHA-256 Hash-chain trên sổ kiểm toán, phát hiện ngay lập tức hành vi sửa đổi trái phép -> Chạy make demo-audit.
+  4. **Nguyên lý (iv) Zero-Trust & Chịu lỗi (Resilience)**: Circuit Breaker tự ngắt và phục hồi khi MinIO S3 gặp sự cố, tự động lưu đệm tại Local Spool và re-sync khi online trở lại -> Chạy make demo-resilience.
 
 ---
 

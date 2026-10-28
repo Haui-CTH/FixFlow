@@ -81,6 +81,9 @@ make demo-sample-data  # [Demo 5] Thống kê 77+ tickets dữ liệu mẫu th�
 make demo-pii          # [Demo 6] Che giấu thông tin cá nhân PII (CCCD, SĐT, Email - NĐ 13/2023/NĐ-CP)
 make demo-contrast     # [Demo 7] Kiểm thử tương phản màu sắc đạt chuẩn WCAG 2.2 AA (>= 4.5:1)
 make demo-it-ot        # [Demo 8] Hội tụ IT/OT: Cảm biến IoT quá nhiệt -> Tự sinh Ticket khẩn cấp
+make demo-nong-lanh    # [Demo 9] Vòng đời Nóng - Lạnh: Đóng gói vé nén WORM & truy vấn kho lạnh MinIO
+make demo-audit        # [Demo 10] Quản trị Dữ liệu & Kiểm toán: Chuỗi băm SHA-256 phát hiện can thiệp
+make demo-resilience   # [Demo 11] Chịu lỗi Zero-Trust: Tự động phục hồi khi MinIO S3 gặp sự cố
 ```
 
 ---

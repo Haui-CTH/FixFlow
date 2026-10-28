@@ -181,4 +181,16 @@ demo-it-ot:
 	@echo "=== [DEMO 8] Hội tụ IT/OT (Cảm biến nhiệt độ IoT -> Tự động tạo Ticket & Phân công) ==="
 	@python scripts/demo_iot_sensor.py
 
+demo-nong-lanh:
+	@echo "=== [DEMO 9] Phân tách Vòng đời Dữ liệu Nóng - Lạnh (MinIO WORM Cold Archive) ==="
+	@python scripts/demo_cold_archive.py
+
+demo-audit:
+	@echo "=== [DEMO 10] Quản trị Dữ liệu & Kiểm toán Toàn vẹn (SHA-256 Hash-Chain) ==="
+	@python scripts/demo_audit_chain.py
+
+demo-resilience:
+	@echo "=== [DEMO 11] Khả năng Chịu lỗi & Tự Phục hồi (Graceful Degradation & Resilience) ==="
+	@python scripts/demo_resilience.py
+
 .DEFAULT_GOAL := help
