@@ -59,12 +59,19 @@ def _minio_reachable(timeout: float = 1.0) -> bool:
 
 
 def _minio_upload(data: bytes, object_name: str, content_type: str) -> str:
-    """Upload lên MinIO, raise S3Error nếu fail."""
+    """Upload lên MinIO, raise Exception nếu fail."""
     if not _minio_reachable():
         raise ConnectionError("MinIO unreachable")
     client = get_minio_client()
     if not client:
-        raise S3Error("MinIO unavailable")
+        raise RuntimeError("MinIO unavailable")
+
+    # Đảm bảo bucket tồn tại trước khi upload
+    try:
+        if not client.bucket_exists(settings.minio_bucket):
+            client.make_bucket(settings.minio_bucket)
+    except Exception:
+        pass
 
     data_length = len(data)
     # MinIO put_object yêu cầu file-like object, không phải bytes

@@ -28,7 +28,7 @@
 
 DX-FSM là hệ thống quản lý dịch vụ thực địa, được xây dựng theo kiến trúc **DX-OS Open-Core 3 tầng**:
 
-- **Tầng 1 – Open-Core (Headless):** Keycloak, nginx, PostgreSQL, MinIO (disabled), n8n
+- **Tầng 1 – Open-Core (Headless):** Keycloak, nginx, PostgreSQL, MinIO, n8n
 - **Tầng 2 – H-P-D-I:** Không gian Human, Process, Data, Intelligence
 - **Tầng 3 – Ứng dụng:** React 18 SPA cho Customer, Technician, Manager
 
@@ -95,7 +95,7 @@ make demo-sample-data  # [Demo 5] Thống kê 77+ tickets dữ liệu mẫu th�
 ├─────────────────────────────┴───────────────────────────────┤
 │                    TẦNG 1: DX-OS OPEN-CORE (HEADLESS)       │
 │  Keycloak (SSO) │ nginx (Gateway) │ PostgreSQL (DB)         │
-│  MinIO (Files, disabled) │ n8n (Workflow) │ Ollama (AI)     │
+│  MinIO (S3 Files)        │ n8n (Workflow) │ Ollama (AI)     │
 └─────────────────────────────────────────────────────────────┘
 ```
 
@@ -109,7 +109,7 @@ Xem chi tiết: [docs/architecture.md](docs/architecture.md)
 - [x] **Identity/SSO** với Keycloak – JWT token, RBAC
 - [x] **API Gateway** với nginx – routing, proxy
 - [x] **Database** PostgreSQL – dữ liệu quan hệ, 7 danh mục sự cố
-- [x] **File Storage** – Local filesystem (MinIO disabled)
+- [x] **File Storage** – MinIO S3 Object Storage (kèm cơ chế local volume fallback)
 - [x] **Workflow Engine** với n8n – ticket intake → assign → process → close
 - [x] **AI Service** – phân loại ticket tự động (Hybrid Rule-based + Ollama)
 
@@ -133,7 +133,7 @@ Xem chi tiết: [docs/architecture.md](docs/architecture.md)
 | Identity/SSO | Keycloak 24 | Apache-2.0 |
 | API Gateway | nginx | BSD-2-Clause |
 | Database | PostgreSQL 16 | PostgreSQL |
-| File Storage | Local filesystem (MinIO disabled) | – |
+| File Storage | MinIO Object Storage (S3 API) | AGPL-3.0 |
 | Workflow | n8n | Elastic-2.0 / Sustainable |
 | Backend API | FastAPI (Python 3.11) | MIT |
 | AI Service | Hybrid (Rule-based Regex + TF-IDF + Heuristic + Ollama) | Apache-2.0 / MIT |
@@ -214,7 +214,7 @@ dx-fsm/
 │   ├── keycloak/            # SSO + RBAC
 │   ├── nginx/               # API Gateway
 │   ├── postgres/            # Database schema & migrations
-│   ├── minio/               # File storage (disabled)
+│   ├── minio/               # S3 Object storage (active)
 │   └── n8n/                 # Workflow engine
 ├── services/                # Tầng 2: Microservices
 │   ├── ticket-service/      # Core API (FastAPI)

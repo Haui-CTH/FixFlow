@@ -66,13 +66,14 @@ docker compose exec -T postgres pg_isready -U dxfsm   # PostgreSQL
 | API Gateway | http://localhost/api/v1 | nginx, cùng origin với frontend qua reverse proxy |
 | Keycloak | http://localhost:8080 | Admin: `KEYCLOAK_ADMIN` / `KEYCLOAK_ADMIN_PASSWORD` trong `.env` |
 | n8n | http://localhost:5678 | Basic auth: `N8N_BASIC_AUTH_USER` / `N8N_BASIC_AUTH_PASSWORD` |
+| MinIO API | http://localhost:9000 | S3 compatible endpoint lưu trữ attachments |
+| MinIO Console | http://localhost:9001 | Web UI: `minioadmin` / `changeme_minio_123` |
 | Mailhog (SMTP dev) | http://localhost:8025 | Nhận email từ notification-service |
 
 Tài khoản demo (realm `dx-fsm`): `admin`, `manager`, `technician`, `customer`
 (mật khẩu xem `core/keycloak/realm-export.json` hoặc README).
 
-MinIO đang **disabled** (`profiles: ["disabled"]`); file đính kèm được lưu ở volume
-`ticket_attachments` (local filesystem fallback của ticket-service).
+MinIO được cấu hình tự động tạo bucket `attachments` và khởi chạy sẵn sàng. Nếu MinIO tạm dừng bảo trì, ticket-service có cơ chế chuyển mạch fallback tự động sang volume `ticket_attachments`.
 
 ### 5. Dừng
 

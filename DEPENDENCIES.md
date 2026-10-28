@@ -33,7 +33,7 @@ Các dịch vụ hạ tầng nền tảng chạy ngầm, được điều phối
 | **Database** | `postgres:16-alpine` | [Docker Hub / Postgres Official](https://hub.docker.com/_/postgres) | PostgreSQL License | Quản trị CSDL quan hệ, lưu trữ schema, audit logs và dữ liệu outbox |
 | **Workflow Engine** | `n8nio/n8n:latest` | [Docker Hub / n8n](https://hub.docker.com/r/n8nio/n8n) | Sustainable Use (Fair-code) | Động cơ tự động hóa quy trình nghiệp vụ, webhook integration |
 | **Dev SMTP Server** | `mailhog/mailhog:latest` | [Docker Hub / MailHog](https://github.com/mailhog/MailHog) | MIT | Máy chủ SMTP ảo và Web UI kiểm tra email trong môi trường dev |
-| **File Storage** | `minio/minio:latest` *(Disabled)* | [Docker Hub / MinIO](https://min.io/) | AGPL-3.0 | *(Cấu hình dự phòng, hiện tại fallback lưu trữ file an toàn qua volume local)* |
+| **File Storage** | `ghcr.io/coollabsio/minio:latest` | [GHCR / MinIO Community Mirror](https://github.com/coollabsio/coolify) | AGPL-3.0 | Lưu trữ tệp đính kèm và hình ảnh hiện trường chuẩn S3 API (có fallback local volume) |
 
 ---
 

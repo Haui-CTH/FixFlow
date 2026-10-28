@@ -75,23 +75,27 @@ services:
       - dxfsm-net
 
   minio:
-    # DISABLED Day 0: minio/minio image bị Docker Hub proxy chặn (whitelist).
-    # Giữ comment để nhớ tích hợp lại khi có image access. Trong thời gian đó
-    # ticket-service dùng local filesystem (volume) để lưu attachment.
-    image: minio/minio:latest
+    # S3 Object Storage (Tầng 1 Open-Core PaaS).
+    # Sử dụng ghcr.io image mirror ổn định, tránh Docker Hub 401 / whitelist.
+    image: ghcr.io/coollabsio/minio:latest
     container_name: dxfsm-minio
-    profiles: ["disabled"]
-    restart: "no"
-    command: server /data --console-address ":9001"
+    restart: unless-stopped
+    entrypoint: ["/bin/sh", "/entrypoint.sh"]
     environment:
       MINIO_ROOT_USER: ${MINIO_ROOT_USER:-minioadmin}
       MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD:?must be set in .env}
     volumes:
       - minio_data:/data
       - ./core/minio/init.sh:/init.sh:ro
+      - ./core/minio/entrypoint.sh:/entrypoint.sh:ro
     ports:
-      - "9000:9000"   # API
-      - "9001:9001"   # Console
+      - "9000:9000"   # S3 API
+      - "9001:9001"   # Web Console
+    healthcheck:
+      test: ["CMD-SHELL", "mc ready local || exit 1"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
     networks:
       - dxfsm-net
 
@@ -148,6 +152,8 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
+      minio:
+        condition: service_started
     healthcheck:
       test: ["CMD-SHELL", "python -c \"import urllib.request; urllib.request.urlopen('http://localhost:8001/health')\""]
       interval: 15s
