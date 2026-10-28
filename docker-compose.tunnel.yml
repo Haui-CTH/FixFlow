@@ -1,0 +1,28 @@
+# FixFlow (DX-FSM) - Cloudflare Tunnel Overlay
+# SPDX-License-Identifier: Apache-2.0
+#
+# Cách dùng:
+#   1. Tạo tunnel trên Cloudflare Zero Trust: Networks -> Tunnels -> Create a tunnel -> Đặt tên (vd: fixflow)
+#   2. Lấy TUNNEL_TOKEN và thêm vào file .env:
+#        CLOUDFLARE_TUNNEL_TOKEN=eyJhIjoi...
+#   3. Khởi chạy hệ thống kèm Cloudflare Tunnel:
+#        docker compose -f docker-compose.yml -f docker-compose.tunnel.yml up -d
+#   4. Cấu hình Public Hostname trên Cloudflare Dashboard:
+#        - Subdomain / Hostname: fixflow.yourdomain.com (hoặc tên miền của bạn)
+#        - Service Type: HTTP
+#        - URL: gateway:80
+#
+# Bảo mật Zero-Trust: Không cần mở cổng router (No open ports), HTTPS tự động 100%.
+
+services:
+  cloudflared:
+    image: cloudflare/cloudflared:latest
+    container_name: dxfsm-cloudflared
+    restart: unless-stopped
+    command: tunnel --no-autoupdate run
+    environment:
+      TUNNEL_TOKEN: ${CLOUDFLARE_TUNNEL_TOKEN:?}
+    networks:
+      - dxfsm-net
+    depends_on:
+      - gateway

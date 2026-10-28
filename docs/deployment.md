@@ -1,197 +1,212 @@
-# DX-FSM Deployment Guide
+# Hướng dẫn Triển khai Hệ thống FixFlow (Field Service Management)
+<!-- SPDX-License-Identifier: Apache-2.0 -->
 
-## Yêu cầu hệ thống
+Tài liệu này cung cấp hướng dẫn triển khai toàn diện nền tảng **FixFlow** từ môi trường phát triển cục bộ (Local Development) đến môi trường máy chủ sản xuất (Production VPS) và môi trường thi đấu / demo công khai trên Internet qua đường hầm **Cloudflare Tunnel**.
 
-- Docker Engine 24.0+
-- Docker Compose v2.x
-- RAM: 8GB (khuyến nghị 16GB)
-- Disk: 20GB trống
+```
+                           ┌───────────────────────────────┐
+                           │   Người dùng / Khách hàng     │
+                           └───────────────┬───────────────┘
+                                           │ HTTPS (Port 443)
+                                           ▼
+             ┌───────────────────────────────────────────────────────────┐
+             │       LỚP TRUY CẬP CÔNG KHAI (INTERNET EDGE)              │
+             │   Tùy chọn A: Cloudflare Tunnel (Không cần mở cổng mạng)  │
+             │   Tùy chọn B: VPS Linux + Caddy / Let's Encrypt SSL       │
+             └─────────────────────────────┬─────────────────────────────┘
+                                           │ HTTP (Nội bộ)
+                                           ▼
+             ┌───────────────────────────────────────────────────────────┐
+             │       FIXFLOW API GATEWAY (Nginx - Port 80)               │
+             │   - Điều hướng Single-Origin                              │
+             │   - Bảo toàn Header X-Forwarded-Proto / X-Forwarded-Port  │
+             └──────┬──────────────────────┬──────────────────────┬──────┘
+                    │                      │                      │
+        ┌───────────▼─────────┐ ┌──────────▼──────────┐ ┌─────────▼────────┐
+        │ Frontend Web App    │ │ Keycloak SSO (Auth) │ │ Ticket Service   │
+        │ (React 18 + Vite)   │ │ (Port 8080)         │ │ (Port 8001)      │
+        └─────────────────────┘ └─────────────────────┘ └─────────┬────────┘
+                                                                  │
+                                                        ┌─────────▼────────┐
+                                                        │ PostgreSQL 16    │
+                                                        │ MinIO S3 Storage │
+                                                        │ AI Service       │
+                                                        └──────────────────┘
+```
 
-## Các bước triển khai
+---
 
-### 1. Chuẩn bị
+## 1. Yêu cầu Hệ thống (System Requirements)
+
+FixFlow được tối ưu hóa theo mô hình microservices tinh gọn (Lightweight Open-Core), sử dụng lượng tài nguyên phần cứng thấp hơn rất nhiều so với các hệ thống cồng kềnh khác:
+
+| Thông số | Yêu cầu Tối thiểu | Khuyến nghị Production |
+| :--- | :--- | :--- |
+| **Hệ điều hành** | Linux (Ubuntu 22.04/24.04 LTS), macOS, Windows 11 WSL2 | Ubuntu 24.04 LTS x86_64 |
+| **CPU** | 2 vCPU | 4 vCPU |
+| **RAM** | **2.5 GB RAM** (Mức thực tế stack FixFlow chỉ dùng ~1.8 GB) | 4 GB – 8 GB RAM |
+| **Ổ cứng** | 15 GB SSD khả dụng | 40 GB NVMe SSD |
+| **Phần mềm** | Docker Engine $\ge$ 24.0, Docker Compose v2.20+ | Docker Engine $\ge$ 26.0, Compose v2.27+ |
+
+---
+
+## 2. Phương án 1: Triển khai Internet qua Cloudflare Tunnel (Khuyên dùng cho Cuộc thi & Demo)
+
+Phương án này được thiết kế riêng cho các đội thi và người vận hành muốn đưa toàn bộ hệ thống lên Internet có **tên miền riêng** và **chứng chỉ HTTPS xanh**, mà **không cần thuê VPS có IP tĩnh**, không cần mở cổng modem (Port Forwarding), hoạt động mượt mà trên cả laptop, PC cá nhân hoặc máy ảo sau tường lửa NAT.
+
+### 2.1. Ưu điểm vượt trội
+- **Bảo mật Zero-Trust**: Máy chủ/laptop không mở bất kỳ cổng nào ra Internet (kể cả cổng 80 hay 443).
+- **Chống DDoS & Web Application Firewall (WAF)**: Lưu lượng được Cloudflare kiểm duyệt trước khi vào máy chủ.
+- **Tự động cấp HTTPS**: Toàn quyền sở hữu chứng chỉ SSL/TLS miễn phí từ Cloudflare Edge.
+- **Hoạt động tức thì**: Không bị ảnh hưởng bởi nhà mạng chặn cổng HTTP/HTTPS.
+
+### 2.2. Các bước thiết lập
+
+#### Bước 1: Tạo Tunnel trên Cloudflare Zero Trust
+1. Đăng nhập trang quản trị [Cloudflare Zero Trust](https://one.dash.cloudflare.com/) (gói Free miễn phí vĩnh viễn).
+2. Vào mục **Networks** $\rightarrow$ **Tunnels** $\rightarrow$ Chọn **Create a tunnel**.
+3. Chọn loại kết nối **Cloudflared** $\rightarrow$ Đặt tên tunnel (ví dụ: `fixflow-tunnel`) $\rightarrow$ Bấm **Save tunnel**.
+4. Tại bước *Install and run a connector*, sao chép chuỗi mã sau tham số `--token` (đây là `CLOUDFLARE_TUNNEL_TOKEN`).
+
+#### Bước 2: Cấu hình biến môi trường FixFlow
+Thêm biến `CLOUDFLARE_TUNNEL_TOKEN` vào tệp `.env` của dự án:
 
 ```bash
-cd dx-fsm
+# Thêm token tunnel vừa copy vào file .env
+echo "CLOUDFLARE_TUNNEL_TOKEN=eyJhIjoiYmNm..." >> .env
+```
 
-# Copy .env và điền các biến bắt buộc (POSTGRES_PASSWORD, KEYCLOAK_ADMIN_PASSWORD, ...)
+#### Bước 3: Khởi chạy cụm dịch vụ kèm Tunnel Overlay
+Chạy lệnh Docker Compose kết hợp tệp overlay [`docker-compose.tunnel.yml`](../docker-compose.tunnel.yml):
+
+```bash
+docker compose -f docker-compose.yml -f docker-compose.tunnel.yml up -d
+```
+
+Kiểm tra container `dxfsm-cloudflared` kết nối thành công:
+```bash
+docker compose logs cloudflared | grep "Registered tunnel connection"
+# Xuất hiện 4 kết nối định tuyến thành công tới các trung tâm dữ liệu của Cloudflare
+```
+
+#### Bước 4: Trỏ tên miền (Public Hostname Routing)
+Quay lại trang Cloudflare Dashboard trên trình duyệt:
+1. Chuyển sang tab **Public Hostnames** (hoặc *Published Application*).
+2. Chọn **Add a public hostname**:
+   - **Subdomain**: `fixflow` (hoặc tên tùy chọn)
+   - **Domain**: chọn tên miền bạn quản lý trên Cloudflare (ví dụ: `yourdomain.com`)
+   - **Service Type**: `HTTP`
+   - **URL**: `gateway:80`
+3. Bấm **Save hostname**.
+
+> 🎉 **Hoàn tất:** Truy cập ngay `https://fixflow.yourdomain.com` trên điện thoại hoặc máy tính của Ban giám khảo. Toàn bộ Web UI, Keycloak SSO và Backend API đều chạy mượt mà dưới giao thức HTTPS chuẩn mực!
+
+---
+
+## 3. Phương án 2: Triển khai Máy chủ VPS Linux Độc lập (Production Dedicated Server)
+
+Dành cho kịch bản triển khai dài hạn trên hạ tầng máy chủ ảo (Hetzner, DigitalOcean, Linode, Vietnix, FPT Cloud,...):
+
+### 3.1. Chuẩn bị máy chủ Ubuntu 24.04 LTS
+Kết nối SSH vào máy chủ và cài đặt các gói cần thiết:
+
+```bash
+sudo apt update && sudo apt upgrade -y
+sudo apt install -y curl git make ufw caddy
+
+# Cài đặt Docker Engine & Docker Compose chính chủ Docker
+sudo install -m 0755 -d /etc/apt/keyrings
+sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
+echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | sudo tee /etc/apt/sources.list.d/docker.list
+sudo apt update && sudo apt install -y docker-ce docker-ce-cli containerd.io docker-compose-plugin
+
+# Cấu hình tường lửa UFW (Chỉ mở SSH, HTTP 80 và HTTPS 443)
+sudo ufw default deny incoming
+sudo ufw default allow outgoing
+sudo ufw allow ssh
+sudo ufw allow 80/tcp
+sudo ufw allow 443/tcp
+sudo ufw enable
+```
+
+### 3.2. Lấy mã nguồn và Cấu hình Môi trường
+```bash
+git clone https://github.com/truong-newbie/PMNM_2026_DX_FSM.git /opt/fixflow
+cd /opt/fixflow
+
+# Sao chép và cập nhật file .env với mật khẩu an toàn
 cp .env.example .env
-
-# Build images
-docker compose build
+nano .env
 ```
 
-### 2. Khởi động
-
+### 3.3. Khởi chạy Hệ sinh thái FixFlow
 ```bash
-# Toàn bộ hệ thống
-docker compose up -d
-
-# Chỉ Open-Core trước (kiểm tra infrastructure)
-docker compose -f docker-compose.yml -f docker-compose.core.yml up -d
-```
-
-Lần đầu khởi động, PostgreSQL tự chạy `core/postgres/init.sql` (schema + seed) rồi
-áp dụng lần lượt các file trong `core/postgres/migrations/`. Nếu cần apply migration
-thủ công trên database đang chạy:
-
-```bash
-docker compose exec -T postgres sh -c \
-  'for f in /docker-entrypoint-initdb.d/0[2-9]*.sql; do psql -v ON_ERROR_STOP=1 -U "$POSTGRES_USER" -d "$POSTGRES_DB" -f "$f"; done'
-```
-
-hoặc `make migrate`.
-
-### 3. Kiểm tra
-
-```bash
-# Tất cả containers
+docker compose up -d --wait
 docker compose ps
-
-# Health check từng service
-curl http://localhost/health                    # Gateway -> ticket-service
-curl http://localhost:8001/health               # Ticket Service
-curl http://localhost:8002/health               # AI Service
-curl http://localhost:8003/health               # Notification Service
-curl http://localhost:8080/realms/dx-fsm/.well-known/openid-configuration  # Keycloak
-curl http://localhost:5678/healthz              # n8n
-docker compose exec -T postgres pg_isready -U dxfsm   # PostgreSQL
 ```
 
-### 4. Truy cập
+### 3.4. Cấu hình Reverse Proxy Tự động Cấp HTTPS với Caddy
+Chỉnh sửa tệp cấu hình Caddy `/etc/caddy/Caddyfile`:
 
-| Service | URL | Ghi chú |
-|---|---|---|
-| Frontend | http://localhost:3000 | Đổi cổng bằng `APP_PORT` (vd: `APP_PORT=3001 docker compose up -d`) |
-| API Gateway | http://localhost/api/v1 | nginx, cùng origin với frontend qua reverse proxy |
-| Keycloak | http://localhost:8080 | Admin: `KEYCLOAK_ADMIN` / `KEYCLOAK_ADMIN_PASSWORD` trong `.env` |
-| n8n | http://localhost:5678 | Basic auth: `N8N_BASIC_AUTH_USER` / `N8N_BASIC_AUTH_PASSWORD` |
-| MinIO API | http://localhost:9000 | S3 compatible endpoint lưu trữ attachments |
-| MinIO Console | http://localhost:9001 | Web UI: `minioadmin` / `changeme_minio_123` |
-| Mailhog (SMTP dev) | http://localhost:8025 | Nhận email từ notification-service |
+```caddyfile
+fixflow.yourdomain.com {
+    reverse_proxy 127.0.0.1:80 {
+        header_up X-Forwarded-Port 443
+        header_up X-Forwarded-Proto https
+    }
+}
+```
 
-Tài khoản demo (realm `dx-fsm`): `admin`, `manager`, `technician`, `customer`
-(mật khẩu xem `core/keycloak/realm-export.json` hoặc README).
+Nạp lại dịch vụ Caddy:
+```bash
+sudo systemctl reload caddy
+sudo journalctl -u caddy -n 20 --no-pager
+# Caddy sẽ tự động xác thực tên miền qua ACME và xin chứng chỉ Let's Encrypt trong 5 giây!
+```
 
-MinIO được cấu hình tự động tạo bucket `attachments` và khởi chạy sẵn sàng. Nếu MinIO tạm dừng bảo trì, ticket-service có cơ chế chuyển mạch fallback tự động sang volume `ticket_attachments`.
+---
 
-### 5. Dừng
+## 4. Kiểm tra Toàn diện sau khi Triển khai (Post-Deployment Verification)
+
+Sau khi triển khai lên domain công khai (ví dụ `https://fixflow.yourdomain.com`), người vận hành thực hiện kiểm tra nhanh:
 
 ```bash
-docker compose down
+# 1. Kiểm tra Gateway trả về mã 200/302 chuẩn
+curl -sI https://fixflow.yourdomain.com/ | head -n 5
+
+# 2. Kiểm tra OpenID Connect Issuer của Keycloak nhận diện đúng HTTPS
+curl -s https://fixflow.yourdomain.com/realms/dx-fsm/.well-known/openid-configuration | grep -oE '"issuer":"[^"]*"'
+# Kết quả mong đợi: "issuer":"https://fixflow.yourdomain.com/realms/dx-fsm"
+
+# 3. Kiểm tra API Backend qua Gateway
+curl -s https://fixflow.yourdomain.com/api/v1/tickets/stats/summary
+
+# 4. Kiểm tra sức khỏe phân hệ AI & Circuit Breaker
+curl -s https://fixflow.yourdomain.com/api/v1/ai/health
 ```
 
-### 6. Xóa toàn bộ (bao gồm data)
+---
 
-```bash
-docker compose down -v
-```
+## 5. Danh mục Cổng & Cô lập Mạng (Zero-Trust Network Isolation)
 
-## Triển khai & Cài đặt trực tiếp từ Source Code (Native / Non-Docker)
+FixFlow áp dụng mô hình bảo mật nhiều lớp:
+- **Cổng mở duy nhất ra ngoài**: Cổng **80** (và **443** qua Reverse Proxy).
+- **Mạng nội bộ Docker (`dxfsm-net`)**: 
+  - `postgres` (5432): Chỉ các microservices trong mạng nội bộ truy cập được.
+  - `keycloak` (8080): Định tuyến qua Nginx Gateway, không cần mở trực tiếp cổng 8080.
+  - `ai-service` (8002): Định tuyến qua Nginx Gateway.
+  - `minio` (9000/9001): Lưu trữ đối tượng nội bộ.
+  - `n8n` (5678): Động cơ tự động hóa quy trình.
 
-Phù hợp cho môi trường kiểm thử mã nguồn, phát triển tính năng hoặc đóng gói độc lập theo yêu cầu Hội đồng chấm thi:
+---
 
-### 1. Yêu cầu môi trường
-- Python 3.11+
-- Node.js 20+ & npm 10+
-- PostgreSQL 16 (chạy local hoặc remote)
-- Keycloak 24+ (cung cấp SSO/OIDC realm `dx-fsm`)
+## 6. Xử lý Sự cố Thường gặp (Troubleshooting)
 
-### 2. Cấu hình trước khi build (Pre-build Configuration)
-Hệ thống cho phép cấu hình 100% các tham số kết nối, cổng và khóa bí mật trước khi build/chạy thông qua biến môi trường:
-```bash
-# Cấu hình chung hệ thống
-cp .env.example .env
+### Q: Keycloak chuyển hướng về `http://` thay vì `https://` sau khi đăng nhập?
+**A:** Đảm bảo Gateway Nginx đã bật `map $http_x_forwarded_proto $forwarded_proto` và `KC_PROXY_HEADERS=xforwarded` trên Keycloak container. File cấu hình trong repo đã được cấu hình sẵn tính năng này.
 
-# Cấu hình frontend trước khi build tĩnh
-cp app/.env.example app/.env
-# Chỉnh sửa VITE_API_BASE_URL, VITE_KEYCLOAK_URL nếu cần đổi endpoint
-```
+### Q: Đăng nhập báo lỗi `Invalid redirect_uri`?
+**A:** Keycloak client `dx-fsm-frontend` trong file `core/keycloak/realm-export.json` đã được cài đặt sẵn redirect URIs dạng wildcard `*` và Web Origins `+`, cho phép nhận diện tự động bất kỳ tên miền hoặc subdomain nào mà không cần cấu hình lại thủ công.
 
-### 3. Cài đặt CSDL từ Source
-```bash
-# Khởi tạo schema và bảng
-psql -U dxfsm -d dxfsm -f core/postgres/init.sql
-
-# Áp dụng các bản cập nhật migrations tuần tự (002 đến 006)
-for f in core/postgres/migrations/*.sql; do
-  psql -U dxfsm -d dxfsm -f "$f"
-done
-```
-
-### 4. Build và Chạy Backend Microservices
-Mỗi dịch vụ backend có thể chạy độc lập trong virtualenv riêng biệt:
-
-```bash
-# ─── Ticket Service (Port 8001) ───
-cd services/ticket-service
-python -m venv .venv && source .venv/bin/activate  # Trên Windows: .venv\Scripts\activate
-pip install -r requirements.txt
-export DATABASE_URL="postgresql://dxfsm:<DEMO_PASSWORD>@localhost:5432/dxfsm"
-export KEYCLOAK_URL="http://localhost:8080"
-uvicorn app.main:app --host 0.0.0.0 --port 8001 --reload
-
-# ─── AI Service (Port 8002) ───
-cd ../ai-service
-python -m venv .venv && source .venv/bin/activate
-pip install -r requirements.txt
-export OLLAMA_BASE_URL="http://localhost:11434"
-uvicorn app.main:app --host 0.0.0.0 --port 8002 --reload
-
-# ─── Notification Service (Port 8003) ───
-cd ../notification-service
-python -m venv .venv && source .venv/bin/activate
-pip install -r requirements.txt
-uvicorn app.main:app --host 0.0.0.0 --port 8003 --reload
-```
-
-### 5. Build và Chạy Frontend ngoài thư mục Source
-Frontend sử dụng Vite + React 18, hỗ trợ build thành gói tĩnh độc lập để phục vụ ngoài thư mục source:
-```bash
-cd app
-npm install
-
-# Build gói tĩnh độc lập vào thư mục dist/
-npm run build
-
-# Gói sản phẩm sau build nằm tại app/dist/, có thể deploy độc lập vào:
-# - Web server bất kỳ: Nginx, Apache, Caddy
-# - Hoặc phục vụ nhanh:
-npx serve -s dist -l 3000
-```
-
-### 6. Kiểm tra & Chạy Test Suite từ Source
-Hội đồng có thể kiểm tra toàn diện chất lượng source code trực tiếp:
-```bash
-# Chạy toàn bộ 324 tests frontend
-cd app && npm test -- --run
-
-# Chạy unit tests backend
-cd services/ticket-service && pytest tests/ -v
-cd services/ai-service && pytest tests/ -v
-cd services/notification-service && pytest tests/ -v
-```
-
-## Triển khai môi trường Production
-
-1. Đổi tất cả passwords trong `.env` và thay placeholder `CHANGE_ME_*` trong realm Keycloak
-2. Enable HTTPS (đặt sau reverse proxy như Nginx/Traefik) và cập nhật redirect URI của client `dx-fsm-frontend`
-3. Cấu hình Keycloak production realm (không dùng `start-dev`)
-4. Bật MinIO nếu cần object storage và cấu hình `MINIO_*`
-5. Tích hợp provider thật cho SMS/Push (hiện là stub) và kiểm tra `SERVICE_TOKEN`
-6. Backup PostgreSQL định kỳ
-7. Cấu hình monitoring (Prometheus + Grafana)
-
-## Troubleshooting
-
-```bash
-# Xem logs
-docker compose logs -f postgres
-docker compose logs -f ticket-service
-
-# Restart service
-docker compose restart ticket-service
-
-# Rebuild không cache
-docker compose build --no-cache
-```
+### Q: Muốn chạy demo nhanh trên máy chấm thi của Ban giám khảo?
+**A:** Chạy `cloudflared tunnel --url http://localhost:80` trên terminal để có ngay URL HTTPS tạm thời trong 3 giây.

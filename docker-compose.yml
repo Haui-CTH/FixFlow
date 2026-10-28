@@ -42,6 +42,7 @@ services:
     environment:
       KEYCLOAK_ADMIN: ${KEYCLOAK_ADMIN:-admin}
       KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD:?must be set in .env}
+      KC_PROXY_HEADERS: xforwarded
     volumes:
       - ./core/keycloak/realm-export.json:/opt/keycloak/data/import/realm-export.json:ro
       - ./core/keycloak/themes:/opt/keycloak/themes:ro
