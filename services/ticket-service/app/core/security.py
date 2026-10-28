@@ -125,9 +125,15 @@ async def _decode_token(token: str) -> dict:
             token,
             rsa_key,
             algorithms=["RS256"],
-            audience=settings.keycloak_client_id,
-            issuer=f"{settings.keycloak_public_url}/realms/{settings.keycloak_realm}",
+            options={"verify_aud": False, "verify_iss": False},
         )
+        iss = claims.get("iss", "")
+        expected_realm = f"/realms/{settings.keycloak_realm}"
+        if expected_realm not in iss:
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail=f"Invalid realm issuer: {iss}",
+            )
         return claims
 
     except JWTError as e:
