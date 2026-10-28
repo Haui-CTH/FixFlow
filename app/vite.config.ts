@@ -15,7 +15,19 @@ export default defineConfig({
     port: 3000,
     proxy: {
       '/api': {
-        target: 'http://localhost:9180',
+        target: 'http://localhost',
+        changeOrigin: true,
+      },
+      '/docs': {
+        target: 'http://localhost',
+        changeOrigin: true,
+      },
+      '/monitor': {
+        target: 'http://localhost',
+        changeOrigin: true,
+      },
+      '/redoc': {
+        target: 'http://localhost',
         changeOrigin: true,
       },
     },

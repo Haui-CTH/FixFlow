@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: Apache-2.0
 // TopBar (S2.4): hamburger (mobile), tiêu đề trang, slot cho NotificationBell (GĐ 07), nút theme.
 
-import { LogOut, Menu, Moon, Sun } from 'lucide-react';
+import { Activity, Code2, LogOut, Menu, Moon, Sun } from 'lucide-react';
 import { useEffect, useRef, useState, type ReactNode } from 'react';
 import { useLocation } from 'react-router-dom';
 import { LanguageSwitcher } from './LanguageSwitcher';
@@ -59,6 +59,8 @@ export function UserMenu({ user, onLogout }: { user: User; onLogout: () => void 
   }, [open]);
 
   if (!user) return null;
+  const isElevated = user.role === 'admin' || user.role === 'manager';
+
   return (
     <div className={styles.userMenu} ref={wrap}>
       <button
@@ -81,6 +83,22 @@ export function UserMenu({ user, onLogout }: { user: User; onLogout: () => void 
             {user.email && <span className={styles.menuEmail}>{user.email}</span>}
             <Badge tone="info">{user.role}</Badge>
           </div>
+          {isElevated && (
+            <>
+              <div className={styles.menuDivider} />
+              <div className={styles.menuLinks}>
+                <a href="/monitor" target="_blank" rel="noopener noreferrer" className={styles.menuLink}>
+                  <Activity size={16} aria-hidden="true" />
+                  <span>Giám sát hệ thống</span>
+                </a>
+                <a href="/docs" target="_blank" rel="noopener noreferrer" className={styles.menuLink}>
+                  <Code2 size={16} aria-hidden="true" />
+                  <span>Tài liệu API</span>
+                </a>
+              </div>
+            </>
+          )}
+          <div className={styles.menuDivider} />
           <button className={styles.logoutBtn} onClick={onLogout}>
             <LogOut size={16} aria-hidden="true" />
             {t('top_bar.dang_xuat')}
