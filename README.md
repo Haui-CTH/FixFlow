@@ -10,7 +10,7 @@
 
 Sản phẩm tham gia thi đấu **Olympic Tin học Sinh viên Việt Nam 2026 — Khối Phần mềm Nguồn mở (OLP PMNM 2026)**, chủ đề *DX-OS Open-Core* (VFOSSA).
 
-**Tài liệu trọng tâm:** [Hỏi đáp Hội đồng Giám khảo](docs/council-qa.md) · [Mức độ hoàn thiện & Minh chứng](docs/muc-hoan-thien.md) · [Thẩm định Bản quyền OSI](docs/licenses-audit.md) · [Kịch bản Thuyết trình 10 phút](docs/demo-script.md)
+**Tài liệu trọng tâm:** [Hỏi đáp Hội đồng Giám khảo](docs/council-qa.md) · [Mức độ hoàn thiện & Minh chứng](docs/muc-hoan-thien.md) · [Thẩm định Bản quyền OSI](docs/licenses-audit.md) · [Tài liệu API Swagger UI (47 endpoints)](http://localhost/docs) · [Kịch bản Thuyết trình 10 phút](docs/demo-script.md)
 
 ## Mục lục
 

@@ -32,10 +32,13 @@ async def lifespan(app: FastAPI):
 
 
 app = FastAPI(
-    title="DX-FSM AI Service",
-    description="AI-powered ticket classification, recommendation, and KB search",
+    title="FixFlow AI & Intelligence Service API",
+    description="Dịch vụ Trí tuệ Nhân tạo FixFlow: Phân loại sự cố tự động (kèm Circuit Breaker NLP <2ms), Gợi ý Kỹ thuật viên đa tiêu chí, Tra cứu Cẩm nang TF-IDF và Che giấu PII (Nghị định 13/2023/NĐ-CP)",
     version="1.3.0",
     docs_url="/docs",
+    redoc_url="/redoc",
+    openapi_url="/openapi.json",
+    root_path="/api/v1",
     lifespan=lifespan,
 )
 

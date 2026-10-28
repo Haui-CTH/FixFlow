@@ -8,6 +8,7 @@ from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.openapi.docs import get_swagger_ui_html, get_redoc_html
 
 from app.config import settings
 from app.db.database import init_db
@@ -68,14 +69,44 @@ async def lifespan(app: FastAPI):
 
 
 app = FastAPI(
-    title="DX-FSM Ticket Service",
-    description="Core API for Field Service Management Platform",
+    title="FixFlow Core & Ticket Service API",
+    description="Hệ sinh thái API mở (Open-Core) Quản lý Dịch vụ Thực địa FixFlow: Vòng đời Ticket FSM 7 trạng thái, Phân công KTV, Tra cứu SLA, Outbox Pattern, và Kiểm toán",
     version="1.2.0",
-    docs_url="/docs",
-    redoc_url="/redoc",
+    docs_url=None,
+    redoc_url=None,
     openapi_url="/openapi.json",
+    root_path="/api/v1",
     lifespan=lifespan,
 )
+
+
+@app.get("/docs", include_in_schema=False)
+async def custom_swagger_ui():
+    return get_swagger_ui_html(
+        openapi_url="/api/v1/openapi.json",
+        title="FixFlow API Documentation — Swagger UI",
+        swagger_favicon_url="/logo.svg",
+        swagger_ui_parameters={
+            "urls": [
+                {"url": "/api/v1/openapi.json", "name": "1. FixFlow Core & Ticket API (30 endpoints)"},
+                {"url": "/api/v1/ai/openapi.json", "name": "2. FixFlow AI & Intelligence API (17 endpoints)"}
+            ],
+            "urls.primaryName": "1. FixFlow Core & Ticket API (30 endpoints)",
+            "persistAuthorization": True,
+            "displayRequestDuration": True,
+            "docExpansion": "list",
+            "filter": True,
+        }
+    )
+
+
+@app.get("/redoc", include_in_schema=False)
+async def custom_redoc():
+    return get_redoc_html(
+        openapi_url="/api/v1/openapi.json",
+        title="FixFlow Core API — ReDoc",
+        redoc_favicon_url="/logo.svg"
+    )
 
 # CORS
 app.add_middleware(

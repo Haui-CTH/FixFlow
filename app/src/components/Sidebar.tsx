@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: Apache-2.0
 // Sidebar (S2.1–S2.3, S2.5, S2.8): nav theo role, active theo route con, thu gọn trên desktop, drawer trên mobile.
 
-import { ChevronsLeft, ChevronsRight, X } from 'lucide-react';
+import { ChevronsLeft, ChevronsRight, X, Code2 } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 import { isActive, navFor } from '../lib/nav';
 import styles from './Layout.module.css';
@@ -45,6 +45,18 @@ export function Sidebar({ open, collapsed, user, onClose, onToggleCollapse }: Pr
           );
         })}
       </nav>
+      <div style={{ marginTop: 'auto', padding: '0 8px 8px' }}>
+        <a
+          href="/docs"
+          target="_blank"
+          rel="noopener noreferrer"
+          title={collapsed ? 'API Swagger UI' : undefined}
+          className={styles.navLink}
+        >
+          <Code2 size={20} aria-hidden="true" />
+          <span className={styles.navLabel}>Tài liệu API</span>
+        </a>
+      </div>
       <button
         className={styles.collapseBtn}
         onClick={onToggleCollapse}
