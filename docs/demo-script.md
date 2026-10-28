@@ -1,5 +1,11 @@
 # Kịch bản Thuyết trình & Demo 10 Phút Chuẩn Cuộc thi PMNM HaUI 2026
+### Dự án: FixFlow (DX-FSM) — Quản lý Dịch vụ Kỹ thuật Thực địa trên nền DX-OS Open-Core
 ### Định dạng: 10 phút Trình bày + 5 phút Trả lời chất vấn Hội đồng Giám khảo
+
+> Đọc kèm:
+> - [`docs/council-qa.md`](council-qa.md) — 10 câu hỏi & trả lời phản biện chuyên sâu của Hội đồng.
+> - [`docs/muc-hoan-thien.md`](muc-hoan-thien.md) — Bảng đối chiếu mức hoàn thiện và độ phủ kiểm thử.
+> - [`docs/licenses-audit.md`](licenses-audit.md) — Thẩm định giấy phép nguồn mở chuẩn OSI 100%.
 
 ---
 
@@ -7,20 +13,20 @@
 
 1. **Khởi động cụm dịch vụ**:
    ```bash
-   docker compose up -d --build
+   make up
    ```
-2. **Kiểm tra trạng thái sức khỏe (Health Check)**:
-   - Mở terminal: `make health` hoặc kiểm tra các cổng:
-     - Frontend: `http://localhost:3000`
-     - Gateway: `http://localhost/health`
-     - AI Service: `http://localhost:8002/health`
-     - Keycloak: `http://localhost:8080/realms/dx-fsm`
+2. **Kiểm tra trạng thái sức khỏe (Health Check & Gateway)**:
+   - Truy cập Gateway thống nhất: `http://localhost/health`
+   - Cổng giao diện FixFlow: `http://localhost/` (hoặc domain Cloudflare Tunnel)
+   - Cổng xác thực Keycloak (FixFlow Theme): `http://localhost/realms/dx-fsm/...`
+   - AI Service: `http://localhost/api/v1/ai/health`
 3. **Mở sẵn 2 trình duyệt độc lập** (để demo 2 vai trò song song không bị đè session cookie):
-   - **Trình duyệt 1 (Chrome thường)**: Đăng nhập sẵn tài khoản **Manager** (`manager@haui.vn` / `manager123`).
-   - **Trình duyệt 2 (Chrome Ẩn danh hoặc Firefox/Edge)**: Chuẩn bị ở trang Login để lát demo vai trò **Customer** (`customer@haui.vn` / `customer123`) và **Technician** (`technician@haui.vn` / `tech123`).
+   - **Trình duyệt 1 (Chrome thường)**: Đăng nhập sẵn tài khoản **Manager** (`manager` / `manager123`).
+   - **Trình duyệt 2 (Chrome Ẩn danh hoặc Firefox/Edge)**: Chuẩn bị ở trang Login Keycloak giao diện FixFlow để lát demo vai trò **Customer** (`customer` / `customer123`) và **Technician** (`technician` / `tech123`).
 4. **Phương án dự phòng (Offline fallback)**:
    - Thư mục ảnh chụp màn hình đầy đủ: `docs/screenshots/`.
    - Toàn bộ AI Service đã tích hợp cơ chế Circuit Breaker, tự động chạy mượt mà trên CPU mà không cần GPU/Internet.
+   - Lưu trữ tự động chuyển đổi từ MinIO S3 sang Local Disk nếu cụm lưu trữ tạm ngắt.
 
 ---
 
@@ -72,32 +78,26 @@
 
 ---
 
-### ⏱ Phút 7:30 – 9:00 | Điểm nhấn Kỹ thuật: Khả năng Chịu lỗi & Transactional Outbox
+### ⏱ Phút 7:30 – 9:00 | Điểm nhấn Kỹ thuật: Hội tụ IT/OT & Khả năng Chịu lỗi
 * **Người thuyết trình nói & Demo nhanh**:
-  1. **Transactional Outbox Pattern**:
-     > *"Hệ thống áp dụng mô hình Outbox để chống mất mát dữ liệu giữa PostgreSQL và n8n/Email Service khi có sự cố mạng. Mỗi thay đổi trạng thái đều được lưu nguyên tử (atomic) vào bảng `outbox_events` kèm cơ chế Exponential Backoff và Circuit Breaker."*
-  2. **Graceful Degradation (Chịu lỗi mềm của AI)**:
-     > *"Đặc biệt, phân hệ AI của chúng em được thiết kế có Circuit Breaker. Nếu máy chủ hiện trường không có card đồ họa GPU hoặc Ollama bị tắt, hệ thống tự động chuyển sang bộ máy Rule-based NLP và TF-IDF chạy bằng CPU trong vòng 2ms, đảm bảo quy trình nhà máy không bị gián đoạn dù chỉ 1 giây!"*
-* **Thao tác**: Mở tab `http://localhost:8002/health` chứng minh hệ thống đang công bố `engine_fallback: "rule_based_active"` rất rõ ràng và minh bạch.
+  1. **Hội tụ IT/OT (Nguyên lý ii của DX-OS)**:
+     > *"FixFlow kết nối trực tiếp cảm biến phần cứng hiện trường với quy trình IT. Cảm biến quá nhiệt phòng Server Lab 402 tự động bắn bản tin cảnh báo qua Gateway $\rightarrow$ Hệ thống tự sinh Ticket khẩn cấp và AI tính điểm phân công KTV ca trực tức thì!"*
+     - Thao tác: Chạy `make demo-it-ot`.
+  2. **Graceful Degradation (Chịu lỗi mềm của AI & Storage)**:
+     > *"Đặc biệt, phân hệ AI của chúng em được thiết kế có Circuit Breaker. Nếu máy chủ hiện trường không có card đồ họa GPU hoặc Ollama bị tắt, hệ thống tự động chuyển sang bộ máy Rule-based NLP và TF-IDF chạy bằng CPU trong vòng 2ms, đảm bảo quy trình nhà máy không bị gián đoạn dù chỉ 1 giây! Đồng thời tệp đính kèm tự động chuyển S3 $\leftrightarrow$ Local Disk nếu MinIO tạm dừng."*
 
 ---
 
 ### ⏱ Phút 9:00 – 10:00 | Báo cáo Chất lượng & Bản quyền Nguồn mở 100%
 * **Người thuyết trình chốt lại**:
   > *"Để đảm bảo tính nghiêm túc của một phần mềm nguồn mở tiêu chuẩn:
-  > - **100% tệp mã nguồn (227/227 files)** đều có SPDX License Header chuẩn Apache-2.0.
-  > - Có tài liệu **DEPENDENCIES.md** phân tích SBOM và tính tương thích giấy phép nguồn mở của mọi thư viện sử dụng.
-  > - Hệ thống đạt **324 unit tests passed** trên frontend và bộ test tự động đầy đủ trên backend.
+  > - **100% tệp mã nguồn** đều có SPDX License Header chuẩn Apache-2.0, không có giấy phép hạn chế non-OSI.
+  > - Hệ thống đạt **332 unit tests passed (43 test suites)** trên frontend, kiểm thử tương phản WCAG 2.2 AA.
+  > - Đầy đủ bộ minh chứng: [`docs/muc-hoan-thien.md`](muc-hoan-thien.md) và [`docs/council-qa.md`](council-qa.md).
   > Chúng em xin trân trọng cảm ơn và sẵn sàng nhận câu hỏi từ Hội đồng!"*
 
 ---
 
 ## 3. Chiến lược Trả lời Chất vấn Hội đồng (5 Phút Q&A)
 
-| # | Câu hỏi thường gặp của Giám khảo | Hướng trả lời ghi điểm tuyệt đối |
-|---|---|---|
-| 1 | **"Hạ tầng Open-Core PaaS của em có bị dính chặt với nghiệp vụ FSM không?"** | *"Dạ thưa thầy, tầng 1 (Keycloak, Nginx, PostgreSQL, n8n) hoàn toàn headless, độc lập 100%. Em có thể giữ nguyên tầng 1 này và thay ứng dụng FSM bằng một hệ thống ERP hoặc E-commerce khác mà không phải cấu hình lại hạ tầng."* |
-| 2 | **"AI của em có phải là 'trang trí' không? Nếu không có mạng hoặc máy yếu thì sao?"** | *"Dạ thưa thầy, AI của em là kiến trúc Hybrid 2 tầng. Tầng lõi chạy 100% offline bằng CPU (Regex trọng số cho phân loại, TF-IDF cho KB, và Scorer đa tiêu chí cho KTV). LLM chỉ là tùy chọn tăng cường khi có GPU."* |
-| 3 | **"Dự án của em giải quyết vấn đề rò rỉ thông tin mật (Secrets) thế nào?"** | *"Toàn bộ cấu hình nhạy cảm đều dùng biến môi trường. Chúng em có tích hợp script kiểm tra bảo mật `scripts/check-secrets.cjs` trong git pre-commit hook, nếu ai vô tình commit secret hay mật khẩu là git sẽ tự động chặn lại."* |
-| 4 | **"Tại sao lại dùng Outbox Pattern mà không gọi trực tiếp webhook sang n8n?"** | *"Gọi trực tiếp rất dễ bị lỗi Dual-Write: DB đã lưu nhưng mạng chập chờn làm mất thông báo. Outbox Pattern lưu sự kiện vào cùng transaction của DB, worker quét định kỳ và gửi lại theo Exponential Backoff, đảm bảo ít nhất một lần gửi (At-least-once delivery)."* |
-| 5 | **"Giấy phép Apache-2.0 của dự án có bị xung đột với các thư viện n8n hay thư viện khác không?"** | *"Chúng em đã lập bảng ma trận tương thích giấy phép trong file `DEPENDENCIES.md`. Các thành phần lõi đều là Apache-2.0, MIT, BSD; n8n chạy độc lập dưới dạng container trung gian nên hoàn toàn tuân thủ pháp lý nguồn mở."* |
+Chi tiết 10 câu hỏi & trả lời phản biện chuyên sâu: xem tại [`docs/council-qa.md`](council-qa.md).
