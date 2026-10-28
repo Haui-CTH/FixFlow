@@ -1,7 +1,7 @@
 # DX-FSM Makefile
 # Usage: make <target>
 
-.PHONY: help up down restart logs ps clean build rebuild test lint fmt init migrate health shell initdocs demo-core demo-ai demo-recommender demo-kb demo-sample-data
+.PHONY: help up down restart logs ps clean build rebuild test lint fmt init migrate health shell initdocs demo-core demo-ai demo-recommender demo-kb demo-sample-data demo-pii demo-contrast
 
 # Default target
 help:
@@ -32,6 +32,8 @@ help:
 	@echo "  demo-recommender  Test AI Recommender gợi ý KTV bằng dữ liệu thật"
 	@echo "  demo-kb           Test Tra cứu Tri thức Cẩm nang Kỹ thuật (TF-IDF)"
 	@echo "  demo-sample-data  Thống kê 77+ tickets dữ liệu mẫu thực tế HaUI"
+	@echo "  demo-pii          Test Che thông tin cá nhân PII (Nghị định 13/2023/NĐ-CP)"
+	@echo "  demo-contrast     Test Kiểm tra tương phản màu tự động (WCAG 2.2 AA)"
 	@echo ""
 	@echo "Examples:"
 	@echo "  make up            # Start all services"
@@ -163,5 +165,16 @@ demo-sample-data:
 	@docker compose exec -T postgres psql -U dxfsm -d dxfsm -c "SELECT category, count(*) AS total_tickets, count(*) FILTER (WHERE status = 'resolved' OR status = 'closed') AS completed FROM tickets GROUP BY category ORDER BY total_tickets DESC;"
 	@docker compose exec -T postgres psql -U dxfsm -d dxfsm -c "SELECT count(*) AS total_tickets_in_system FROM tickets;"
 	@echo "✓ Minh chứng: 77+ sự cố kỹ thuật thực tế tại các tòa nhà HaUI, đủ 7 danh mục và 7 trạng thái."
+
+
+demo-pii:
+	@echo "=== [DEMO 6] Che Thông tin Cá nhân PII (Nghị định 13/2023/NĐ-CP) ==="
+	@docker compose exec ai-service pytest tests/test_pii.py
+	@echo "✓ Minh chứng: Tự động che SĐT, Email, CCCD trước khi chuyển tới mô hình AI."
+
+demo-contrast:
+	@echo "=== [DEMO 7] Kiểm thử Tương phản Màu tự động (Chuẩn WCAG 2.2 Level AA) ==="
+	@docker compose exec app npm test -- src/test/contrast.test.ts --run
+	@echo "✓ Minh chứng: 100% token màu sắc đạt chuẩn tương phản >= 4.5:1 (a11y)."
 
 .DEFAULT_GOAL := help

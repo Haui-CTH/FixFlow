@@ -23,6 +23,7 @@ except ImportError:
 
 from app.config import get_settings
 from .rule_classifier import Classification, rule_based_classify
+from .pii import mask_pii, has_pii
 
 logger = logging.getLogger(__name__)
 
@@ -141,7 +142,14 @@ def _ollama_classify(title: str, description: str) -> Optional[Classification]:
                      OLLAMA_COOLDOWN_SEC - (now - _last_ollama_failure))
         return None
 
-    prompt = PROMPT_TEMPLATE.format(title=title, description=description or "(không có)")
+    # Anonymize PII before passing to LLM (Decree 13/2023/ND-CP compliance)
+    safe_title = mask_pii(title)
+    safe_desc = mask_pii(description)
+    pii_found = has_pii(title) or has_pii(description)
+    if pii_found:
+        logger.info("PII detected in ticket content; anonymized before sending to LLM prompt")
+
+    prompt = PROMPT_TEMPLATE.format(title=safe_title, description=safe_desc or "(không có)")
     payload = {
         "model": settings.ollama_model,
         "prompt": prompt,
@@ -197,6 +205,7 @@ def _ollama_classify(title: str, description: str) -> Optional[Classification]:
                 details={
                     "reasoning": reasoning,
                     "model": settings.ollama_model,
+                    "pii_sanitized": pii_found,
                 },
             )
     except (httpx.ConnectError, httpx.ConnectTimeout):
