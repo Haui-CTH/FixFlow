@@ -56,3 +56,7 @@ logs/
 # Local UI planning docs
 docs/frontend-ui-plan/
 coverage/
+
+# Temporary local directories
+1/
+2/
