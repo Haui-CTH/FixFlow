@@ -43,7 +43,10 @@
   margin-bottom: var(--space-5);
   min-height: 44px;
 }
-.brandText { flex: 1; }
+.brandTextWrap { display: flex; flex-direction: column; flex: 1; line-height: 1.2; }
+.brandText { font-weight: 700; font-size: 1.125rem; }
+.campusTag { font-size: 0.6875rem; font-weight: 600; text-transform: uppercase; color: var(--accent); letter-spacing: 0.05em; }
+.collapsed .campusTag { display: none; }
 
 .closeBtn {
   display: none;
@@ -195,7 +198,7 @@
   justify-content: center;
   width: 32px;
   height: 32px;
-  border-radius: 50%;
+  border-radius: var(--radius-sm);
   background: var(--accent);
   color: var(--on-accent);
   font-weight: 700;

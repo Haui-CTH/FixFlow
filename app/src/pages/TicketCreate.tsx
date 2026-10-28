@@ -29,6 +29,50 @@ interface FormValues {
   customer_location: string;
 }
 
+interface IncidentPreset {
+  tag: string;
+  title: string;
+  category: string;
+  priority: string;
+  location: string;
+  description: string;
+}
+
+const HAUI_PRESETS: IncidentPreset[] = [
+  {
+    tag: '📽️ Máy chiếu (Tòa A1)',
+    title: 'Máy chiếu không nhận tín hiệu HDMI / VGA',
+    category: 'hardware',
+    priority: 'urgent',
+    location: 'Tòa A1 - Phòng 305',
+    description: 'Máy chiếu bật nguồn đèn nháy đỏ, cắm cáp HDMI vào laptop không hiển thị hình ảnh giảng dạy.',
+  },
+  {
+    tag: '📶 Mạng Lab (Nhà A2)',
+    title: 'Mất mạng Internet toàn bộ phòng máy thực hành',
+    category: 'network',
+    priority: 'critical',
+    location: 'Nhà A2 - Lab 402',
+    description: 'Tất cả các máy trạm trong phòng máy bị ngắt kết nối mạng LAN, switch trung tâm nháy đèn cam.',
+  },
+  {
+    tag: '❄️ Điều hòa (Khu B)',
+    title: 'Điều hòa nhiệt độ thổi gió nóng và chảy nước',
+    category: 'electrical',
+    priority: 'medium',
+    location: 'Xưởng Cơ khí Nhà B',
+    description: 'Điều hòa phòng học bật 18 độ nhưng chỉ ra gió nóng, có hiện tượng nước ngưng rò rỉ xuống sàn.',
+  },
+  {
+    tag: '🚪 Khóa từ (Khảo thí)',
+    title: 'Hệ thống kiểm soát ra vào bị lỗi thẻ từ',
+    category: 'access_control',
+    priority: 'high',
+    location: 'Trung tâm Khảo thí',
+    description: 'Đầu đọc thẻ RFID liên tục báo tít dài màu đỏ, giảng viên và sinh viên không quét thẻ vào được.',
+  },
+];
+
 const DRAFT_KEY = 'dxfsm-ticket-draft';
 const EMPTY: FormValues = { title: '', description: '', category: '', priority: 'medium', customer_location: '' };
 
@@ -151,6 +195,15 @@ export default function TicketCreate() {
     setValue('priority', r.priority, opts);
   };
 
+  const applyPreset = (p: IncidentPreset) => {
+    const opts = { shouldDirty: true, shouldValidate: true };
+    setValue('title', p.title, opts);
+    setValue('category', p.category, opts);
+    setValue('priority', p.priority, opts);
+    setValue('customer_location', p.location, opts);
+    setValue('description', p.description, opts);
+  };
+
   const cancel = () => navigate(role === 'customer' ? '/my-tickets' : '/tickets');
 
   return (
@@ -158,6 +211,22 @@ export default function TicketCreate() {
       <PageHeader title={t('ticket_create.tao_ticket')} description={t('ticket_create.la_thong_tin_bat_buoc')} />
       <form noValidate onSubmit={handleSubmit((v) => create.mutate(v), onInvalid)} className={styles.form}>
         <ErrorSummary errors={summary} />
+
+        <div className={styles.presetSection}>
+          <div className={styles.presetTitle}>Sự cố thường gặp tại HaUI (chọn nhanh 1 chạm):</div>
+          <div className={styles.presetList}>
+            {HAUI_PRESETS.map((p) => (
+              <button
+                type="button"
+                key={p.tag}
+                onClick={() => applyPreset(p)}
+                className={styles.presetBtn}
+              >
+                {p.tag}
+              </button>
+            ))}
+          </div>
+        </div>
 
         <fieldset className={styles.group}>
           <legend>{t('ticket_create.thong_tin_su_co')}</legend>

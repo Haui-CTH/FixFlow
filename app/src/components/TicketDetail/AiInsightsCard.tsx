@@ -17,7 +17,7 @@ export function AiInsightsCard({ ticket, canSuggest, onSuggest }: { ticket: Tick
   return (
     <Card className={has ? undefined : styles.dim}>
       <h2 className={styles.h2}>
-        <Sparkles size={16} aria-hidden="true" /> AI Insights
+        <Sparkles size={16} aria-hidden="true" /> Chuẩn đoán & Hỗ trợ Kỹ thuật
       </h2>
       {has ? (
         <>

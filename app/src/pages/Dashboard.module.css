@@ -52,8 +52,8 @@
 /* ─── Distribution bars ─── */
 .distRow { display: grid; grid-template-columns: 110px minmax(0, 1fr) auto; align-items: center; gap: var(--space-3); margin-bottom: var(--space-3); }
 .distLabel { font-size: 0.875rem; overflow-wrap: anywhere; }
-.distBarTrack { height: 12px; background: var(--muted-bg); border-radius: 999px; overflow: hidden; }
-.distBarFill { height: 100%; border-radius: 999px; }
+.distBarTrack { height: 12px; background: var(--muted-bg); border-radius: 2px; overflow: hidden; }
+.distBarFill { height: 100%; border-radius: 2px; }
 .distCount { font-weight: 700; min-width: 2ch; text-align: right; font-variant-numeric: tabular-nums; }
 .distPct { color: var(--text-muted); font-size: 0.75rem; min-width: 4ch; text-align: right; font-variant-numeric: tabular-nums; }
 .distTail { display: inline-flex; align-items: baseline; gap: var(--space-2); }
@@ -95,7 +95,7 @@
 /* ─── Outbox ─── */
 .outboxHead { display: flex; align-items: center; justify-content: space-between; gap: var(--space-3); margin-bottom: var(--space-4); flex-wrap: wrap; }
 .outboxHead .sectionTitle { margin-bottom: 0; }
-.badge { display: inline-flex; align-items: center; gap: var(--space-1); padding: 2px var(--space-3); border-radius: 999px; font-size: 0.8125rem; font-weight: 700; }
+.badge { display: inline-flex; align-items: center; gap: var(--space-1); padding: 1px var(--space-2); border-radius: var(--radius-sm); border: 1px solid currentColor; font-size: 0.8125rem; font-weight: 700; }
 .badgeOk { background: var(--success-bg); color: var(--success); }
 .badgeWait { background: var(--warning-bg); color: var(--warning); }
 .badgeBad { background: var(--danger-bg); color: var(--danger); }
@@ -116,11 +116,11 @@
 .assigneeCount { text-align: right; font-variant-numeric: tabular-nums; }
 .assigneeTable th.assigneeCount { text-align: right; }
 .assigneeCell { display: flex; align-items: center; gap: var(--space-3); }
-.avatar { flex-shrink: 0; display: inline-flex; align-items: center; justify-content: center; width: 32px; height: 32px; border-radius: 50%; background: var(--muted-bg); font-weight: 700; text-transform: uppercase; }
+.avatar { flex-shrink: 0; display: inline-flex; align-items: center; justify-content: center; width: 32px; height: 32px; border-radius: var(--radius-sm); background: var(--muted-bg); border: 1px solid var(--border); font-weight: 700; text-transform: uppercase; }
 .assigneeName { font-weight: 600; }
 .assigneeUsername { color: var(--text-muted); font-size: 0.8125rem; }
 .sortBtn { display: inline-flex; align-items: center; gap: var(--space-1); min-height: 44px; min-width: 44px; padding: 0; border: none; background: transparent; color: inherit; font: inherit; font-weight: 600; cursor: pointer; }
-.loadBar { height: 6px; margin-top: var(--space-1); background: var(--muted-bg); border-radius: 999px; overflow: hidden; }
+.loadBar { height: 6px; margin-top: var(--space-1); background: var(--muted-bg); border-radius: 2px; overflow: hidden; }
 .loadFill { height: 100%; background: var(--info); }
 .numActive { color: var(--info); }
 .numResolved { color: var(--success); }

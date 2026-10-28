@@ -19,8 +19,8 @@
 .sla-ok { color: var(--text-muted); }
 .sla-warning { color: var(--warning); }
 .sla-overdue { color: var(--danger); }
-.slaTrack { flex: 1; height: 8px; background: var(--muted-bg); border-radius: 999px; overflow: hidden; }
-.slaBar { height: 100%; border-radius: 999px; }
+.slaTrack { flex: 1; height: 8px; background: var(--muted-bg); border-radius: 2px; overflow: hidden; }
+.slaBar { height: 100%; border-radius: 2px; }
 .bar-ok { background: var(--success); }
 .bar-warning { background: var(--warning); }
 .bar-overdue { background: var(--danger); }
@@ -56,15 +56,16 @@
   justify-content: center;
   width: 36px;
   height: 36px;
-  border-radius: 50%;
+  border-radius: var(--radius-sm);
   background: var(--muted-bg);
+  border: 1px solid var(--border);
   font-weight: 700;
   text-transform: uppercase;
 }
 .commentBody { flex: 1; min-width: 0; }
 .commentHead { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2); }
 .commentText { white-space: pre-wrap; overflow-wrap: anywhere; }
-.internal { padding: 1px var(--space-2); border-radius: 999px; background: var(--warning-bg); color: var(--warning); font-size: 0.75rem; font-weight: 700; }
+.internal { padding: 1px var(--space-2); border-radius: var(--radius-sm); background: var(--warning-bg); color: var(--warning); border: 1px solid color-mix(in srgb, var(--warning) 30%, transparent); font-size: 0.75rem; font-weight: 700; }
 .commentForm { display: grid; gap: var(--space-3); border-top: 1px solid var(--border); padding-top: var(--space-4); }
 .formRow { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--space-3); margin-top: var(--space-3); }
 .check { display: inline-flex; align-items: center; gap: var(--space-2); min-height: 44px; }
@@ -99,8 +100,8 @@
 .techBody { display: grid; gap: var(--space-1); flex: 1; min-width: 0; }
 .techMeta { color: var(--text-muted); font-size: 0.875rem; }
 .techLoad { display: flex; align-items: center; gap: var(--space-3); font-size: 0.8125rem; }
-.recBadge { margin-left: var(--space-2); padding: 1px var(--space-2); border-radius: 999px; background: var(--success-bg); color: var(--success); font-size: 0.75rem; }
-.offBadge { margin-left: var(--space-2); padding: 1px var(--space-2); border-radius: 999px; background: var(--muted-bg); color: var(--text-muted); font-size: 0.75rem; }
+.recBadge { margin-left: var(--space-2); padding: 1px var(--space-2); border-radius: var(--radius-sm); background: var(--success-bg); color: var(--success); border: 1px solid color-mix(in srgb, var(--success) 30%, transparent); font-size: 0.75rem; font-weight: 600; }
+.offBadge { margin-left: var(--space-2); padding: 1px var(--space-2); border-radius: var(--radius-sm); background: var(--muted-bg); color: var(--text-muted); border: 1px solid var(--border); font-size: 0.75rem; font-weight: 600; }
 .modalActions { display: flex; justify-content: flex-end; gap: var(--space-2); margin-top: var(--space-5); }
 
 @media (max-width: 1023px) {

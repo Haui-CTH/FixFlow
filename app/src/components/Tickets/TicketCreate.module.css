@@ -33,3 +33,39 @@
   }
   .actions button { flex: 1; }
 }
+
+.presetSection {
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: var(--space-3) var(--space-4);
+  display: grid;
+  gap: var(--space-2);
+}
+.presetTitle {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+.presetList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+.presetBtn {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 4px 8px;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--text);
+  cursor: pointer;
+  transition: all var(--dur-fast);
+  white-space: nowrap;
+}
+.presetBtn:hover {
+  border-color: var(--accent);
+  background: var(--surface-2);
+  color: var(--accent);
+}

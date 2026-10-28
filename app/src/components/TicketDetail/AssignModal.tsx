@@ -120,7 +120,7 @@ export function AssignModal({
                     {t.full_name}
                     {isRecommended && (
                       <span className={styles.recBadge}>
-                        {aiRec ? `AI Đề xuất (${Math.round(aiRec.score)}%)` : tr('assign_modal.de_xuat')}
+                        {aiRec ? `★ Phù hợp nhất (${Math.round(aiRec.score)}%)` : tr('assign_modal.de_xuat')}
                       </span>
                     )}
                     {!t.is_available && <span className={styles.offBadge}>{tr('assign_modal.khong_san_sang')}</span>}

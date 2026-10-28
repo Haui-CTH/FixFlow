@@ -23,7 +23,7 @@ export function Sidebar({ open, collapsed, user, onClose, onToggleCollapse }: Pr
     <aside className={cls} aria-label={t('sidebar.aside')}>
       <div className={styles.brand}>
         <img src="/logo.svg" alt="" width={32} height={32} />
-        <span className={styles.brandText}>DX-FSM</span>
+        <div className={styles.brandTextWrap}><span className={styles.brandText}>DX-FSM</span><span className={styles.campusTag}>HaUI Campus</span></div>
         <button className={styles.closeBtn} onClick={onClose} aria-label={t('sidebar.dong_menu')}>
           <X size={20} aria-hidden="true" />
         </button>

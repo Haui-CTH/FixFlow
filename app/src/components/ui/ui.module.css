@@ -42,19 +42,20 @@
   display: inline-flex;
   align-items: center;
   gap: var(--space-1);
-  padding: 2px var(--space-2);
-  border-radius: 999px;
+  padding: 1px var(--space-2);
+  border-radius: var(--radius-sm);
   font-size: 0.8125rem;
   font-weight: 600;
   white-space: nowrap;
+  border: 1px solid transparent;
 }
-.t-info { background: var(--info-bg); color: var(--info); }
-.t-assigned { background: var(--status-assigned-bg); color: var(--status-assigned); }
-.t-warning { background: var(--warning-bg); color: var(--warning); }
-.t-success { background: var(--success-bg); color: var(--success); }
-.t-danger { background: var(--danger-bg); color: var(--danger); }
-.t-muted { background: var(--muted-bg); color: var(--text-muted); }
-.t-dark { background: var(--primary); color: var(--on-primary); }
+.t-info { background: var(--info-bg); color: var(--info); border-color: color-mix(in srgb, var(--info) 25%, transparent); }
+.t-assigned { background: var(--status-assigned-bg); color: var(--status-assigned); border-color: color-mix(in srgb, var(--status-assigned) 25%, transparent); }
+.t-warning { background: var(--warning-bg); color: var(--warning); border-color: color-mix(in srgb, var(--warning) 25%, transparent); }
+.t-success { background: var(--success-bg); color: var(--success); border-color: color-mix(in srgb, var(--success) 25%, transparent); }
+.t-danger { background: var(--danger-bg); color: var(--danger); border-color: color-mix(in srgb, var(--danger) 25%, transparent); }
+.t-muted { background: var(--muted-bg); color: var(--text-muted); border-color: var(--border); }
+.t-dark { background: var(--primary); color: var(--on-primary); border-color: transparent; }
 
 /* ─── Card / PageHeader ─── */
 .card {
@@ -237,7 +238,7 @@ textarea.control { min-height: 96px; resize: vertical; }
 .tabCount {
   min-width: 22px;
   padding: 0 var(--space-2);
-  border-radius: 999px;
+  border-radius: var(--radius-sm);
   background: var(--muted-bg);
   color: var(--text);
   font-size: 0.75rem;

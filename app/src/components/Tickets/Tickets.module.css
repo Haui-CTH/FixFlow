@@ -61,7 +61,8 @@
   padding: 2px var(--space-1) 2px var(--space-3);
   background: var(--info-bg);
   color: var(--info);
-  border-radius: 999px;
+  border-radius: var(--radius-sm);
+  border: 1px solid color-mix(in srgb, var(--info) 25%, transparent);
   font-size: 0.875rem;
   font-weight: 600;
 }
@@ -75,7 +76,7 @@
   border: none;
   background: transparent;
   color: inherit;
-  border-radius: 50%;
+  border-radius: 2px;
   cursor: pointer;
 }
 .chip button { position: relative; }
