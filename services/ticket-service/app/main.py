@@ -8,6 +8,7 @@ from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import HTMLResponse
 from fastapi.openapi.docs import get_swagger_ui_html, get_redoc_html
 
 from app.config import settings
@@ -80,24 +81,108 @@ app = FastAPI(
 )
 
 
+SWAGGER_HTML = """<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>FixFlow API Documentation — Swagger UI</title>
+  <link rel="icon" type="image/svg+xml" href="/logo.svg">
+  <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/swagger-ui-dist@5/swagger-ui.css">
+  <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/swagger-ui-dist@5/swagger-ui-standalone-preset.css">
+  <style>
+    body { margin: 0; background: #f8fafc; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+    .ff-topbar {
+      background: linear-gradient(135deg, #0F172A 0%, #1E293B 100%);
+      padding: 12px 24px;
+      border-bottom: 2px solid #2563EB;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    .ff-topbar-wrapper {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      max-width: 1460px;
+      margin: 0 auto;
+    }
+    .ff-topbar-wrapper img {
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+    }
+    .ff-brand {
+      color: #FFFFFF;
+      font-size: 20px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+    }
+    .ff-sub {
+      color: #94A3B8;
+      font-size: 13px;
+      margin-left: 8px;
+      font-weight: 500;
+    }
+    .ff-badge {
+      background: rgba(37, 99, 235, 0.2);
+      color: #60A5FA;
+      border: 1px solid rgba(37, 99, 235, 0.4);
+      padding: 3px 10px;
+      border-radius: 12px;
+      font-size: 12px;
+      font-weight: 600;
+      margin-left: auto;
+    }
+    .swagger-ui .topbar { display: none !important; }
+    .swagger-ui .info { margin: 24px 0 16px !important; }
+    .swagger-ui .info .title { color: #0F172A; }
+    .swagger-ui .scheme-container { background: #FFFFFF; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+    .swagger-ui select { border-radius: 6px; padding: 6px 12px; font-weight: 600; border-color: #CBD5E1; }
+  </style>
+</head>
+<body>
+  <div class="ff-topbar">
+    <div class="ff-topbar-wrapper">
+      <img src="/logo.svg" alt="FixFlow Logo">
+      <span class="ff-brand">FixFlow</span>
+      <span class="ff-sub">Cổng Tài liệu & Thử nghiệm API (DX-OS Open-Core)</span>
+      <span class="ff-badge">47 Endpoints • OpenAPI 3.1</span>
+    </div>
+  </div>
+  <div id="swagger-ui"></div>
+  <script src="https://cdn.jsdelivr.net/npm/swagger-ui-dist@5/swagger-ui-bundle.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/swagger-ui-dist@5/swagger-ui-standalone-preset.js"></script>
+  <script>
+    window.onload = function() {
+      window.ui = SwaggerUIBundle({
+        urls: [
+          { url: "/api/v1/openapi.json", name: "1. Core & Ticket Service API (30 endpoints)" },
+          { url: "/api/v1/ai/openapi.json", name: "2. AI & Intelligence Service API (17 endpoints)" }
+        ],
+        "urls.primaryName": "1. Core & Ticket Service API (30 endpoints)",
+        dom_id: '#swagger-ui',
+        deepLinking: true,
+        presets: [
+          SwaggerUIBundle.presets.apis,
+          SwaggerUIStandalonePreset
+        ],
+        plugins: [
+          SwaggerUIBundle.plugins.DownloadUrl
+        ],
+        layout: "StandaloneLayout",
+        persistAuthorization: true,
+        displayRequestDuration: true,
+        docExpansion: "list",
+        filter: true
+      });
+    };
+  </script>
+</body>
+</html>
+"""
+
 @app.get("/docs", include_in_schema=False)
 async def custom_swagger_ui():
-    return get_swagger_ui_html(
-        openapi_url="/api/v1/openapi.json",
-        title="FixFlow API Documentation — Swagger UI",
-        swagger_favicon_url="/logo.svg",
-        swagger_ui_parameters={
-            "urls": [
-                {"url": "/api/v1/openapi.json", "name": "1. FixFlow Core & Ticket API (30 endpoints)"},
-                {"url": "/api/v1/ai/openapi.json", "name": "2. FixFlow AI & Intelligence API (17 endpoints)"}
-            ],
-            "urls.primaryName": "1. FixFlow Core & Ticket API (30 endpoints)",
-            "persistAuthorization": True,
-            "displayRequestDuration": True,
-            "docExpansion": "list",
-            "filter": True,
-        }
-    )
+    return HTMLResponse(content=SWAGGER_HTML)
 
 
 @app.get("/redoc", include_in_schema=False)
