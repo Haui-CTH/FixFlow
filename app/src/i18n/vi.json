@@ -487,7 +487,8 @@
     "tat_ca_ticket": "Tất cả ticket",
     "thu_doi_tu_khoa_hoac_bo_bot_bo_loc": "Thử đổi từ khoá hoặc bỏ bớt bộ lọc.",
     "ticket_cua_toi": "Ticket của tôi",
-    "xoa_loc": "Xoá lọc"
+    "xoa_loc": "Xoá lọc",
+    "xuat_excel": "Xuất Excel (CSV)"
   },
   "time": {
     "d_ago": "{{n}}d trước",

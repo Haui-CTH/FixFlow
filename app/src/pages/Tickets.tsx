@@ -2,7 +2,7 @@
 // DX-FSM Tickets Page (GĐ 03): tìm/lọc/sắp xếp/phân trang phía server, trạng thái lưu trên URL.
 
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
-import { Plus, SearchX, Ticket as TicketIcon } from 'lucide-react';
+import { FileSpreadsheet, Plus, SearchX, Ticket as TicketIcon } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { SkeletonRows } from '../components/ui/Skeleton';
@@ -17,6 +17,7 @@ import styles from '../components/Tickets/Tickets.module.css';
 import { useDebounce } from '../hooks/useDebounce';
 import { useRole } from '../hooks/useRole';
 import { ticketApi } from '../lib/api';
+import { downloadTicketsCSV } from '../lib/export-csv';
 import { t } from '../lib/i18n';
 
 const DEFAULT_SORT = 'created_at:desc';
@@ -104,6 +105,26 @@ export default function Tickets({ mine = false }: { mine?: boolean }) {
     </Link>
   );
 
+  const handleExportCSV = () => {
+    downloadTicketsCSV(tickets, mine ? 'FixFlow_Ticket_Cua_Toi' : 'FixFlow_Danh_sach_Su_co');
+  };
+
+  const headerActions = (
+    <div style={{ display: 'flex', gap: '8px', alignItems: 'center', flexWrap: 'wrap' }}>
+      {tickets.length > 0 && (
+        <Button
+          variant="secondary"
+          onClick={handleExportCSV}
+          title={t('tickets.xuat_excel')}
+        >
+          <FileSpreadsheet size={16} style={{ marginRight: '6px' }} />
+          {t('tickets.xuat_excel')}
+        </Button>
+      )}
+      {createBtn}
+    </div>
+  );
+
   let body;
   if (isError && !data) {
     body = <ErrorState title={t('tickets.khong_tai_duoc_danh_sach_ticket')} message={t('tickets.kiem_tra_ket_noi_roi_thu_lai')} onRetry={() => refetch()} />;
@@ -153,7 +174,7 @@ export default function Tickets({ mine = false }: { mine?: boolean }) {
 
   return (
     <div>
-      <PageHeader title={`${mine ? t('tickets.ticket_cua_toi') : t('tickets.tat_ca_ticket')}${data ? ` (${total})` : ''}`} actions={createBtn || undefined} />
+      <PageHeader title={`${mine ? t('tickets.ticket_cua_toi') : t('tickets.tat_ca_ticket')}${data ? ` (${total})` : ''}`} actions={headerActions} />
       <TicketFilters
         filters={{ ...filters, q: qInput }}
         sort={sortRaw}

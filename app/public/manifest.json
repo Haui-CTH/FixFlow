@@ -1,0 +1,25 @@
+{
+  "name": "FixFlow — Quản lý Dịch vụ Kỹ thuật Thực địa HaUI",
+  "short_name": "FixFlow",
+  "description": "Nền tảng Quản lý Dịch vụ Kỹ thuật Thực địa trên Lõi mở DX-OS (HaUI PMNM 2026)",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#f8fafc",
+  "theme_color": "#0284c7",
+  "icons": [
+    {
+      "src": "/logo.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/fixflow-symbol.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

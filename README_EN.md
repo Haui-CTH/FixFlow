@@ -5,15 +5,15 @@
 ![Apache 2.0](https://img.shields.io/badge/License-Apache%202.0-blue)
 ![Docker](https://img.shields.io/badge/Docker-Ready-2496ed)
 ![Python](https://img.shields.io/badge/Python-3.11+-3776ab)
-![Vue](https://img.shields.io/badge/Vue-3-4fc08d)
+![React](https://img.shields.io/badge/React-18-61dafb)
 
 ## Overview
 
 DX-FSM is a Field Service Management system built on **DX-OS Open-Core 3-tier architecture**:
 
-- **Tier 1 – Open-Core (Headless):** Keycloak, APISIX, PostgreSQL, MinIO, n8n
+- **Tier 1 – Open-Core (Headless):** Keycloak, Nginx Gateway, PostgreSQL, MinIO, n8n
 - **Tier 2 – H-P-D-I:** Human, Process, Data, Intelligence spaces
-- **Tier 3 – Application:** Vue 3 SPA for Customer, Technician, Manager
+- **Tier 3 – Application:** React 18 SPA for Customer, Technician, Manager
 
 ## Quick Start
 

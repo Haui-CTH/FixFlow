@@ -128,6 +128,12 @@ describe('Tickets page', () => {
     expect((await screen.findAllByText('TKT-1')).length).toBeGreaterThan(0);
   });
 
+  it('renders Export Excel (CSV) button when tickets are loaded', async () => {
+    list.mockResolvedValue(resp([mk(1)]));
+    setup();
+    expect(await screen.findByRole('button', { name: /Xuất Excel \(CSV\)/ })).toBeInTheDocument();
+  });
+
   it('error state with retry', async () => {
     list.mockRejectedValue(new Error('boom'));
     setup();

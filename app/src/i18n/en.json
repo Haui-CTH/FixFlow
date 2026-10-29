@@ -487,7 +487,8 @@
     "tat_ca_ticket": "All tickets",
     "thu_doi_tu_khoa_hoac_bo_bot_bo_loc": "Try another keyword or remove some filters.",
     "ticket_cua_toi": "My tickets",
-    "xoa_loc": "Clear filters"
+    "xoa_loc": "Clear filters",
+    "xuat_excel": "Export Excel (CSV)"
   },
   "time": {
     "d_ago": "{{n}}d ago",

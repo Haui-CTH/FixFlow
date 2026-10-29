@@ -116,7 +116,7 @@ export default function PublicVerify() {
             </div>
           </div>
         </div>
-        <Link to="/login" style={{ textDecoration: 'none' }}>
+        <Link to="/login" className="no-print" style={{ textDecoration: 'none' }}>
           <Button variant="ghost" size="sm">
             <ArrowLeft size={14} style={{ marginRight: '6px' }} /> Đăng nhập hệ thống
           </Button>
@@ -127,6 +127,7 @@ export default function PublicVerify() {
       <main style={{ width: '100%', maxWidth: '780px' }}>
         {/* Search Bar */}
         <div
+          className="no-print"
           style={{
             background: 'var(--surface, #ffffff)',
             borderRadius: '12px',
@@ -381,7 +382,7 @@ export default function PublicVerify() {
                 )}
 
                 {/* Print button */}
-                <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '8px' }}>
+                <div className="no-print" style={{ display: 'flex', justifyContent: 'flex-end', gap: '8px' }}>
                   <Button variant="secondary" onClick={() => window.print()}>
                     <Printer size={15} style={{ marginRight: '6px' }} /> In giấy xác nhận
                   </Button>

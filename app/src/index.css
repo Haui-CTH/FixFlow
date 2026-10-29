@@ -193,3 +193,78 @@ h4 { font-size: 1rem; }
     font-size: 16px; /* chặn iOS zoom khi focus */
   }
 }
+
+
+/* ─── Khổ in Chuẩn hóa A4 cho Biên bản Nghiệm thu & Công văn ─────────── */
+@media print {
+  @page {
+    size: A4 portrait;
+    margin: 12mm 15mm;
+  }
+
+  /* Ẩn các thành phần giao diện không in */
+  nav,
+  aside,
+  header:not(.print-header),
+  footer,
+  button,
+  .no-print,
+  [role="dialog"] button,
+  [class*="sidebar"],
+  [class*="topBar"],
+  [class*="createLink"] {
+    display: none !important;
+  }
+
+  html,
+  body {
+    background: #ffffff !important;
+    color: #0f172a !important;
+    font-size: 11pt !important;
+    line-height: 1.4 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  #root {
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  /* Khi in Modal (WorkOrderModal), loại bỏ overlay và bung rộng theo trang in */
+  [role="dialog"] {
+    position: static !important;
+    box-shadow: none !important;
+    border: none !important;
+    padding: 0 !important;
+    max-width: 100% !important;
+    width: 100% !important;
+    background: transparent !important;
+  }
+
+  div[style*="position: fixed"][style*="inset: 0"] {
+    position: static !important;
+    background: transparent !important;
+    display: block !important;
+    padding: 0 !important;
+  }
+
+  /* Tránh ngắt trang dở chừng giữa các khối thông tin và chữ ký */
+  div[style*="gridTemplateColumns"],
+  div[style*="borderRadius"] {
+    break-inside: avoid !important;
+    page-break-inside: avoid !important;
+  }
+
+  svg {
+    max-width: 100% !important;
+  }
+
+  a {
+    text-decoration: none !important;
+    color: inherit !important;
+  }
+}

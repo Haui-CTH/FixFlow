@@ -107,7 +107,7 @@ export function WorkOrderModal({
             <div style={{ color: 'var(--text-muted)', lineHeight: '1.4' }}>
               Quét mã QR bằng điện thoại để kiểm chứng tính toàn vẹn và chứng chỉ nghiệm thu số trực tiếp tại Cổng Xác thực HaUI ICT.
             </div>
-            <div>
+            <div className="no-print">
               <a
                 href={verifyUrl}
                 target="_blank"
@@ -137,7 +137,7 @@ export function WorkOrderModal({
         </div>
 
         {/* Nút hành động */}
-        <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '8px', marginTop: '16px', borderTop: '1px solid var(--border, #e2e8f0)', paddingTop: '12px' }}>
+        <div className="no-print" style={{ display: 'flex', justifyContent: 'flex-end', gap: '8px', marginTop: '16px', borderTop: '1px solid var(--border, #e2e8f0)', paddingTop: '12px' }}>
           <Button variant="secondary" onClick={onClose}>
             Đóng
           </Button>
