@@ -166,9 +166,19 @@ sudo journalctl -u caddy -n 20 --no-pager
 
 ---
 
-## 4. Kiểm tra Toàn diện sau khi Triển khai (Post-Deployment Verification)
+## 4. Kiểm tra Tự động Toàn diện sau khi Triển khai (Automated Smoke Tests)
 
-Sau khi triển khai lên domain công khai (ví dụ `https://fixflow.yourdomain.com`), người vận hành thực hiện kiểm tra nhanh:
+Sau khi triển khai lên domain công khai (ví dụ `https://fixflow.yourdomain.com`), người vận hành hoặc Ban Giám khảo có thể chạy công cụ kiểm thử tự động toàn diện chỉ bằng một lệnh:
+
+```bash
+# Quét tự động 7 hạng mục: TLS, Web UI, Keycloak OIDC, API Gateway, Public Verify, AI KB, Cô lập mạng
+python scripts/verify_online_deploy.py https://fixflow.yourdomain.com
+
+# Hoặc dùng Makefile
+make verify-online url=https://fixflow.yourdomain.com
+```
+
+Hoặc kiểm tra thủ công từng thành phần:
 
 ```bash
 # 1. Kiểm tra Gateway trả về mã 200/302 chuẩn
@@ -187,7 +197,31 @@ curl -s https://fixflow.yourdomain.com/api/v1/ai/health
 
 ---
 
-## 5. Danh mục Cổng & Cô lập Mạng (Zero-Trust Network Isolation)
+## 5. Sao lưu và Khôi phục Thảm họa (Automated Backup & Disaster Recovery)
+
+Hệ thống FixFlow tích hợp sẵn cơ chế sao lưu định kỳ và khôi phục an toàn có xác thực mã băm mật mã học (SHA-256) nhằm bảo vệ dữ liệu nghiệp vụ và tệp chứng từ hiện trường:
+
+### 5.1. Tạo bản sao lưu (Backup)
+```bash
+# Tự động trích xuất PostgreSQL, tệp đính kèm và tạo manifest.json kiểm toán SHA-256
+make backup
+# Hoặc chạy script
+python scripts/backup.py --keep 7
+```
+Bản sao lưu được lưu trữ có đánh dấu thời gian tại `backups/backup_YYYYMMDD_HHMMSS/` với chính sách lưu trữ (retention policy) giữ lại 7 bản gần nhất.
+
+### 5.2. Khôi phục từ bản sao lưu (Restore)
+```bash
+# Khôi phục từ bản sao lưu mới nhất (tự động kiểm tra SHA-256 chống sửa lén)
+make restore
+
+# Khôi phục bản cụ thể và bỏ qua xác nhận tương tác
+python scripts/restore.py backup_20261029_053231 --force
+```
+
+---
+
+## 6. Danh mục Cổng & Cô lập Mạng (Zero-Trust Network Isolation)
 
 FixFlow áp dụng mô hình bảo mật nhiều lớp:
 - **Cổng mở duy nhất ra ngoài**: Cổng **80** (và **443** qua Reverse Proxy).
@@ -200,7 +234,7 @@ FixFlow áp dụng mô hình bảo mật nhiều lớp:
 
 ---
 
-## 6. Xử lý Sự cố Thường gặp (Troubleshooting)
+## 7. Xử lý Sự cố Thường gặp (Troubleshooting)
 
 ### Q: Keycloak chuyển hướng về `http://` thay vì `https://` sau khi đăng nhập?
 **A:** Đảm bảo Gateway Nginx đã bật `map $http_x_forwarded_proto $forwarded_proto` và `KC_PROXY_HEADERS=xforwarded` trên Keycloak container. File cấu hình trong repo đã được cấu hình sẵn tính năng này.

@@ -255,3 +255,4 @@ def _scan_clamav_stream(data: bytes, host: str, port: int) -> tuple[bool, Option
     except Exception as e:
         # Nếu ClamAV không phản hồi, ghi nhận cảnh báo nhưng không đánh trượt file
         return True, None
+

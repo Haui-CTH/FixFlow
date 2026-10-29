@@ -60,3 +60,6 @@ coverage/
 # Temporary local directories
 1/
 2/
+# Automated backups
+backups/*
+!backups/.gitkeep

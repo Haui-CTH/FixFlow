@@ -97,3 +97,4 @@ def test_verify_resolved_ticket_success_and_tamper_detection():
     ticket.sla_met = False
     res4 = verify_ticket_seal(ticket, provided_code=code)
     assert res4["valid"] is False
+

@@ -340,3 +340,4 @@ Kết quả sẽ được trích xuất tự động từ cơ sở dữ liệu h
 
 if __name__ == "__main__":
     main()
+

@@ -109,3 +109,4 @@ def test_reject_empty_file():
     res = inspect_file_content(b"", "empty.txt")
     assert res.is_safe is False
     assert "rỗng" in res.error_message
+

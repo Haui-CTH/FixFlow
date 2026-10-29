@@ -1,7 +1,7 @@
 # DX-FSM Makefile
 # Usage: make <target>
 
-.PHONY: help up down restart logs ps clean build rebuild test lint fmt init migrate health shell initdocs license-check eval-ai eval-impact demo-core demo-ai demo-recommender demo-kb demo-sample-data demo-pii demo-contrast demo-it-ot demo-nong-lanh demo-audit demo-resilience demo-verify
+.PHONY: help up down restart logs ps clean build rebuild test lint fmt init migrate health shell initdocs license-check eval-ai eval-impact demo-core demo-ai demo-recommender demo-kb demo-sample-data demo-pii demo-contrast demo-it-ot demo-nong-lanh demo-audit demo-resilience demo-verify backup restore verify-online
 
 # Default target
 help:
@@ -36,6 +36,9 @@ help:
 	@echo "  demo-contrast     Test Kiểm tra tương phản màu tự động (WCAG 2.2 AA)"
 	@echo "  demo-verify       Test Cổng Xác thực Công khai & Con dấu số Nghiệm thu"
 	@echo "  eval-impact       Chạy bộ đo lường thực nghiệm tác động (Trước vs Sau)"
+	@echo "  verify-online     Kiểm tra sức khỏe hệ thống trực tuyến (url=http://...)"
+	@echo "  backup            Sao lưu CSDL và tệp đính kèm vào backups/"
+	@echo "  restore           Khôi phục dữ liệu từ bản sao lưu (backup=...)"
 	@echo ""
 	@echo "Examples:"
 	@echo "  make up            # Start all services"
@@ -209,5 +212,14 @@ demo-verify:
 
 eval-impact:
 	@python scripts/measure_impact.py
+
+verify-online:
+	@python scripts/verify_online_deploy.py $(url)
+
+backup:
+	@python scripts/backup.py
+
+restore:
+	@python scripts/restore.py $(backup)
 
 .DEFAULT_GOAL := help
