@@ -100,7 +100,7 @@ license-check:
 
 # Run AI subsystems comprehensive benchmark
 eval-ai:
-	@docker compose exec -T ai-service python - < scripts/eval_ai.py
+	@docker compose exec -T ai-service python /app/eval_ai.py
 
 # Format code
 fmt:

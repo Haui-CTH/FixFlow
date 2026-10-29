@@ -33,7 +33,7 @@
     - **D (Data)**: Chỉ số KPI, gauge SLA thời gian thực, báo cáo tổng hợp.
     - **I (Intelligence)**: Phân loại sự cố NLP, TF-IDF Knowledge Base, Gợi ý KTV.
   * **Tầng 3 (Ứng dụng Người dùng cuối)**: React 18 SPA Responsive, hỗ trợ đa ngôn ngữ (VI/EN), tối ưu thao tác hiện trường.
-* **Sơ đồ kiến trúc hệ thống**: Chiếu trực tiếp vector SVG chuẩn màu Signet Pastel tại [`docs/architecture-diagram.svg`](architecture-diagram.svg).
+* **Sơ đồ kiến trúc hệ thống**: Chiếu trực tiếp vector SVG chuẩn màu sắc hiện đại tại [`docs/architecture-diagram.svg`](architecture-diagram.svg).
 
 ---
 

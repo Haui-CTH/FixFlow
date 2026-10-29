@@ -129,3 +129,4 @@ docker compose exec gateway nginx -s reload
 1. **Khả năng tái sử dụng (Reusability):** Tầng 1 hoạt động như một nền tảng điện toán đám mây thu nhỏ (Mini Sovereign Cloud), phục vụ song song cả Quản lý Sự cố Kỹ thuật (FixFlow), Quản lý Phòng thí nghiệm (DX-Lab), Quản lý Kho, v.v.
 2. **Khả năng mở rộng (Extensibility):** Thêm ứng dụng mới chỉ tốn vài phút cấu hình khai báo, **không phải sửa một dòng mã nguồn nào của các dịch vụ lõi**.
 3. **Tiết kiệm tài nguyên:** Thay vì mỗi ứng dụng phải tự dựng Keycloak, Postgres, Nginx riêng, tất cả đều hội tụ trên Tầng 1, giữ tổng dung lượng RAM toàn hệ thống ở mức tối ưu **< 2 GB**.
+
