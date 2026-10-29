@@ -244,3 +244,21 @@ First request from Keycloak user
 ```
 
 Idempotent, an toàn race condition vì unique key `keycloak_id`.
+
+
+---
+
+## 8. Bản ghi Quyết định Kiến trúc (Architectural Decision Records - ADRs)
+
+Hệ thống ghi nhận 8 quyết định kiến trúc trọng tâm nhằm bảo đảm tính khoa học, khả năng chịu tải và sự minh bạch trong mọi lựa chọn công nghệ:
+
+| Mã ADR | Vấn đề & Bối cảnh | Quyết định kỹ thuật của FixFlow | Lý do & Đánh đổi (Trade-offs) |
+|---|---|---|---|
+| **ADR-01** | Chọn giấy phép nguồn mở nào cho dự án? | Phát hành theo **Apache License 2.0** (chuẩn OSI). | Cho phép doanh nghiệp và cơ quan nhà nước tiếp nhận tự do, bảo hộ quyền sáng chế, không phát sinh xung đột copyleft với các thư viện MIT/BSD. |
+| **ADR-02** | Chọn CSDL NoSQL MongoDB hay Relational PostgreSQL? | Chọn **PostgreSQL 16 với JSONB** và chỉ mục GIN. | Tránh bẫy giấy phép thương mại hạn chế **SSPL-1.0** của MongoDB; bảo đảm tính toàn vẹn giao dịch ACID tuyệt đối cho nghiệp vụ vé. |
+| **ADR-03** | Quản trị bí mật hệ thống (Secret Management) ra sao? | Không dùng HashiCorp Vault; dùng **.env cách ly + pre-commit scan TruffleHog**. | Tránh bẫy giấy phép **BUSL-1.1** của Vault (từ 08/2023 không còn là nguồn mở); giữ hệ thống tinh gọn, bảo mật cao qua CI. |
+| **ADR-04** | AI nên chạy LLM lớn trực tiếp hay mô hình Hybrid? | Chọn **Hybrid: TF-IDF Vectorizer + Heuristic Regex (< 2ms)**, kết nối Ollama khi có GPU. | Loại bỏ nguy cơ **ảo giác (hallucination)**; toàn bộ hệ thống chạy êm ái trên CPU phổ thông mà không cần card GPU đắt tiền. |
+| **ADR-05** | Giao tiếp bất đồng bộ dùng Kafka hay Outbox Pattern? | Chọn **Transactional Outbox Pattern** trên PostgreSQL + Exponential Backoff. | Tiết kiệm 2 GB RAM (không phải dựng Kafka/Zookeeper); bảo đảm tính nhất quán dữ liệu vé và thông báo không bị thất thoát khi mạng lỗi. |
+| **ADR-06** | Định tuyến mạng phân mảnh cổng hay Gateway duy nhất? | Chọn **Nginx Reverse Proxy Same-Origin trên Port 80**. | Giải quyết triệt để lỗi CORS; đồng nhất tên miền đăng nhập Keycloak PKCE; tích hợp mượt mà Cloudflare Quick Tunnel HTTPS. |
+| **ADR-07** | Đặt công cụ Giám sát (/monitor) và Swagger (/docs) ở đâu? | Đưa vào **TopBar UserMenu (chỉ cho Admin/Manager)**, không để ở Sidebar KTV. | Tuân thủ chuẩn công thái học hiện trường: phân định rạch ròi giữa *Không gian tác nghiệp người dùng* và *Cổng quản trị nền tảng DevOps*. |
+| **ADR-08** | Chứng minh Quản trị dữ liệu thế hệ mới (Nguyên lý iii)? | Áp dụng chuỗi băm mật mã **Merkle SHA-256 Hash-Chain** trên nhật ký sự kiện vé. | Bảo đảm tính bất biến, chống sửa đổi và chống chối bỏ trách nhiệm; phát hiện gian lận CSDL tức thì (make demo-audit). |

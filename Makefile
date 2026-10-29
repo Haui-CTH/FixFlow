@@ -1,7 +1,7 @@
 # DX-FSM Makefile
 # Usage: make <target>
 
-.PHONY: help up down restart logs ps clean build rebuild test lint fmt init migrate health shell initdocs license-check demo-core demo-ai demo-recommender demo-kb demo-sample-data demo-pii demo-contrast demo-it-ot demo-nong-lanh demo-audit demo-resilience
+.PHONY: help up down restart logs ps clean build rebuild test lint fmt init migrate health shell initdocs license-check eval-ai demo-core demo-ai demo-recommender demo-kb demo-sample-data demo-pii demo-contrast demo-it-ot demo-nong-lanh demo-audit demo-resilience
 
 # Default target
 help:
@@ -97,6 +97,10 @@ lint:
 # Check license headers (SPDX / REUSE)
 license-check:
 	@python scripts/license_check.py
+
+# Run AI subsystems comprehensive benchmark
+eval-ai:
+	@docker compose exec -T ai-service python - < scripts/eval_ai.py
 
 # Format code
 fmt:

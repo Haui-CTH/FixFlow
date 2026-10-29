@@ -1,12 +1,13 @@
 // SPDX-License-Identifier: Apache-2.0
-// TicketHeader (P5.2): quay lại, mã, badge, tiêu đề h1, meta, SLA, vùng hành động.
+// TicketHeader (P5.2): quay lại, mã, badge, tiêu đề h1, meta, SLA, vùng hành động + nút In Biên bản Nghiệm thu.
 
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, FileText } from 'lucide-react';
 import type { ReactNode } from 'react';
 import { Link } from 'react-router-dom';
 import type { Ticket } from '../../lib/api';
 import { formatRelative } from '../../lib/format';
 import { PriorityBadge, StatusBadge } from '../ui/Badge';
+import { Button } from '../ui/Button';
 import { SlaProgress } from './SlaProgress';
 import styles from './TicketDetail.module.css';
 import { t } from '../../lib/i18n';
@@ -16,11 +17,13 @@ export function TicketHeader({
   backTo,
   now,
   actions,
+  onOpenReport,
 }: {
   ticket: Ticket;
   backTo: string;
   now: number;
   actions?: ReactNode;
+  onOpenReport?: () => void;
 }) {
   return (
     <header className={styles.header}>
@@ -38,7 +41,15 @@ export function TicketHeader({
         {t('ticket_header.created_by', { name: ticket.customer_name || t('ticket_header.khong_ro'), when: formatRelative(ticket.created_at) })}
       </p>
       <SlaProgress ticket={ticket} now={now} />
-      {actions}
+      <div style={{ display: 'flex', gap: '8px', alignItems: 'center', flexWrap: 'wrap', marginTop: '12px' }}>
+        {actions}
+        {onOpenReport && (
+          <Button variant="secondary" onClick={onOpenReport}>
+            <FileText size={16} style={{ marginRight: '6px' }} />
+            Biên bản nghiệm thu
+          </Button>
+        )}
+      </div>
     </header>
   );
 }

@@ -10,6 +10,7 @@ import { NotesPanel } from '../components/Notes/NotesPanel';
 import { AiInsightsCard } from '../components/TicketDetail/AiInsightsCard';
 import { KbSuggestions } from '../components/KnowledgeBase/KbSuggestions';
 import { AssignModal } from '../components/TicketDetail/AssignModal';
+import { WorkOrderModal } from '../components/TicketDetail/WorkOrderModal';
 import { AttachmentsPanel } from '../components/TicketDetail/AttachmentsPanel';
 import { CommentsPanel } from '../components/TicketDetail/CommentsPanel';
 import { Overview } from '../components/TicketDetail/Overview';
@@ -28,6 +29,7 @@ export default function TicketDetail() {
   const role = useRole();
   const [params, setParams] = useSearchParams();
   const [assignOpen, setAssignOpen] = useState(false);
+  const [reportOpen, setReportOpen] = useState(false);
 
   // Đồng hồ cho SLA, cập nhật mỗi phút
   const [now, setNow] = useState(() => Date.now());
@@ -98,6 +100,7 @@ export default function TicketDetail() {
         backTo={backTo}
         now={now}
         actions={<StatusActions ticket={ticket} role={role} onAssign={() => setAssignOpen(true)} />}
+        onOpenReport={() => setReportOpen(true)}
       />
       <div className={styles.layout}>
         <div className={styles.main}>
@@ -115,6 +118,7 @@ export default function TicketDetail() {
           <KbSuggestions query={ticket.title} category={ticket.category} />
         </aside>
       </div>
+      <WorkOrderModal ticket={ticket} open={reportOpen} onClose={() => setReportOpen(false)} />
       {(role === 'manager' || role === 'admin') && (
         <AssignModal ticket={ticket} open={assignOpen} onClose={() => setAssignOpen(false)} />
       )}
