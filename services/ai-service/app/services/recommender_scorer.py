@@ -188,6 +188,15 @@ def score_technician(
     else:
         est_pickup = 1.0 if wl_s > 0.5 else 4.0
 
+    breakdown = {
+        "specialty": round(spec_s * W_SPECIALTY, 1),
+        "skill": round(skill_s * W_SKILL, 1),
+        "performance": round(perf_s * W_PERFORMANCE, 1),
+        "workload": round(wl_s * W_WORKLOAD, 1),
+        "level": round(lvl_s * W_LEVEL, 1),
+        "recency": round(rec_s * W_RECENCY, 1),
+    }
+
     return Recommendation(
         technician=tech,
         score=score,
@@ -195,4 +204,5 @@ def score_technician(
         reasons=reasons,
         workload=current_open,
         estimated_pickup_hours=est_pickup,
+        score_breakdown=breakdown,
     )

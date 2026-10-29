@@ -16,6 +16,7 @@ from .text_vectorizer import (
     build_idf,
     vectorize,
     cosine_similarity,
+    expand_query,
 )
 
 logger = logging.getLogger(__name__)
@@ -144,7 +145,8 @@ class KBSearchIndex:
         with self._lock:
             if not self._doc_ids:
                 return []
-            q_vec = vectorize(query, self._idf)
+            expanded_q = expand_query(query)
+            q_vec = vectorize(expanded_q, self._idf)
             if not q_vec:
                 return []
             results: list[SearchResult] = []

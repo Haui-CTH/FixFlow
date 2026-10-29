@@ -83,13 +83,14 @@ class TicketContext:
 
 @dataclass
 class Recommendation:
-    """Single recommendation result."""
+    """Single recommendation result with Explainable AI (XAI) breakdown."""
     technician: TechnicianProfile
     score: float  # 0-100
     confidence: float  # 0-1
     reasons: list[str] = field(default_factory=list)
     workload: int = 0  # current open tickets
     estimated_pickup_hours: float = 0.0
+    score_breakdown: dict[str, float] = field(default_factory=dict)
 
     def to_dict(self) -> dict:
         return {
@@ -103,4 +104,5 @@ class Recommendation:
             "reasons": self.reasons,
             "current_workload": self.workload,
             "estimated_pickup_hours": round(self.estimated_pickup_hours, 2),
+            "score_breakdown": self.score_breakdown,
         }
