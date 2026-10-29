@@ -11,7 +11,7 @@
 **Đội thi:** HaUI · **Trường:** Trường Công nghệ Thông tin và Truyền thông, Đại học Công nghiệp Hà Nội  
 Sản phẩm tham gia thi đấu **Olympic Tin học Sinh viên Việt Nam 2026 — Khối Phần mềm Nguồn mở (OLP PMNM 2026)**, chủ đề *DX-OS Open-Core* (VFOSSA).
 
-**Dùng thử trực tuyến (Live Demo):** <https://fixflow.filebridge.click> · Cổng tra cứu xác thực số: <https://fixflow.filebridge.click/verify/TKT-2026-000003> · *(Kênh dự phòng Cloudflare Tunnel: <https://large-javascript-randy-shorter.trycloudflare.com>)* · Hoặc chạy tại máy: `http://localhost/`
+**Dùng thử trực tuyến (Live Demo):** <https://fixflow.filebridge.click> · Cổng tra cứu xác thực số: <https://fixflow.filebridge.click/verify/TKT-2026-000003>  · Hoặc chạy tại máy: `http://localhost/`
 
 **Đọc nhanh:** [Giới thiệu](#giới-thiệu) · [Kiến trúc](#kiến-trúc) · [Tính năng](#tính-năng) · [11 Tiêu chí Minh chứng (100 điểm)](#bằng-chứng-đánh-giá-100-điểm) · [Live Demo 1 Chạm](#lệnh-live-demo-1-chạm) · [Công nghệ](#tech-stack) · [Cài đặt](#cài-đặt-nhanh) · [Cổng Dịch vụ (Endpoints)](#danh-mục-cổng-dịch-vụ-cho-hội-đồng-chấm-thi) · [Xử lý sự cố](#xử-lý-sự-cố) · [Tài liệu](#tài-liệu) · [Đóng góp](#đóng-góp-và-liên-hệ) · [Giấy phép](#giấy-phép)
 

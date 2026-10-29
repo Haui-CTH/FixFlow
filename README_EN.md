@@ -24,7 +24,8 @@ cp .env.example .env
 docker compose up -d
 ```
 
-Access: http://localhost:3000
+Access: <https://fixflow.filebridge.click> (or local `http://localhost/`)  
+Public Verification: <https://fixflow.filebridge.click/verify/TKT-2026-000003>
 
 ## Demo Accounts
 
