@@ -120,7 +120,7 @@ id,title,description,expected_category,expected_priority
 119,Đèn bàn phím laptop không sáng,Đã bật nhưng không lên,hardware,low
 120,Fingerprint reader không nhận,Tay khô,hardware,low
 121,Excel báo lỗi khi mở file CSV,Encoding không đúng,software,medium
-122,PowerPoint bị crash khi insert video,software,medium
+122,PowerPoint bị crash khi insert video,,software,medium
 123,Teams không nhận micro,Đã cấp quyền trong Settings,software,medium
 124,Zoom bị giật lag,Họp 10 người,software,medium
 125,Slack gửi thông báo liên tục,Đã tắt nhưng vẫn bật,software,low
@@ -159,16 +159,16 @@ id,title,description,expected_category,expected_priority
 158,Reset password cho tài khoản admin,Quên password,access_control,medium
 159,Disable account nhân viên nghỉ việc,HR yêu cầu,access_control,medium
 160,Enable account cho nhân viên quay lại,Sau thai sản,access_control,medium
-161,Mất điện khu vực cafeteria,electrical,medium
+161,Mất điện khu vực cafeteria,,electrical,medium
 162,Đèn emergency không sáng khi mất điện,Kiểm tra pin,electrical,high
 163,Ổ cắm tại phòng họp chập chờn,Cắm/rút nhiều lần,electrical,medium
 164,Máy phát điện không khởi động,Test hàng tuần,electrical,high
 165,Yêu cầu kiểm tra hệ thống điện,Định kỳ,electrical,low
-166,Đèn tại bãi đỗ xe không sáng,electrical,medium
+166,Đèn tại bãi đỗ xe không sáng,,electrical,medium
 167,UPS tại phòng server hết pin,Cần thay,electrical,high
 168,Máy tính bị sốc điện,Do chập điện tòa nhà,electrical,high
 169,Đứt dây điện máy lạnh,Máy lạnh tắt đột ngột,electrical,high
-170,Yêu cầu lắp ổ cắm cho máy in mới,service_request,low
+170,Yêu cầu lắp ổ cắm cho máy in mới,,service_request,low
 171,Máy in nhãn bị lỗi,In ra giấy trắng,hardware,medium
 172,Đầu đọc thẻ từ bị hỏng,Không nhận thẻ,hardware,high
 173,Máy quét mã vạch không hoạt động,Laser không sáng,hardware,medium
@@ -189,7 +189,7 @@ id,title,description,expected_category,expected_priority
 188,DHCP server hết scope,Không cấp IP,network,high
 189,DNS server down,Không phân giải,network,critical
 190,IP helper address sai,DHCP relay không hoạt động,network,medium
-191,Phần mềm accounting không connect database,software,critical
+191,Phần mềm accounting không connect database,,software,critical
 192,Hệ thống bán hàng bị lỗi sync,Chi nhánh không thấy data,software,critical
 193,Website công ty không truy cập được,DNS issue,network,critical
 194,API server timeout,Ứng dụng mobile không sync,software,high
