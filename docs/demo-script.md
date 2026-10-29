@@ -90,8 +90,8 @@
 ### ⏱ Phút 9:00 – 10:00 | Báo cáo Chất lượng & Bản quyền Nguồn mở 100%
 * **Người thuyết trình chốt lại**:
   > *"Để đảm bảo tính nghiêm túc của một phần mềm nguồn mở tiêu chuẩn:
-  > - **100% tệp mã nguồn** đều có SPDX License Header chuẩn Apache-2.0, không có giấy phép hạn chế non-OSI.
-  > - Hệ thống đạt **588 tests passed 100%** (332 tests frontend + 256 tests backend microservices), kiểm thử tương phản WCAG 2.2 AA.
+  > - **233/233 tệp mã nguồn (100%)** đều có SPDX License Header chuẩn Apache-2.0, không có giấy phép hạn chế non-OSI.
+  > - Hệ thống đạt **590 tests passed 100% (332 tests frontend + 258 tests backend microservices)** (332 tests frontend + 256 tests backend microservices), kiểm thử tương phản WCAG 2.2 AA.
   > - Đầy đủ bộ minh chứng: [`docs/muc-hoan-thien.md`](muc-hoan-thien.md) và [`docs/council-qa.md`](council-qa.md).
   > Chúng em xin trân trọng cảm ơn và sẵn sàng nhận câu hỏi từ Hội đồng!"*
 

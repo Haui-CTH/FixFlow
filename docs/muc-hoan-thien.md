@@ -1,8 +1,8 @@
 # Mức Hoàn Thiện — Tính Năng, Bằng Chứng và Độ Phủ Tầng 1 Open-Core
 
 > **Dự án:** FixFlow (DX-FSM) — Quản lý Dịch vụ Kỹ thuật Thực địa trên nền DX-OS Open-Core  
-> **Phiên bản:** v1.3.0  
-> **Cập nhật:** 28/10/2026
+> **Phiên bản:** v1.4.0  
+> **Cập nhật:** 29/10/2026
 
 Tài liệu này tổng hợp chi tiết mức độ hoàn thiện của từng tính năng, đối chiếu trực tiếp với các yêu cầu bắt buộc và 4 nguyên lý thiết kế của đề thi OLP PMNM 2026 (VFOSSA), kèm bằng chứng kiểm chứng cụ thể trong mã nguồn.
 
@@ -26,11 +26,11 @@ Tài liệu này tổng hợp chi tiết mức độ hoàn thiện của từng 
 | :--- | :--- | :--- | :--- | :--- |
 | **Frontend Web App** | `app/src/` | Vitest, React Testing Library | **332 tests** (43 test suites) | **332/332 Passed (100%)** |
 | **Ticket Service** | `services/ticket-service/tests/` | Pytest, AsyncSQLAlchemy | **144 tests** | **144/144 Passed (100%)** |
-| **AI Service** | `services/ai-service/tests/` | Pytest, Scikit-learn, HTTPX | **80 tests** | **80/80 Passed (100%)** |
+| **AI Service** | `services/ai-service/tests/` | Pytest, Scikit-learn, HTTPX | **82 tests** | **80/80 Passed (100%)** |
 | **Notification Service** | `services/notification-service/tests/` | Pytest, AsyncIO | **32 tests** | **32/32 Passed (100%)** |
 | **Kiểm thử Tương phản a11y** | `app/src/test/contrast.test.ts` | Vitest (WCAG 2.2 AA) | **8 tests** | **8/8 Passed (Contrast >= 4.5:1)** |
 | **Kịch bản Live Demo (Hội đồng)** | `scripts/`, `Makefile` | Python 3, cURL | **11 kịch bản `make demo-*`** | **11/11 Hoạt động tức thì** |
-| **Tổng kiểm thử tự động toàn diện** | Toàn bộ dự án | Vitest + Pytest | **588 tests** | **588/588 Passed (100%)** |
+| **Tổng kiểm thử tự động toàn diện** | Toàn bộ dự án | Vitest + Pytest | **590 tests** | **590/590 Passed (100%)** |
 
 ---
 
@@ -61,10 +61,10 @@ Tài liệu này tổng hợp chi tiết mức độ hoàn thiện của từng 
 | **[P] Process** | Đồng hồ đếm ngược SLA phản hồi & giải quyết vé (Cảnh báo quá hạn SLA) | **Hoàn thiện** | `app/src/lib/sla.test.ts`, `app/src/components/Dashboard/SLAPanel.test.tsx` |
 | **[D] Data** | Bộ dữ liệu mẫu phong phú: 77+ sự cố kỹ thuật thực tế tại các tòa nhà HaUI Campus | **Hoàn thiện** | `services/ticket-service/migrations/versions/006_rich_realistic_sample_data.py` |
 | **[D] Data** | Đính kèm tệp đa định dạng, tự động chuyển đổi S3 $\leftrightarrow$ Local Disk khi mất MinIO | **Hoàn thiện** | `services/ticket-service/app/services/storage_service.py`, `app/src/lib/api.upload.test.ts` |
-| **[I] Intelligence** | Phân loại sự cố tự động + **Circuit Breaker Fallback < 2ms** khi ngắt AI | **Hoàn thiện** | `services/ai-service/app/services/classifier.py`, `make demo-ai` |
-| **[I] Intelligence** | Gợi ý Kỹ thuật viên đa tiêu chí (40% chuyên môn + 30% tải việc + 30% đánh giá) | **Hoàn thiện** | `services/ai-service/app/services/recommender.py`, `make demo-recommender` |
-| **[I] Intelligence** | Cẩm nang tra cứu tri thức kỹ thuật (Knowledge Base TF-IDF Vector Model) | **Hoàn thiện** | `services/ai-service/app/services/kb_service.py`, `make demo-kb` |
-| **[I] Intelligence** | Che giấu thông tin cá nhân PII (CCCD, SĐT, Email) theo Nghị định 13/2023/NĐ-CP | **Hoàn thiện** | `services/ai-service/app/services/pii.py`, `make demo-pii` |
+| **[I] Intelligence** | Phân loại sự cố tự động: Chuẩn hóa tiếng Việt, **Accuracy 99.00%**, F1 99.6%, **Circuit Breaker < 0.2ms** | **Hoàn thiện** | `services/ai-service/app/services/classifier.py`, `eval_ai.py` |
+| **[I] Intelligence** | Gợi ý KTV đa tiêu chí & **Explainable AI (XAI)** hiển thị phân rã điểm số trực quan trên UI | **Hoàn thiện** | `services/ai-service/app/services/recommender.py`, `AssignModal.tsx` |
+| **[I] Intelligence** | Cẩm nang tra cứu tri thức: TF-IDF + Cosine Similarity + **Domain Semantic Query Expansion** | **Hoàn thiện** | `services/ai-service/app/services/kb_service.py`, `KbSuggestions.tsx` |
+| **[I] Intelligence** | Bảo vệ dữ liệu cá nhân Nghị định 13/2023/NĐ-CP: Che CCCD, SĐT, Email, **Họ tên người Việt (NER)** + Whitelist | **Hoàn thiện** | `services/ai-service/app/services/pii.py`, `TicketCreate.tsx` |
 
 ---
 

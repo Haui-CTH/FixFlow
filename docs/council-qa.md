@@ -50,7 +50,7 @@ FixFlow được thiết kế bao phủ toàn diện 4 trục năng lực số:
 | **[H] Human** | Phân quyền 4 vai trò rõ rệt (Admin, Manager, Technician, Customer). Giao diện tối ưu công thái học hiện trường: Dark/Light mode chống lóa ngoài trời, mobile responsive, đạt chuẩn tương phản màu sắc **WCAG 2.2 AA (>= 4.5:1)**. | [`app/src/test/contrast.test.ts`](../app/src/test/contrast.test.ts) (332 unit tests) |
 | **[P] Process** | Động cơ chuyển trạng thái hữu hạn (FSM) kiểm soát vòng đời vé: `new` $\rightarrow$ `assigned` $\rightarrow$ `in_progress` $\rightarrow$ `pending_customer` $\rightarrow$ `resolved` $\rightarrow$ `closed`. Khóa trạng thái sai quyền, đo đếm SLA phản hồi & xử lý. | [`services/ticket-service/app/services/ticket_service.py`](../services/ticket-service/app/services/ticket_service.py) |
 | **[D] Data** | Mô hình dữ liệu phân tầng, lưu trữ ảnh/tệp đính kèm trên MinIO S3, lưu nhật ký biến động trạng thái (History Timeline), sổ kiểm toán Outbox Event chống thất thoát sự kiện tích hợp. | [`services/ticket-service/app/models/ticket.py`](../services/ticket-service/app/models/ticket.py) |
-| **[I] Intelligence** | Bộ 3 tác tử AI thực dụng: (1) Phân loại tự động có Circuit Breaker < 2ms; (2) Thuật toán gợi ý KTV đa tiêu chí (40% chuyên môn + 30% tải việc + 30% đánh giá); (3) Cẩm nang tri thức TF-IDF tra cứu tức thì; (4) Che thông tin cá nhân PII. | [`services/ai-service/app/`](../services/ai-service/app/) |
+| **[I] Intelligence** | Bộ tác tử AI thực dụng v1.4.0: (1) Phân loại 7 danh mục độ chính xác **99.00%**, Macro F1 **99.6%**, Circuit Breaker < 0.2ms; (2) Gợi ý KTV đa tiêu chí kèm phân rã điểm số trực quan (Explainable AI - XAI); (3) Cẩm nang tri thức TF-IDF có Semantic Query Expansion; (4) Bảo vệ dữ liệu cá nhân Nghị định 13/2023/NĐ-CP (CCCD, SĐT, Email, Tên riêng tiếng Việt có xưng hô + Whitelist). | [`services/ai-service/app/`](../services/ai-service/app/) |
 
 ---
 
@@ -60,7 +60,7 @@ FixFlow được thiết kế bao phủ toàn diện 4 trục năng lực số:
   - Tác tử tra cứu tri thức (Knowledge Base) sử dụng giải thuật **TF-IDF Vector Space Model** trích xuất chính xác giải pháp kỹ thuật từ cẩm nang đã được chuyên gia phê duyệt, trả về đúng số bước khắc phục, không sinh từ ngẫu nhiên.
   - Thuật toán phân công KTV tính điểm tường minh dựa trên ma trận toán học (Scoring weights: Expertise, Workload, Rating) $\rightarrow$ Kiểm chứng được lý do gợi ý, không phải hộp đen.
 - **Bảo vệ quyền riêng tư (PII Masking theo Nghị định 13/2023/NĐ-CP):**
-  - Tự động quét và che số Căn cước công dân (12 chữ số), số điện thoại Việt Nam (+84 / 09x, 08x...), email cá nhân trước khi đưa vào mô hình phân tích hoặc nhật ký hệ thống.
+  - Tự động quét và che số Căn cước công dân (12 chữ số), số điện thoại Việt Nam (+84 / 09x, 08x...), email cá nhân, và **Họ tên người Việt có từ xưng hô** (Contextual Vietnamese NER) trước khi đưa vào mô hình phân tích; bảo vệ danh từ công nghệ (Cisco, Windows, HaUI...) qua whitelist an toàn theo đúng **Nghị định 13/2023/NĐ-CP**.
   - Minh chứng: Chạy `make demo-pii`.
 - **Hoạt động không cần GPU (Graceful Degradation):**
   - Toàn bộ pipeline AI được tối ưu hóa chạy trực tiếp trên CPU phổ thông.

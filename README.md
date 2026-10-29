@@ -45,7 +45,7 @@ Bảng đối soát minh chứng kỹ thuật phục vụ Hội đồng giám kh
 |:---:|---|:---:|---|---|
 | **1** | Kho mã nguồn & Lịch sử Git | 5 | [Repo GitHub công khai](https://github.com/truong-newbie/PMNM_2026_DX_FSM), web viewer hoạt động, 8 nhánh GitFlow | `git branch -a` |
 | **2** | Giấy phép nguồn mở OSI | 10 | [LICENSE](LICENSE) (Apache-2.0), [NOTICE](NOTICE), [REUSE.toml](REUSE.toml), 100% SPDX | make license-check |
-| **3** | Quản lý phiên bản / Release | 5 | [docs/releases/v1.3.0.md](docs/releases/v1.3.0.md), thẻ tag `v1.3.0`, `v1.2.0`, `v1.1.0` | `git tag -l` |
+| **3** | Quản lý phiên bản / Release | 5 | [docs/releases/v1.4.0.md](docs/releases/v1.4.0.md), thẻ tag `v1.4.0`, `v1.4.0`, `v1.3.0`, `v1.2.0`, `v1.1.0` | `git tag -l` |
 | **4** | Build/install from source | 10 | [docs/deployment.md](docs/deployment.md), cấu hình pre-build `.env`, Docker Compose | `docker compose up -d --build` |
 | **5** | Quản lý thư viện & Provenance | 10 | [DEPENDENCIES.md](DEPENDENCIES.md) (SBOM 200 dòng, ma trận license, không commit vendor/node_modules) | `npm ls`, `pip list` |
 | **6** | Tài liệu & Bug tracker | 10 | [README.md](README.md), [CHANGELOG.md](CHANGELOG.md), [CONTRIBUTING.md](CONTRIBUTING.md), GitHub Issues/PRs | `docs/demo-script.md` |
@@ -57,7 +57,7 @@ Bảng đối soát minh chứng kỹ thuật phục vụ Hội đồng giám kh
 | **7** | Đúng kiến trúc DX-OS & H-P-D-I | 10 | Tầng 1 Headless PaaS độc lập (SSO, Gateway, DB, Workflow); chứng minh chuỗi giá trị H-P-D-I | `make demo-core` |
 | **8** | Mức độ hoàn thiện & ổn định | 10 | 77+ tickets thực tế HaUI (Migration 006), AI Circuit Breaker tự ngắt fallback < 2ms | `make demo-ai`<br>`make demo-sample-data` |
 | **9** | Tính thân thiện & Giá trị thực tế | 10 | Giải quyết bài toán bảo trì cơ sở vật chất phòng lab/xưởng HaUI; phân quyền 4 vai; VI/EN | Mở `http://localhost/` |
-| **10** | Chất lượng kỹ thuật & Mở rộng | 10 | Transactional Outbox + DLQ, Zero hardcoded secrets, 332 tests tự động passed 100% | `make test` |
+| **10** | Chất lượng kỹ thuật & Mở rộng | 10 | Transactional Outbox + DLQ, Zero hardcoded secrets, 590 tests tự động passed 100% (332 frontend + 258 backend) | `make test` |
 | **11** | Trình diễn & Tiềm năng cộng đồng | 10 | Kịch bản 10 phút demo ([docs/demo-script.md](docs/demo-script.md)), 12 slides ([docs/slides.md](docs/slides.md)), AI Recommender & KB | `make demo-recommender`<br>`make demo-kb` |
 
 ---

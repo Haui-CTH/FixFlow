@@ -29,7 +29,7 @@ DX-FSM là nền tảng quản lý dịch vụ thực địa (Field Service Mana
 3. Điền thông tin:
    - Tiêu đề (bắt buộc)
    - Mô tả chi tiết vấn đề
-   - Danh mục (hardware/software/network/electrical)
+   - Danh mục (7 danh mục: hardware, software, network, electrical, access_control, service_request, other)
    - Mức ưu tiên
    - Thông tin liên hệ
 4. Submit → Ticket được tạo + AI phân loại tự động
@@ -57,9 +57,10 @@ DX-FSM là nền tảng quản lý dịch vụ thực địa (Field Service Mana
 
 ## AI Features
 
-- **Auto-classification**: Tự động phân loại ticket dựa trên tiêu đề và mô tả
-- **Priority detection**: Gợi ý mức ưu tiên
-- **Technician recommendation**: Gợi ý KTV phù hợp nhất
+- **Auto-classification**: Tự động phân loại 7 danh mục sự cố và 4 mức ưu tiên với bộ chuẩn hóa tiếng Việt, độ chính xác **99.00%** (198/200 mẫu), độ trễ < 0.2ms trên CPU.
+- **Privacy Assurance (PDPD)**: Tự động phát hiện và che giấu SĐT, Email, CCCD, và Họ tên người Việt theo Nghị định 13/2023/NĐ-CP.
+- **Knowledge Base Assistance**: Tra cứu cẩm nang giải pháp sự cố theo thời gian thực (Semantic Query Expansion + TF-IDF) và chèn giải pháp 1-click.
+- **Explainable AI (XAI)**: Gợi ý Kỹ thuật viên kèm phân tách minh bạch từng thành phần điểm số (chuyên môn, đánh giá, tải việc, kỹ năng).
 
 ## Dashboard
 

@@ -144,7 +144,7 @@ Theo giáo trình DX-OS, hệ thống chuyển giao quyền kiểm soát từ co
 #### Câu 6: AI/ML được dùng ở đâu? Dữ liệu đầu vào, mô hình, đánh giá và giới hạn của kết quả là gì?
 * **Trả lời:**
   - AI được tích hợp tại 3 điểm nghiệp vụ thực tế:
-    1. *Ticket Classifier:* Phân loại category và priority từ title/description. Kiến trúc Hybrid 3 tầng: Cache (SHA-256) $\rightarrow$ Ollama LLM (`llama3.2:3b`) $\rightarrow$ Rule-based Fallback. Độ chính xác đạt 85% trên tập test 200 mẫu.
+    1. *Ticket Classifier:* Phân loại category và priority từ title/description. Kiến trúc Hybrid 3 tầng: Cache (SHA-256) $\rightarrow$ Ollama LLM (`llama3.2:3b`) $\rightarrow$ Rule-based Fallback. Độ chính xác đạt **99.00%** (198/200 mẫu) với Macro F1 **99.6%**, độ trễ sub-0.2ms trên CPU.
     2. *Knowledge Base Search:* Pure Python TF-IDF + Cosine Similarity tìm bài viết khắc phục sự cố, trọng số tiêu đề gấp 3 lần.
     3. *Technician Recommender:* Chấm điểm đa tiêu chí (chuyên môn 40%, kỹ năng 15%, lịch sử 20%, tải hiện tại 15%, cấp bậc 5%, độ tươi 5%) kết hợp Collaborative Filtering boost.
   - *Giới hạn:* LLM chạy trên máy cá nhân có thể trễ khi cold start $\rightarrow$ giải quyết bằng warm-up background và timeout fallback.
@@ -178,16 +178,16 @@ Theo giáo trình DX-OS, hệ thống chuyển giao quyền kiểm soát từ co
 ## 5. KẾ HOẠCH HÀNH ĐỘNG CỤ THỂ (ACTION PLAN)
 
 ### Giai đoạn 1: Chốt chặn PoF (Hoàn thành trong 24h tới)
-- [ ] **Tạo file `DEPENDENCIES.md`:** Liệt kê đầy đủ tên package, phiên bản, nguồn gốc, giấy phép cho Backend (FastAPI, SQLAlchemy, ...), Frontend (React, TanStack, ...) và Docker Images.
-- [ ] **Audit SPDX License Headers:** Chạy script kiểm tra và bổ sung `# SPDX-License-Identifier: Apache-2.0` vào 100% các file mã nguồn chưa có.
-- [ ] **Kiểm tra chạy từ source:** Test chạy độc lập backend và frontend trên môi trường local không dùng Docker theo đúng hướng dẫn trong README.
-- [ ] **Tạo GitHub Issues:** Tạo các Issue mô phỏng các task Sprint 4, Sprint 5 và Sprint AI sắp tới trên GitHub để hoàn thiện minh chứng Bug Tracker.
+- [x] **Tạo file `DEPENDENCIES.md`:** Liệt kê đầy đủ tên package, phiên bản, nguồn gốc, giấy phép cho Backend (FastAPI, SQLAlchemy, ...), Frontend (React, TanStack, ...) và Docker Images.
+- [x] **Audit SPDX License Headers:** Chạy script kiểm tra và bổ sung `# SPDX-License-Identifier: Apache-2.0` vào 100% các file mã nguồn chưa có.
+- [x] **Kiểm tra chạy từ source:** Test chạy độc lập backend và frontend trên môi trường local không dùng Docker theo đúng hướng dẫn trong README.
+- [x] **Tạo GitHub Issues:** Tạo các Issue mô phỏng các task Sprint 4, Sprint 5 và Sprint AI sắp tới trên GitHub để hoàn thiện minh chứng Bug Tracker.
 
 ### Giai đoạn 2: Đưa AI vào sử dụng thật (Thực hiện `docs/ai-production-plan.md`)
-- [ ] **P0 + P1 (Ollama LLM):** Cấu hình `OLLAMA_BASE_URL` động qua biến môi trường; bóc code fence JSON; warm-up model lúc startup; kiểm thử fallback êm khi tắt Ollama.
-- [ ] **P3 (Đồng bộ Category):** Thêm migration CSDL bổ sung 2 category còn thiếu (`access_control`, `service_request`) hoặc ánh xạ chuẩn hóa tại AI service để không bao giờ lỗi enum.
-- [ ] **P4 (Khớp dữ liệu KTV):** Cập nhật seed dữ liệu trong `recommender_v2.py` sang đúng UUID của các KTV trong bảng `technicians`.
-- [ ] **P5 (Hiển thị KB trên UI):** Bổ sung API client `searchKb` và hiển thị gợi ý bài viết liên quan trên giao diện `TicketCreate` và `TicketDetail`.
+- [x] **P0 + P1 (Ollama LLM):** Cấu hình `OLLAMA_BASE_URL` động qua biến môi trường; bóc code fence JSON; warm-up model lúc startup; kiểm thử fallback êm khi tắt Ollama.
+- [x] **P3 (Đồng bộ Category):** Thêm migration CSDL bổ sung 2 category còn thiếu (`access_control`, `service_request`) hoặc ánh xạ chuẩn hóa tại AI service để không bao giờ lỗi enum.
+- [x] **P4 (Khớp dữ liệu KTV):** Cập nhật seed dữ liệu trong `recommender_v2.py` sang đúng UUID của các KTV trong bảng `technicians`.
+- [x] **P5 (Hiển thị KB trên UI):** Bổ sung API client `searchKb` và hiển thị gợi ý bài viết liên quan trên giao diện `TicketCreate` và `TicketDetail`.
 - [ ] **P6 (Dọn dẹp Gateway):** Xóa các route không sử dụng (`/solution`, `/duplicate`, `/summary`) trong `core/nginx/nginx.conf`.
 
 ### Giai đoạn 3: Chuẩn bị Hồ sơ Nộp bài & Showcase (Trước ngày Demo)

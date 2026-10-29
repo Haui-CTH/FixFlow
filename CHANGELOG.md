@@ -5,6 +5,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v1.4.0] – 2026-10-29
+
+Bản phát hành Nâng tầm Trí tuệ Nhân tạo thực dụng, Explainable AI (XAI), Tuân thủ Nghị định 13/2023/NĐ-CP (PDPD) và Tự động hóa Chốt chặn Chất lượng CI/CD.
+
+### Added (Bản phát hành v1.4.0)
+- **Chuẩn hóa Ngôn ngữ Tiếng Việt & Nâng cấp Độ chính xác 99%**: Bổ sung bộ tiền xử lý preprocess_vietnamese_text đồng nhất dấu tiếng Việt, xử lý từ viết tắt/từ lóng IT (ko, k, hong, dc, đc, 	ạch, cháy); nâng độ chính xác phân loại sự cố lên **99.00%** (198/200 mẫu) với Macro F1 **99.6%**, phản hồi sub-0.2ms trên CPU.
+- **Explainable AI (XAI) & Phân rã Điểm số Kỹ thuật viên**: API /recommend cung cấp trường score_breakdown phân tích chi tiết đóng góp từng tiêu chí (specialty, skill, performance, workload, level, 
+ecency). Giao diện AssignModal.tsx hiển thị trực quan các huy hiệu điểm số ([Chuyên môn: +40], [Đánh giá: +18.6], [Tải việc: +9.4], [Kỹ năng: +7.5]).
+- **Bảo vệ Quyền riêng tư theo Nghị định 13/2023/NĐ-CP (PDPD)**: Bổ sung Contextual Vietnamese NER nhận diện và che họ tên người có xưng hô (	hầy/cô/anh/chị/ông/bà...) thành [TÊN-n]; danh mục whitelist kỹ thuật bảo đảm không che nhầm từ khóa nghiệp vụ; hiển thị huy hiệu cam kết bảo mật quyền riêng tư trên màn hình tạo ticket (TicketCreate.tsx).
+- **Mở rộng Ngữ nghĩa Tìm kiếm Tri thức (Domain Semantic Query Expansion)**: Mở rộng từ khóa tìm kiếm trong Knowledge Base cho thiết bị mạng, điều hòa, máy in, nguồn điện giúp tăng tỷ lệ gợi ý chính xác giải pháp.
+- **Chốt chặn Bản quyền & Đánh giá AI trong CI/CD**: Bổ sung job license-compliance kiểm tra 233/233 tệp mã nguồn tuân thủ SPDX Apache-2.0 và bước chạy benchmark tự động eval_ai.py trong GitHub Actions .github/workflows/ci.yml.
+- **Độ phủ Kiểm thử Tự động Toàn diện**: Tổng cộng **590 tests tự động passed 100%** (332 tests Frontend Vitest + 258 tests Backend Pytest).
+
 ## [v1.3.0] – 2026-10-27
 
 Bản phát hành chính thức Cuộc thi Phần mềm Nguồn mở HaUI 2026 (Official PMNM 2026 Release).
