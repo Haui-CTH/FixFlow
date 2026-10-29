@@ -222,6 +222,7 @@ export interface AiTechnicianRec {
   reasons: string[];
   current_workload: number;
   estimated_pickup_hours: number;
+  score_breakdown?: Record<string, number>;
 }
 
 export interface AiRecommendResponse {

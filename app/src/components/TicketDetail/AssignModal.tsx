@@ -129,6 +129,37 @@ export function AssignModal({
                     {t.specialty.map((s) => categoryMeta(s).label).join(', ') || tr('assign_modal.chua_khai_bao_chuyen_mon')}
                     {aiRec && aiRec.reasons.length > 0 && ` · ${aiRec.reasons.join(', ')}`}
                   </span>
+                  {aiRec && aiRec.score_breakdown && Object.keys(aiRec.score_breakdown).length > 0 && (
+                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '4px', marginTop: '4px' }}>
+                      {Object.entries(aiRec.score_breakdown)
+                        .filter(([_, val]) => val > 0)
+                        .map(([k, val]) => {
+                          const labels: Record<string, string> = {
+                            specialty: 'Chuyên môn',
+                            skill: 'Kỹ năng',
+                            performance: 'Đánh giá',
+                            workload: 'Tải việc',
+                            level: 'Cấp bậc',
+                            recency: 'Hoạt động',
+                          };
+                          return (
+                            <span
+                              key={k}
+                              style={{
+                                fontSize: '11px',
+                                padding: '1px 6px',
+                                borderRadius: '10px',
+                                background: 'var(--color-bg-muted, #f1f5f9)',
+                                color: 'var(--color-text-muted, #475569)',
+                                border: '1px solid var(--color-border, #cbd5e1)',
+                              }}
+                            >
+                              {labels[k] || k}: +{val}
+                            </span>
+                          );
+                        })}
+                    </div>
+                  )}
                   <span className={styles.techLoad}>
                     <span
                       role="progressbar"

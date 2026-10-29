@@ -249,6 +249,10 @@ export default function TicketCreate() {
               minLength: { value: 10, message: t('ticket_create.mo_ta_can_it_nhat_10_ky_tu') },
             })}
           />
+          <div style={{ display: "flex", alignItems: "center", gap: "6px", fontSize: "12px", color: "var(--color-text-muted, #64748b)", marginTop: "6px" }}>
+            <span aria-hidden="true">🔒</span>
+            <span>Bảo vệ quyền riêng tư theo <strong>Nghị định 13/2023/NĐ-CP</strong>: Hệ thống tự động ẩn danh SĐT, Email, CCCD và Tên riêng trước khi xử lý AI.</span>
+          </div>
         </fieldset>
 
         <KbSuggestions

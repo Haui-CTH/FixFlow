@@ -19,6 +19,18 @@ env:
   POSTGRES_VERSION: "16"
 
 jobs:
+  # ─── 0. License & Copyright Compliance (SPDX / REUSE) ───────────
+  license-compliance:
+    name: License & Copyright Compliance (SPDX / REUSE)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+      - name: Verify SPDX Apache-2.0 Headers
+        run: python scripts/license_check.py
+
   # ─── 1. Lint Python services ─────────────────────────────────────
   lint-python:
     name: Lint Python Services
@@ -127,7 +139,7 @@ jobs:
 
   # ─── 4. Test ai-service ─────────────────────────────────────────
   test-ai-service:
-    name: Test AI Service
+    name: Test AI Service & Quality Gate
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -135,7 +147,11 @@ jobs:
         with:
           python-version: ${{ env.PYTHON_VERSION }}
       - run: pip install -r services/ai-service/requirements.txt
-      - run: cd services/ai-service && python -m pytest tests/ -v --tb=short
+      - name: Unit Tests
+        run: cd services/ai-service && python -m pytest tests/ -v --tb=short
+      - name: AI Quality Gate Benchmark
+        run: |
+          PYTHONPATH=services/ai-service python services/ai-service/eval_ai.py
 
   # ─── 5. Test notification-service ───────────────────────────────
   test-notification-service:
