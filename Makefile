@@ -1,7 +1,7 @@
 # DX-FSM Makefile
 # Usage: make <target>
 
-.PHONY: help up down restart logs ps clean build rebuild test lint fmt init migrate health shell initdocs license-check eval-ai demo-core demo-ai demo-recommender demo-kb demo-sample-data demo-pii demo-contrast demo-it-ot demo-nong-lanh demo-audit demo-resilience
+.PHONY: help up down restart logs ps clean build rebuild test lint fmt init migrate health shell initdocs license-check eval-ai eval-impact demo-core demo-ai demo-recommender demo-kb demo-sample-data demo-pii demo-contrast demo-it-ot demo-nong-lanh demo-audit demo-resilience demo-verify
 
 # Default target
 help:
@@ -34,6 +34,8 @@ help:
 	@echo "  demo-sample-data  Thống kê 77+ tickets dữ liệu mẫu thực tế HaUI"
 	@echo "  demo-pii          Test Che thông tin cá nhân PII (Nghị định 13/2023/NĐ-CP)"
 	@echo "  demo-contrast     Test Kiểm tra tương phản màu tự động (WCAG 2.2 AA)"
+	@echo "  demo-verify       Test Cổng Xác thực Công khai & Con dấu số Nghiệm thu"
+	@echo "  eval-impact       Chạy bộ đo lường thực nghiệm tác động (Trước vs Sau)"
 	@echo ""
 	@echo "Examples:"
 	@echo "  make up            # Start all services"
@@ -200,5 +202,12 @@ demo-audit:
 demo-resilience:
 	@echo "=== [DEMO 11] Khả năng Chịu lỗi & Tự Phục hồi (Graceful Degradation & Resilience) ==="
 	@python scripts/demo_resilience.py
+
+demo-verify:
+	@echo "=== [DEMO 12] Cổng Xác thực Công khai & Con dấu Số Biên bản Nghiệm thu (HMAC-SHA256) ==="
+	@curl -s http://localhost/api/v1/tickets/verify/TKT-2026-000003 | jq . || curl -s http://localhost/api/v1/tickets/verify/TKT-2026-000003
+
+eval-impact:
+	@python scripts/measure_impact.py
 
 .DEFAULT_GOAL := help

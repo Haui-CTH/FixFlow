@@ -1,0 +1,37 @@
+{
+  "meta": {
+    "title": "FixFlow Empirical Impact Measurements (HaUI Campus)",
+    "timestamp": "2026-10-29T05:08:44.199071+00:00",
+    "target": "OLP PMNM 2026 - DX-OS Open-Core",
+    "commit": "develop"
+  },
+  "indicators": {
+    "time_to_assign": {
+      "before": "chưa đo",
+      "after_median_min": 288.0,
+      "after_p90_min": 1440.0,
+      "ai_inference_ms": 1.8,
+      "sample_size": 114,
+      "data_source": "Dữ liệu thực nghiệm 77+ sự cố HaUI (Migration 006)"
+    },
+    "overdue_rate": {
+      "before": "chưa đo",
+      "after_pct": 44.0,
+      "sla_met_count": 54,
+      "overdue_count": 40,
+      "judged_total": 91
+    },
+    "knowledge_search_latency": {
+      "before": "chưa đo",
+      "after_median_ms": 7.72,
+      "after_p95_ms": 72.06
+    },
+    "workflow_handover_steps": {
+      "before_physical_steps": 7,
+      "after_digital_steps": 1,
+      "public_verify_enabled": true,
+      "seal_algorithm": "HMAC-SHA256",
+      "technician_name_masked": "Hoàng M. T."
+    }
+  }
+}
