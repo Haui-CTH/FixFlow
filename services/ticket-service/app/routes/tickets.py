@@ -90,6 +90,8 @@ class TicketResponse(BaseModel):
     created_at: Optional[str] = None
     updated_at: Optional[str] = None
     assigned_at: Optional[str] = None
+    sla_met: Optional[bool] = None
+    seal_code: Optional[str] = None
 
     class Config:
         from_attributes = True
@@ -222,6 +224,19 @@ def _build_ticket_response(ticket: Ticket) -> TicketResponse:
         created_at=_dt_to_str(ticket.created_at),
         updated_at=_dt_to_str(ticket.updated_at),
         assigned_at=_dt_to_str(ticket.assigned_at),
+        sla_met=ticket.sla_met,
+        seal_code=(
+            __import__('app.services.seal', fromlist=['compute_work_order_seal'])
+            .compute_work_order_seal(
+                ticket_number=ticket.ticket_number,
+                status=ticket.status.value if hasattr(ticket.status, 'value') else str(ticket.status),
+                technician_id=str(ticket.technician_id) if ticket.technician_id else None,
+                resolved_at=ticket.resolved_at,
+                sla_met=ticket.sla_met,
+            )[1]
+            if (ticket.status.value if hasattr(ticket.status, 'value') else str(ticket.status)) in ('resolved', 'closed')
+            else None
+        ),
     )
 
 
@@ -387,6 +402,46 @@ async def get_overdue(
     )
     tickets = rows.scalars().all()
     return {"items": [_build_ticket_response(t) for t in tickets], "count": len(tickets)}
+
+
+@router.get("/verify/{ticket_ref}")
+async def verify_work_order_endpoint(
+    ticket_ref: str,
+    code: Optional[str] = None,
+    db: AsyncSession = Depends(get_db),
+):
+    """
+    Cổng xác thực công khai Biên bản Nghiệm thu Kỹ thuật Hiện trường (Public Verify Portal).
+    Không yêu cầu đăng nhập. Kiểm tra chữ ký HMAC-SHA256, tính toàn vẹn thời gian và cam kết SLA.
+    """
+    from app.services.seal import verify_ticket_seal
+    import uuid
+    from fastapi.responses import JSONResponse
+
+    ticket = None
+    res = await db.execute(select(Ticket).where(func.lower(Ticket.ticket_number) == ticket_ref.strip().lower()))
+    ticket = res.scalar_one_or_none()
+
+    if not ticket:
+        try:
+            ref_uuid = uuid.UUID(ticket_ref.strip())
+            res = await db.execute(select(Ticket).where(Ticket.id == ref_uuid))
+            ticket = res.scalar_one_or_none()
+        except (ValueError, AttributeError):
+            pass
+
+    if not ticket:
+        return JSONResponse(
+            status_code=404,
+            content={
+                "valid": False,
+                "status_label": "Không tìm thấy biên bản",
+                "reason": f"Không tìm thấy phiếu sự cố nào khớp với mã '{ticket_ref}' trong hệ sinh thái HaUI FixFlow.",
+                "ticket_number": ticket_ref,
+            },
+        )
+
+    return verify_ticket_seal(ticket, provided_code=code)
 
 
 @router.get("/{ticket_id}", response_model=TicketResponse)

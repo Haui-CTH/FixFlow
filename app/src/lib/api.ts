@@ -77,6 +77,8 @@ export interface Ticket {
   updated_at?: string | null;
   assigned_at?: string | null;
   sla_deadline?: string | null;
+  sla_met?: boolean | null;
+  seal_code?: string | null;
 }
 
 export interface TicketPatch {
@@ -354,3 +356,32 @@ export const metricsApi = {
   get: (params?: { window_days?: number }) =>
     api.get<MetricsResponse>('/admin/metrics', { params }),
 };
+
+// ─── Public Verification API ───────────────────────────────
+
+export interface WorkOrderVerification {
+  valid: boolean;
+  status_label: string;
+  reason?: string;
+  ticket_number?: string;
+  ticket_id?: string;
+  title?: string;
+  category?: string;
+  priority?: string;
+  status?: string;
+  location?: string;
+  technician_name?: string;
+  resolved_at?: string | null;
+  sla_met?: boolean | null;
+  seal_code?: string | null;
+  full_hash?: string | null;
+  issued_by?: string;
+  algorithm?: string;
+}
+
+export async function verifyWorkOrder(ticketRef: string, code?: string): Promise<WorkOrderVerification> {
+  const params = code ? { code } : undefined;
+  const res = await axios.get<WorkOrderVerification>(`${API_BASE}/tickets/verify/${encodeURIComponent(ticketRef)}`, { params });
+  return res.data;
+}
+
