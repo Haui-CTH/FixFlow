@@ -1,6 +1,5 @@
 // SPDX-License-Identifier: Apache-2.0
 // Automated Color Contrast Test according to WCAG 2.2 Level AA guidelines.
-// Inspired by HIT-Champion/Signet accessibility compliance.
 // Ensures text has at least 4.5:1 contrast against its background.
 
 import { describe, it, expect } from 'vitest';

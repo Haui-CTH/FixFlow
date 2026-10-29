@@ -1,7 +1,7 @@
 # SPDX-License-Identifier: Apache-2.0
 """
 Tests for PII Anonymization & Data Protection (Decree 13/2023/ND-CP compliance).
-Inspired by HIT-Champion/Signet privacy engineering.
+Tuân thủ Nghị định 13/2023/NĐ-CP về Bảo vệ dữ liệu cá nhân.
 """
 from app.services.pii import anonymize_pii, mask_pii, has_pii
 
@@ -64,6 +64,24 @@ def test_has_pii_detection():
     assert has_pii("Lỗi switch tầng 4 phòng lab 201") is False
 
 
+def test_mask_vietnamese_personal_names():
+    text = "Vui lòng liên hệ thầy Đỗ Đăng Trường hoặc cô Hoàng Thị Mai để nhận máy"
+    masked, mapping = anonymize_pii(text)
+    assert "[TÊN-1]" in masked
+    assert "[TÊN-2]" in masked
+    assert "Đỗ Đăng Trường" not in masked
+    assert "Hoàng Thị Mai" not in masked
+    assert mapping["[TÊN-1]"] == "Đỗ Đăng Trường"
+    assert mapping["[TÊN-2]"] == "Hoàng Thị Mai"
+
+
+def test_non_person_technical_whitelist():
+    text = "Cài đặt Windows 11 và cấu hình switch Cisco tại phòng lab HaUI"
+    masked = mask_pii(text)
+    assert masked == text
+    assert has_pii(text) is False
+
+
 if __name__ == "__main__":
     test_mask_vietnamese_phone_numbers()
     test_mask_international_format_phone()
@@ -72,5 +90,6 @@ if __name__ == "__main__":
     test_multiple_pii_combination()
     test_clean_text_without_pii()
     test_has_pii_detection()
-    print("ALL 7 PII TESTS PASSED 100%!")
-
+    test_mask_vietnamese_personal_names()
+    test_non_person_technical_whitelist()
+    print("ALL 9 PII TESTS PASSED 100%!")
