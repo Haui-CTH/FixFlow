@@ -24,6 +24,7 @@ from app.models.ticket import Ticket, TicketAttachment, TicketHistory
 from app.models.user import User
 from app.services.storage_service import upload_attachment
 from app.services.user_resolver import resolve_or_create_user
+from app.services.file_guard import inspect_file_content
 
 router = APIRouter()
 
@@ -122,6 +123,15 @@ async def upload_ticket_attachment(
     if not data:
         raise HTTPException(status_code=400, detail="Empty file")
 
+    # 3b. File Content Security Guard (Magic bytes, extension check, anti-polyglot/macro)
+    safe_name = os.path.basename(file.filename or "attachment")
+    inspection = inspect_file_content(data, safe_name, declared_mime=content_type)
+    if not inspection.is_safe:
+        raise HTTPException(
+            status_code=400,
+            detail=f"Tệp bị từ chối kiểm tra an toàn: {inspection.error_message}",
+        )
+
     # 4. Upload to storage
     safe_name = os.path.basename(file.filename or "attachment")
     try:
@@ -157,6 +167,11 @@ async def upload_ticket_attachment(
         user_id=actor_id,
         action="attachment_added",
         new_value=f"{safe_name} ({size} bytes)",
+        metadata_json={
+            "sha256": inspection.sha256,
+            "detected_type": inspection.detected_type,
+            "safe": True,
+        },
     )
     db.add(history)
 
