@@ -94,12 +94,12 @@ Quay lại trang Cloudflare Dashboard trên trình duyệt:
 1. Chuyển sang tab **Public Hostnames** (hoặc *Published Application*).
 2. Chọn **Add a public hostname**:
    - **Subdomain**: `fixflow` (hoặc tên tùy chọn)
-   - **Domain**: chọn tên miền bạn quản lý trên Cloudflare (ví dụ: `yourdomain.com`)
+   - **Domain**: chọn tên miền bạn quản lý trên Cloudflare (ví dụ: `filebridge.click`)
    - **Service Type**: `HTTP`
    - **URL**: `gateway:80`
 3. Bấm **Save hostname**.
 
-> 🎉 **Hoàn tất:** Truy cập ngay `https://fixflow.yourdomain.com` trên điện thoại hoặc máy tính của Ban giám khảo. Toàn bộ Web UI, Keycloak SSO và Backend API đều chạy mượt mà dưới giao thức HTTPS chuẩn mực!
+> 🎉 **Hoàn tất:** Truy cập ngay `https://fixflow.filebridge.click` trên điện thoại hoặc máy tính của Ban giám khảo. Toàn bộ Web UI, Keycloak SSO và Backend API đều chạy mượt mà dưới giao thức HTTPS chuẩn mực!
 
 ---
 
@@ -149,7 +149,7 @@ docker compose ps
 Chỉnh sửa tệp cấu hình Caddy `/etc/caddy/Caddyfile`:
 
 ```caddyfile
-fixflow.yourdomain.com {
+fixflow.filebridge.click {
     reverse_proxy 127.0.0.1:80 {
         header_up X-Forwarded-Port 443
         header_up X-Forwarded-Proto https
@@ -168,31 +168,31 @@ sudo journalctl -u caddy -n 20 --no-pager
 
 ## 4. Kiểm tra Tự động Toàn diện sau khi Triển khai (Automated Smoke Tests)
 
-Sau khi triển khai lên domain công khai (ví dụ `https://fixflow.yourdomain.com`), người vận hành hoặc Ban Giám khảo có thể chạy công cụ kiểm thử tự động toàn diện chỉ bằng một lệnh:
+Sau khi triển khai lên domain công khai (ví dụ `https://fixflow.filebridge.click`), người vận hành hoặc Ban Giám khảo có thể chạy công cụ kiểm thử tự động toàn diện chỉ bằng một lệnh:
 
 ```bash
 # Quét tự động 7 hạng mục: TLS, Web UI, Keycloak OIDC, API Gateway, Public Verify, AI KB, Cô lập mạng
-python scripts/verify_online_deploy.py https://fixflow.yourdomain.com
+python scripts/verify_online_deploy.py https://fixflow.filebridge.click
 
 # Hoặc dùng Makefile
-make verify-online url=https://fixflow.yourdomain.com
+make verify-online url=https://fixflow.filebridge.click
 ```
 
 Hoặc kiểm tra thủ công từng thành phần:
 
 ```bash
 # 1. Kiểm tra Gateway trả về mã 200/302 chuẩn
-curl -sI https://fixflow.yourdomain.com/ | head -n 5
+curl -sI https://fixflow.filebridge.click/ | head -n 5
 
 # 2. Kiểm tra OpenID Connect Issuer của Keycloak nhận diện đúng HTTPS
-curl -s https://fixflow.yourdomain.com/realms/dx-fsm/.well-known/openid-configuration | grep -oE '"issuer":"[^"]*"'
-# Kết quả mong đợi: "issuer":"https://fixflow.yourdomain.com/realms/dx-fsm"
+curl -s https://fixflow.filebridge.click/realms/dx-fsm/.well-known/openid-configuration | grep -oE '"issuer":"[^"]*"'
+# Kết quả mong đợi: "issuer":"https://fixflow.filebridge.click/realms/dx-fsm"
 
 # 3. Kiểm tra API Backend qua Gateway
-curl -s https://fixflow.yourdomain.com/api/v1/tickets/stats/summary
+curl -s https://fixflow.filebridge.click/api/v1/tickets/stats/summary
 
 # 4. Kiểm tra sức khỏe phân hệ AI & Circuit Breaker
-curl -s https://fixflow.yourdomain.com/api/v1/ai/health
+curl -s https://fixflow.filebridge.click/api/v1/ai/health
 ```
 
 ---
