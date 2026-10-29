@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: Apache-2.0
 // Sidebar (S2.1–S2.3, S2.5, S2.8): nav theo role, active theo route con, thu gọn trên desktop, drawer trên mobile.
 
-import { ChevronsLeft, ChevronsRight, X } from 'lucide-react';
+import { ChevronsLeft, ChevronsRight, Headphones, PlusCircle, X } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 import { isActive, navFor } from '../lib/nav';
 import styles from './Layout.module.css';
@@ -19,6 +19,9 @@ export function Sidebar({ open, collapsed, user, onClose, onToggleCollapse }: Pr
   const { pathname } = useLocation();
   const cls = [styles.sidebar, open && styles.sidebarOpen, collapsed && styles.collapsed].filter(Boolean).join(' ');
 
+  const canCreate = user?.role === 'customer' || user?.role === 'manager' || user?.role === 'admin';
+  const isCreateActive = pathname === '/tickets/new';
+
   return (
     <aside className={cls} aria-label={t('sidebar.aside')}>
       <div className={styles.brand}>
@@ -28,6 +31,19 @@ export function Sidebar({ open, collapsed, user, onClose, onToggleCollapse }: Pr
           <X size={20} aria-hidden="true" />
         </button>
       </div>
+
+      {canCreate && (
+        <Link
+          to="/tickets/new"
+          title={collapsed ? t('nav.new_ticket') : undefined}
+          aria-current={isCreateActive ? 'page' : undefined}
+          className={`${styles.createBtn} ${isCreateActive ? styles.createBtnActive : ''}`}
+        >
+          <PlusCircle size={18} aria-hidden="true" />
+          {!collapsed && <span>{t('nav.new_ticket')}</span>}
+        </Link>
+      )}
+
       <nav className={styles.nav} aria-label={t('sidebar.dieu_huong_chinh')}>
         {navFor(user?.role).map(({ path, label, icon: Icon }) => {
           const active = isActive(path, pathname);
@@ -45,6 +61,28 @@ export function Sidebar({ open, collapsed, user, onClose, onToggleCollapse }: Pr
           );
         })}
       </nav>
+
+      {!collapsed ? (
+        <div className={styles.supportCard}>
+          <div className={styles.supportHead}>
+            <Headphones size={14} aria-hidden="true" />
+            <span>Hỗ trợ kỹ thuật HaUI</span>
+          </div>
+          <div className={styles.supportBody}>
+            <div>Hotline: <strong>024.3765 5121</strong></div>
+            <div>Văn phòng: <strong>P.204 Nhà A10</strong></div>
+            <div className={styles.supportStatus}>
+              <span className={styles.statusDot}></span>
+              <span>Trực hiện trường 24/7</span>
+            </div>
+          </div>
+        </div>
+      ) : (
+        <div className={styles.supportCollapsed} title="Hỗ trợ HaUI ICT: 024.3765 5121">
+          <Headphones size={18} aria-hidden="true" />
+        </div>
+      )}
+
       <button
         className={styles.collapseBtn}
         onClick={onToggleCollapse}

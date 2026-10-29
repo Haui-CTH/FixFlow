@@ -44,6 +44,8 @@ html, body, body.login-pf {
   display: flex !important;
   flex-direction: row !important;
   min-height: 100vh !important;
+  height: 100% !important;
+  align-items: stretch !important;
   width: 100% !important;
   margin: 0 !important;
   padding: 0 !important;
@@ -59,6 +61,9 @@ html, body, body.login-pf {
   flex: 0 0 40% !important;
   min-width: 360px !important;
   max-width: 500px !important;
+  min-height: 100vh !important;
+  align-self: stretch !important;
+  margin: 0 !important;
   background: linear-gradient(165deg, var(--ff-navy) 0%, var(--ff-navy-dark) 100%) !important;
   display: flex !important;
   flex-direction: column !important;
@@ -69,6 +74,10 @@ html, body, body.login-pf {
   position: relative !important;
   border-right: 1px solid rgba(255, 255, 255, 0.08) !important;
   box-shadow: 4px 0 24px rgba(15, 23, 42, 0.15) !important;
+}
+
+.login-pf-page-footer {
+  display: none !important;
 }
 
 /* Brand Container inside Left Panel (2-Column Grid: Icon Left, Text Right) */
