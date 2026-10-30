@@ -6,7 +6,7 @@ name: Deploy Documentation & Pages
 
 on:
   push:
-    branches: [main, develop, master]
+    branches: [main]
   workflow_dispatch:
 
 permissions:
@@ -16,7 +16,7 @@ permissions:
 
 concurrency:
   group: github-pages
-  cancel-in-progress: false
+  cancel-in-progress: true
 
 jobs:
   deploy:
