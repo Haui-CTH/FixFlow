@@ -5,6 +5,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v1.4.1] – 2026-10-30
+
+Bản phát hành Nâng cấp Tiện ích Thực địa, Tự động hóa Triển khai Tài liệu GitHub Pages và Hồ sơ Bảo vệ Hội đồng Giám khảo OLP PMNM 2026.
+
+### Added (Bản phát hành v1.4.1)
+- **Xuất Dữ liệu Excel/CSV Chuẩn Quốc tế (UTF-8 BOM)**: Bổ sung module `app/src/lib/export-csv.ts` kèm ký tự Byte Order Mark (`\uFEFF`) chống vỡ font tiếng Việt trên Microsoft Excel Windows, hỗ trợ bộ lọc và phân trang dữ liệu sự cố.
+- **PWA Web App Manifest & Cài đặt Di động**: Bổ sung `app/public/manifest.json` và cấu hình PWA trong `app/index.html` cho phép kỹ thuật viên hiện trường cài đặt ứng dụng độc lập trên điện thoại thông minh (Android/iOS).
+- **Bộ Định dạng In ấn Biên bản Khổ A4 Chuẩn Doanh nghiệp**: Bổ sung bộ quy tắc CSS `@media print` tối ưu hóa trang in biên bản bàn giao, nghiệm thu và trang xác thực công khai, loại bỏ thanh điều hướng và ngắt trang thông minh.
+- **Cổng Tài liệu Trực tuyến Docsify & Tự động Deploy GitHub Pages**: Xây dựng cổng tra cứu tài liệu `website/` và pipeline `.github/workflows/pages.yml`, tự động xuất bản tài liệu kỹ thuật lên GitHub Pages kèm liên kết trực tiếp tới bản triển khai Live.
+- **Hồ sơ Phản biện & Cẩm nang Thuyết trình Hội đồng Giám khảo**: Hoàn thiện tài liệu `docs/council-qa.md` (giải trình chi tiết 10 câu hỏi định hướng chính thức của Hội đồng OLP PMNM) và `docs/pitching-guide.md` (kịch bản thuyết trình và biểu diễn tính năng 10 phút).
+- **Thẩm định Triển khai Trực tuyến Toàn diện**: Xác thực tên miền chính thức `https://fixflow.filebridge.click` đạt 7/7 bài kiểm tra khắt khe (TLS 1.3 Let's Encrypt, OIDC SSO Discovery, Ticket API Gateway, Public Verify Portal HMAC-SHA256, Edge-AI TF-IDF, và cô lập vùng mạng nội bộ Zero-Trust).
+
 ## [v1.4.0] – 2026-10-29
 
 Bản phát hành Nâng tầm Trí tuệ Nhân tạo thực dụng, Explainable AI (XAI), Tuân thủ Nghị định 13/2023/NĐ-CP (PDPD) và Tự động hóa Chốt chặn Chất lượng CI/CD.

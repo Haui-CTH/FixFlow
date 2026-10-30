@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<!-- SPDX-License-Identifier: Apache-2.0 -->
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>FixFlow — Nền tảng Quản lý Dịch vụ Kỹ thuật Thực địa (DX-FSM)</title>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta name="description" content="FixFlow — Nền tảng Quản lý Dịch vụ Kỹ thuật Thực địa (DX-FSM) trên nền DX-OS Open-Core (HaUI PMNM 2026)">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
+  <link rel="icon" href="logo.svg" type="image/svg+xml">
+  
+  <!-- Docsify Theme: Vue / Dark Mode Support -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/docsify@4/lib/themes/vue.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/docsify-themeable@0/dist/css/theme-simple.css">
+  
+  <!-- KaTeX for LaTeX Math -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+
+  <style>
+    :root {
+      --theme-color: #0284c7;
+      --base-font-size: 15px;
+      --sidebar-width: 290px;
+      --sidebar-nav-link-color--active: #0284c7;
+      --sidebar-name-color: #0284c7;
+    }
+    .top-live-banner {
+      background: linear-gradient(90deg, #0369a1 0%, #0284c7 100%);
+      color: #ffffff;
+      padding: 8px 16px;
+      text-align: center;
+      font-size: 13px;
+      font-weight: 500;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    .top-live-banner a {
+      color: #fef08a;
+      text-decoration: underline;
+      font-weight: 700;
+      margin: 0 4px;
+    }
+    .app-name-link img {
+      width: 32px;
+      height: 32px;
+      vertical-align: middle;
+      margin-right: 8px;
+    }
+    .sidebar {
+      border-right: 1px solid #e2e8f0;
+    }
+    .markdown-section pre {
+      border-radius: 8px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+    .markdown-section code {
+      border-radius: 4px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    }
+    .badge-fsm {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 9999px;
+      font-size: 11px;
+      font-weight: 600;
+      background: #e0f2fe;
+      color: #0369a1;
+      margin-left: 6px;
+    }
+  </style>
+</head>
+<body>
+  <div class="top-live-banner">
+    🚀 Hệ thống FixFlow đang chạy trực tuyến tại: 
+    <a href="https://fixflow.filebridge.click" target="_blank" rel="noopener">fixflow.filebridge.click</a>
+    &nbsp;|&nbsp; 🛡️ Cổng Tra cứu Con dấu Công khai: 
+    <a href="https://fixflow.filebridge.click/verify/TKT-2026-000003" target="_blank" rel="noopener">Biên bản TKT-2026-000003</a>
+  </div>
+
+  <div id="app">Đang tải tài liệu FixFlow (DX-FSM)...</div>
+
+  <script>
+    window.$docsify = {
+      name: '<span style="font-weight:800;color:#0284c7">FixFlow</span> <span style="font-size:12px;color:#64748b;font-weight:normal">DX-FSM</span>',
+      repo: 'https://github.com/Haui-CTH/FixFlow',
+      loadSidebar: true,
+      loadNavbar: true,
+      auto2top: true,
+      subMaxLevel: 3,
+      sidebarDisplayLevel: 1,
+      search: {
+        maxAge: 86400000,
+        paths: 'auto',
+        placeholder: '🔍 Tìm kiếm tài liệu...',
+        noData: 'Không tìm thấy kết quả phù hợp!',
+        depth: 4
+      },
+      copyCode: {
+        buttonText: 'Sao chép',
+        errorText: 'Lỗi',
+        successText: 'Đã sao chép!'
+      },
+      pagination: {
+        previousText: 'Trang trước',
+        nextText: 'Trang tiếp theo',
+        crossChapter: true
+      }
+    };
+  </script>
+
+  <!-- Docsify Core -->
+  <script src="https://cdn.jsdelivr.net/npm/docsify@4/lib/docsify.min.js"></script>
+  
+  <!-- Plugins -->
+  <script src="https://cdn.jsdelivr.net/npm/docsify@4/lib/plugins/search.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/docsify-copy-code/dist/docsify-copy-code.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/docsify-pagination/dist/docsify-pagination.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/docsify/lib/plugins/zoom-image.min.js"></script>
+  
+  <!-- Code Syntax Highlighting -->
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1/components/prism-bash.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1/components/prism-python.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1/components/prism-typescript.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1/components/prism-json.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1/components/prism-yaml.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1/components/prism-sql.min.js"></script>
+  
+  <!-- KaTeX Math -->
+  <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/marked@4/marked.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/docsify-katex@latest/dist/docsify-katex.js"></script>
+</body>
+</html>

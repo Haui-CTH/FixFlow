@@ -275,7 +275,7 @@ Chưa gỡ được sự cố? Mở issue theo [mẫu báo lỗi](https://github
 | **Vận hành & Hướng dẫn** | [Kịch bản Live Demo 10 phút](docs/demo-script.md) · [Hướng dẫn triển khai Docker & Tunnel](docs/deployment.md) · [Cổng Tài liệu API Swagger](http://localhost/docs) · [Hướng dẫn người dùng](docs/user-guide.md) |
 | **Kiến trúc & Kỹ thuật** | [Kiến trúc DX-OS & 8 ADRs](docs/architecture.md) · [Thẩm định Chất lượng AI](docs/danh-gia-ai.md) · [Hướng dẫn cắm ứng dụng mới](docs/them-ung-dung.md) · [Đặc tả kỹ thuật API RESTful](docs/api-specification.md) · [Báo cáo kỹ thuật tổng thể](docs/technical-report.md) |
 | **Dự thi & Đánh giá (OLP)** | [Cẩm nang Thuyết trình & Phản biện](docs/pitching-guide.md) · [Báo cáo đối soát 100 điểm & Minh chứng](docs/muc-hoan-thien.md) · [Hỏi đáp & Phản biện Hội đồng Giám khảo](docs/council-qa.md) · [Thẩm định Bản quyền OSI](docs/licenses-audit.md) · [Slide thuyết trình 12 trang](docs/slides.md) · [Tiêu chí cuộc thi 2026](docs/danh-gia-tieu-chi-cuoc-thi-2026.md) |
-| **Dự án & Quản trị** | [Bản quyền & Phụ thuộc SBOM](DEPENDENCIES.md) · [Lịch sử thay đổi CHANGELOG](CHANGELOG.md) · [Quy tắc đóng góp CONTRIBUTING](CONTRIBUTING.md) · [Chính sách an toàn SECURITY](docs/SECURITY.md) · [Giấy phép Apache-2.0](LICENSE) |
+| **Dự án & Quản trị** | [Bản quyền & Phụ thuộc SBOM](DEPENDENCIES.md) · [Tuyên bố Giấy phép](LICENSES.md) · [Lịch sử thay đổi CHANGELOG](CHANGELOG.md) · [Quy tắc đóng góp CONTRIBUTING](CONTRIBUTING.md) · [Chính sách an toàn SECURITY](docs/SECURITY.md) · [Giấy phép Apache-2.0](LICENSE) |
 
 ---
 
