@@ -6,28 +6,31 @@ name: Deploy Documentation & Pages
 
 on:
   push:
-    branches: [main, develop]
+    branches: [main, develop, master]
   workflow_dispatch:
 
 permissions:
   contents: read
+  pages: write
+  id-token: write
 
 concurrency:
   group: github-pages
   cancel-in-progress: false
 
 jobs:
-  build:
-    name: Chuẩn bị Cổng Tài liệu (Docsify)
+  deploy:
+    name: Triển khai Cổng Tài liệu (Docsify)
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      pages: read
-    outputs:
-      pages_enabled: ${{ steps.check_pages.outputs.enabled }}
     steps:
       - name: Checkout mã nguồn
         uses: actions/checkout@v4
+
+      - name: Cấu hình GitHub Pages
+        uses: actions/configure-pages@v5
 
       - name: Đóng gói trang tài liệu tĩnh
         run: |
@@ -52,36 +55,11 @@ jobs:
           # Vô hiệu hóa Jekyll để đọc các tệp có tiền tố gạch dưới (_sidebar.md, _navbar.md)
           touch _site/.nojekyll
 
-      - name: Kiểm tra trạng thái kích hoạt GitHub Pages trên Repository
-        id: check_pages
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          if gh api "repos/$GITHUB_REPOSITORY/pages" --silent >/dev/null 2>&1; then
-            echo "enabled=1" >> "$GITHUB_OUTPUT"
-            echo "✓ GitHub Pages đã được kích hoạt trên repository."
-          else
-            echo "enabled=0" >> "$GITHUB_OUTPUT"
-            echo "::notice::Repository chưa bật GitHub Pages (Source: GitHub Actions). Hãy vào Settings -> Pages -> Source: chọn 'GitHub Actions' để trang tự động xuất bản."
-          fi
-
       - name: Tải lên cấu phẩm Pages
         uses: actions/upload-pages-artifact@v3
         with:
           path: _site
 
-  deploy:
-    name: Xuất bản lên GitHub Pages
-    needs: build
-    if: needs.build.outputs.pages_enabled == '1'
-    runs-on: ubuntu-latest
-    permissions:
-      pages: write
-      id-token: write
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    steps:
       - name: Triển khai tới GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
